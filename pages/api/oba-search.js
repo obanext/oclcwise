@@ -59,6 +59,8 @@ function extractChildTitleId(item) {
     item?.title?.childTitleIds?.[0] ||
     item?.childTitleId ||
     item?.title?.childTitleId ||
+    item?.id ||
+    item?.title?.id ||
     "";
 
   return isNumericId(id) ? text(id) : "";
