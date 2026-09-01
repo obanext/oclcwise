@@ -57,6 +57,8 @@ function extractChildTitleId(item = {}) {
   const id =
     item?.childTitleList?.[0]?.childTitleId ||
     item?.title?.childTitleList?.[0]?.childTitleId ||
+    item?.childTitleIds?.[0] ||
+    item?.title?.childTitleIds?.[0] ||
     item?.childTitleId ||
     item?.title?.childTitleId ||
     "";
@@ -451,9 +453,12 @@ export default async function handler(req, res) {
     `&offset=${offset}` +
     `&limit=${limitNumber}` +
     `&searchScope=${encodeURIComponent(selectedSearchScope)}` +
-    `&sort=${encodeURIComponent(selectedSort)}` +
     `&filterAvailableTitles=${encodeURIComponent(selectedFilterAvailableTitles ? "true" : "false")}` +
     `&enableMultiSelectFaceting=true`;
+
+  if (sortWasProvided) {
+    searchUrl = appendParam(searchUrl, "sort", selectedSort);
+  }
 
   if (query && !(useSearchEndpoint && query === "*.*")) {
     searchUrl = appendParam(searchUrl, "term", query);

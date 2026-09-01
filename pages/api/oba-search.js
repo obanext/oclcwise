@@ -55,6 +55,8 @@ function extractChildTitleId(item) {
   const id =
     item?.childTitleList?.[0]?.childTitleId ||
     item?.title?.childTitleList?.[0]?.childTitleId ||
+    item?.childTitleIds?.[0] ||
+    item?.title?.childTitleIds?.[0] ||
     item?.childTitleId ||
     item?.title?.childTitleId ||
     "";
@@ -243,9 +245,12 @@ export default async function handler(req, res) {
     `&offset=${offset}` +
     `&limit=${limitNumber}` +
     `&searchScope=${encodeURIComponent(selectedScope)}` +
-    `&sort=${encodeURIComponent(selectedSort)}` +
     `&filterAvailableTitles=${encodeURIComponent(filterAvailableTitles)}` +
     `&enableMultiSelectFaceting=true`;
+
+  if (sortWasProvided) {
+    titleSummaryUrl = appendParam(titleSummaryUrl, "sort", selectedSort);
+  }
 
   titleSummaryUrl = appendRepeatedParam(titleSummaryUrl, "facetFilter", facetFilter);
 
