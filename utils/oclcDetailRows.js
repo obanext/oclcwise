@@ -81,6 +81,11 @@ export function buildOclcDetailRows(data = {}) {
       endpoint: "/title/{titleId}/iteminformation?branchId=1000&branchCatGroups=0&clientType=I",
       body: data?.itemInformation,
     },
+    {
+      key: "recommendations",
+      endpoint: "/title/{titleId}/recommended/title?limit=5&offset=0",
+      body: data?.recommendations,
+    },
   ];
 
   return sections.flatMap((section) => flattenValue(section.body, section));

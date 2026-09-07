@@ -79,6 +79,11 @@ const exactLabels = {
   "[].temporaryShelfCode": "Tijdelijke kastcode",
   "[].volume": "Exemplaar-deel",
   "[].volumeId": "Exemplaar-deel-ID",
+  "items[].id": "WISE titel-ID aanbevolen titel",
+  "items[].title": "Aanbevolen titel",
+  "items[].author": "Auteur aanbevolen titel",
+  "items[].publicationYear": "Jaar aanbevolen titel",
+  "items[].medium.code": "Materiaalcode aanbevolen titel",
 };
 
 const termLabels = {
@@ -174,6 +179,8 @@ const noteOverrides = {
   "items|[].effectiveStatus": "Ruwe status van het concrete exemplaar.",
   "items|[].effectiveStatusCode": "Ruwe exemplaarstatuscode; wordt niet vertaald.",
   "items|[].returnDate": "Ruwe datum/tijdwaarde uit iteminformation.",
+  "recommendations|items[].title": "Ruwe titel uit de recommendation-response.",
+  "recommendations|items[].author": "Ruwe auteurswaarde uit de recommendation-response.",
 };
 
 export function normalizeOclcDetailPath(path = "") {

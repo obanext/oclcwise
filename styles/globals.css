@@ -369,6 +369,64 @@ a {
   color: #990000;
 }
 
+.displayed-fields-table-card {
+  padding: 14px;
+}
+
+.displayed-fields-table {
+  min-width: 1420px;
+  table-layout: fixed;
+}
+
+.displayed-fields-table th:nth-child(1) { width: 80px; }
+.displayed-fields-table th:nth-child(2) { width: 230px; }
+.displayed-fields-table th:nth-child(3) { width: 230px; }
+.displayed-fields-table th:nth-child(4) { width: 260px; }
+.displayed-fields-table th:nth-child(5) { width: 310px; }
+.displayed-fields-table th:nth-child(6) { width: 310px; }
+
+.displayed-fields-table code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+
+.recommendations-section {
+  margin: 0 0 48px;
+}
+
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recommendation-card {
+  display: block;
+  min-height: 150px;
+  padding: 18px;
+  border: 1px solid #d8d8d8;
+  border-radius: 18px;
+  background: #f2f2f2;
+  text-decoration: none;
+}
+
+.recommendation-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.recommendation-card p {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.recommendation-card:hover {
+  background: #e8e8e8;
+}
+
 /* Debug */
 
 .debug-section {
