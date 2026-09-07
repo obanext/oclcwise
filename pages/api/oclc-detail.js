@@ -35,18 +35,9 @@ export default async function handler(req, res) {
       )}?clientType=PUBLIC&holdsCount=true`
     ),
     fetchWiseResponse(itemInformationUrl(id)),
-    fetchWiseResponse(
-      `${WISE_BASE_URL}/title/${encodeURIComponent(id)}/recommended/title?limit=5&offset=0`
-    ),
   ]);
 
-  const [
-    titleCall,
-    titleInfoCall,
-    availabilityCall,
-    itemInformationCall,
-    recommendationsCall,
-  ] = calls;
+  const [titleCall, titleInfoCall, availabilityCall, itemInformationCall] = calls;
   if (!titleCall.ok) {
     return res.status(titleCall.status || 502).json({
       error: "OCLC kerndetail ophalen mislukt",
@@ -58,7 +49,6 @@ export default async function handler(req, res) {
     ["Bibliografische titelinformatie", titleInfoCall],
     ["Beschikbaarheid", availabilityCall],
     ["Exemplaren", itemInformationCall],
-    ["Aanbevelingen", recommendationsCall],
   ]
     .filter(([, call]) => !call.ok)
     .map(([source, call]) => ({ source, status: call.status, error: call.error || "Call mislukt" }));
@@ -69,7 +59,6 @@ export default async function handler(req, res) {
     titleInfo: titleInfoCall.ok ? titleInfoCall.body : null,
     availability: availabilityCall.ok ? availabilityCall.body : null,
     itemInformation: itemInformationCall.ok ? itemInformationCall.body : null,
-    recommendations: recommendationsCall.ok ? recommendationsCall.body : null,
     warnings,
     debug: { calls },
   });

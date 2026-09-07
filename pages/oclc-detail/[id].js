@@ -1,19 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { buildOclcDetailRows, toOclcDetailCsv } from "../../utils/oclcDetailRows";
+import { buildOclcDetailRows, toOclcDetailCsv } from "../../utils/oclcDetailRows.js";
 
-const pretty = (value) => JSON.stringify(value, null, 2);
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
-const text = (value) => {
-  if (typeof value === "string") return value.trim();
-  if (value === null || value === undefined) return "";
-  return String(value).trim();
+const hasValue = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string") return value.length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
 };
 
-function firstText(...values) {
-  return values.map(text).find(Boolean) || "";
-}
+const rawText = (value) => {
+  if (value === null) return "null";
+  if (value === undefined) return "undefined";
+  if (typeof value === "string") return value;
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+};
+
+const pretty = (value) => JSON.stringify(value, null, 2);
 
 function downloadFile(filename, contents, mimeType) {
   const blob = new Blob([contents], { type: mimeType });
@@ -28,21 +34,26 @@ function downloadFile(filename, contents, mimeType) {
   window.URL.revokeObjectURL(url);
 }
 
-function availabilityStatus(item = {}) {
-  const status = text(item?.effectiveStatus || item?.status);
-  const labels = {
-    AVAILABLE: "Aanwezig",
-    ON_LOAN: "Uitgeleend",
-    MISSING: "Niet beschikbaar",
-    IN_TRANSIT: "Onderweg",
-  };
+function RawValue({ value, empty = "—" }) {
+  return <span className="raw-value">{hasValue(value) ? rawText(value) : empty}</span>;
+}
 
-  return labels[status] || status;
+function RawRows({ rows }) {
+  return (
+    <section className="specs-list">
+      {rows.map((row) => (
+        <div className="spec-row" key={row.key || row.label}>
+          <div className="spec-label">{row.label}</div>
+          <div className="spec-value"><RawValue value={row.value} /></div>
+        </div>
+      ))}
+    </section>
+  );
 }
 
 /**
  * ALL detail page.
- * Presents OCLC source data directly as a visual detail page, JSON evidence, API calls and downloads.
+ * The layout follows the OBA detail concepts while every displayed value remains raw OCLC data.
  */
 export default function OclcDetailPage() {
   const router = useRouter();
@@ -51,6 +62,7 @@ export default function OclcDetailPage() {
   const [data, setData] = useState(null);
   const [tab, setTab] = useState("availability");
   const [error, setError] = useState("");
+  const [coverFailed, setCoverFailed] = useState(false);
 
   useEffect(() => {
     if (!router.isReady || !id) return;
@@ -58,6 +70,7 @@ export default function OclcDetailPage() {
     let cancelled = false;
     setData(null);
     setError("");
+    setCoverFailed(false);
 
     fetch(`/api/oclc-detail?id=${encodeURIComponent(id)}`)
       .then(async (response) => {
@@ -78,97 +91,111 @@ export default function OclcDetailPage() {
   }, [router.isReady, id]);
 
   const titleData = data?.title || {};
-  const titleInfo = data?.titleInfo || {};
+  const titleRecord = asArray(data?.titleInfo)[0] || {};
+  const titleAvailability = asArray(data?.availability);
+  const itemInformation = asArray(data?.itemInformation);
   const calls = asArray(data?.debug?.calls);
   const warnings = asArray(data?.warnings);
 
-  const title = firstText(titleData?.mainTitle, titleData?.title, titleInfo?.mainTitle, titleInfo?.title);
-  const subtitle = firstText(titleData?.subtitle, titleInfo?.subtitle);
-  const author = firstText(titleData?.author?.description, titleInfo?.author?.description);
-  const summary = firstText(titleData?.contents, titleData?.contentsSchoolWise, titleInfo?.contents);
-  const cover = firstText(
-    titleData?.imageUrls?.large,
-    titleData?.imageUrls?.medium,
-    titleData?.imageUrls?.small,
-    titleInfo?.imageUrls?.large,
-    titleInfo?.imageUrls?.medium,
-    titleInfo?.imageUrls?.small
-  );
+  const volumeTitle = [titleData?.volume, titleData?.volumeTitle].filter(hasValue).join(", ");
+  const titleParts = [
+    titleData?.mainTitle || titleData?.title || titleRecord?.title,
+    titleData?.subtitle,
+    volumeTitle,
+  ].filter(hasValue);
+  const combinedTitle = titleParts.join(" / ");
 
-  const subjects = useMemo(() => {
-    const values = [
-      ...asArray(titleData?.subjects),
-      ...asArray(titleData?.subject),
-      ...asArray(titleData?.subjectPim),
-      ...asArray(titleData?.subjectSchoolWise),
-    ];
+  const authorValues = [
+    titleData?.author?.description,
+    ...asArray(titleData?.collaborators).map((entry) => entry?.description),
+  ].filter(hasValue);
 
-    return values
-      .map((entry) => text(entry?.description || entry?.label || entry))
-      .filter(Boolean);
-  }, [titleData]);
+  const cover = titleData?.imageUrls?.large
+    || titleData?.imageUrls?.medium
+    || titleData?.imageUrls?.small
+    || "";
 
-  const genres = useMemo(
-    () => asArray(titleData?.genre).map((entry) => text(entry?.description || entry)).filter(Boolean),
-    [titleData]
-  );
+  const headlineRows = useMemo(() => [
+    { label: "Beschikbaar", value: titleData?.available },
+    { label: "Reserveren toegestaan", value: titleAvailability[0]?.holdAllowed },
+  ], [titleData, titleAvailability]);
 
-  const language = asArray(titleData?.language)
-    .map((entry) => text(entry?.description || entry?.code || entry))
-    .filter(Boolean)
-    .join(", ");
+  const topSpecificationRows = useMemo(() => [
+    { label: "Algemene materiaalaanduiding", value: titleData?.media?.description },
+    { label: "Taal publicatie", value: titleData?.language },
+    { label: "Uitgave", value: titleData?.imprint },
+    { label: "Collatie", value: titleData?.annotationCollation },
+    { label: "Doelgroep", value: titleData?.audience?.description },
+  ].filter((row) => hasValue(row.value)), [titleData]);
 
-  const series = asArray(titleData?.titleSeries)
-    .map((entry) => text(entry?.description || entry?.title || entry))
-    .filter(Boolean)
-    .join(", ");
+  const practicalRows = useMemo(() => [
+    { label: "ISBN Nummer", value: titleData?.isbn },
+    { label: "PPN Nummer", value: titleData?.ppn },
+    { label: "Boekcode / plaatsingscode", value: itemInformation.map((item) => item?.callNumber).filter(hasValue) },
+    { label: "Taal publicatie", value: titleData?.language },
+    { label: "Hoofdtitel", value: titleData?.mainTitle },
+    { label: "Algemene materiaalaanduiding", value: titleData?.media?.description },
+    { label: "Eerste verantwoordelijke", value: titleData?.author?.description },
+    { label: "Titel - deeltitel", value: [titleData?.subtitle, titleData?.volume, titleData?.volumeTitle].filter(hasValue) },
+    { label: "Impressum", value: titleData?.imprint },
+    { label: "Jaar van uitgave", value: titleData?.publicationYear },
+    { label: "Collatie", value: titleData?.annotationCollation },
+    { label: "Annotatie", value: titleData?.annotationNoMarc },
+    { label: "Editie", value: titleData?.annotationEdition },
+    { label: "Auteur Functie", value: titleData?.author?.addition },
+    {
+      label: "Auteur - secundaire - Functie",
+      value: asArray(titleData?.collaborators).map((entry) => entry?.addition).filter(hasValue),
+    },
+    {
+      label: "Auteur - secundaire",
+      value: asArray(titleData?.collaborators).map((entry) => entry?.description).filter(hasValue),
+    },
+    { label: "Doelgroep", value: titleData?.audience?.description },
+    { label: "Reeks", value: titleData?.titleSeries },
+    { label: "Genre", value: titleData?.genre },
+    { label: "Trefwoord - hoofdgeleding", value: titleData?.subjects },
+    { label: "Samenvatting - Tekst", value: titleData?.contents },
+  ].filter((row) => hasValue(row.value)), [itemInformation, titleData]);
 
-  const specRows = useMemo(() => {
-    const rows = [
-      ["OCLC/Wise detail-id", text(id)],
-      ["Materiaal", firstText(titleData?.media?.description, titleData?.mediumGroup?.description)],
-      ["Materiaalcode", text(titleData?.media?.code)],
-      ["Publicatiejaar", text(titleData?.publicationYear)],
-      ["Editie", firstText(titleData?.annotationEdition, titleData?.edition)],
-      ["Imprint", text(titleData?.imprint)],
-      ["Collatie", text(titleData?.annotationCollation)],
-      ["Taal", language],
-      ["ISBN", asArray(titleData?.isbn).map(text).filter(Boolean).join(", ")],
-      ["PPN", firstText(titleData?.ppn, titleInfo?.ppn)],
-      ["Reeks", series],
-      ["Genre", genres.join(", ")],
-    ];
+  const titleAvailabilityRows = useMemo(() => titleAvailability.flatMap((record, recordIndex) => {
+    const statuses = asArray(record?.availability);
+    const statusRows = statuses.length ? statuses : [{}];
 
-    return rows.filter(([, value]) => value);
-  }, [genres, id, language, series, titleData, titleInfo]);
+    return statusRows.map((status, statusIndex) => ({
+      key: `title-availability-${recordIndex}-${statusIndex}`,
+      bibliographicRecordId: record?.bibliographicRecordId,
+      ppn: record?.ppn,
+      catGroup: status?.catGroup,
+      status: status?.status,
+      statusCode: status?.statusCode,
+      holdAllowed: record?.holdAllowed,
+      holdQueuePosition: record?.holdQueuePosition,
+      numberOfItems: record?.numberOfItems,
+      material: record?.material,
+    }));
+  }), [titleAvailability]);
 
-  const recommendationItems = useMemo(
-    () => asArray(data?.recommendations?.items).slice(0, 5),
-    [data]
-  );
+  const itemRows = useMemo(() => itemInformation.map((item, index) => ({
+    key: `${item?.id ?? item?.barcode ?? "item"}-${index}`,
+    branchName: item?.branchName,
+    branchId: item?.branchId,
+    location: item?.location,
+    subLocation: item?.subLocation,
+    shelfDescription: item?.shelfDescription,
+    callNumber: item?.callNumber,
+    effectiveStatus: item?.effectiveStatus,
+    effectiveStatusCode: item?.effectiveStatusCode,
+    returnDate: item?.returnDate,
+    barcode: item?.barcode,
+  })), [itemInformation]);
 
-  const availabilityRows = useMemo(
-    () =>
-      asArray(data?.itemInformation).map((item, index) => ({
-        key: `${text(item?.barcode || item?.id) || "item"}-${index}`,
-        location: firstText(item?.branchName, item?.branchId),
-        place: firstText(item?.subLocation, item?.shelfDescription, item?.location),
-        shelf: firstText(item?.callNumber, item?.headWord, item?.shelfCode),
-        status: availabilityStatus(item),
-      })),
-    [data]
-  );
-
-  const allOclc = useMemo(
-    () => ({
-      discoveryTitleResponse: data?.title || null,
-      titleResponse: data?.titleInfo || null,
-      titleAvailabilityResponse: data?.availability || null,
-      itemInformationResponse: data?.itemInformation || null,
-      recommendedTitlesResponse: data?.recommendations || null,
-    }),
-    [data]
-  );
+  const allOclc = useMemo(() => ({
+    discoveryTitleResponse: data?.title ?? null,
+    titleResponse: data?.titleInfo ?? null,
+    titleAvailabilityResponse: data?.availability ?? null,
+    itemInformationResponse: data?.itemInformation ?? null,
+  }), [data]);
 
   const detailRows = useMemo(() => buildOclcDetailRows(data), [data]);
 
@@ -181,7 +208,7 @@ export default function OclcDetailPage() {
         <img src="/header.JPG" alt="OBA" />
       </div>
 
-      <div className="container detail-page">
+      <div className="container detail-page oclc-all-detail-page">
         {warnings.length ? (
           <div className="detail-warning" role="status">
             <strong>Niet alle WISE-informatie kon worden geladen.</strong>
@@ -197,84 +224,46 @@ export default function OclcDetailPage() {
 
         <section className="hero">
           <div className="hero-left">
-            <h1 className="title">{title || "Onbekende titel"}</h1>
-            {subtitle ? <div className="subtitle">{subtitle}</div> : null}
-            {author ? <div className="author-line">{author}</div> : null}
-            {summary ? <div className="summary-text">{summary}</div> : null}
+            <h1 className="title">{combinedTitle || "Onbekende titel"}</h1>
+            {authorValues.length ? <div className="author-line">{authorValues.join(" · ")}</div> : null}
+            {hasValue(titleData?.contents) ? <div className="summary-text"><RawValue value={titleData.contents} /></div> : null}
 
-            <div className="card-grid top-cards">
+            <div className="raw-headline-grid">
+              {headlineRows.map((row) => (
+                <div className="raw-headline-item" key={row.label}>
+                  <strong>{row.label}</strong>
+                  <RawValue value={row.value} />
+                </div>
+              ))}
+            </div>
+
+            <div className="card-grid top-cards top-cards-single">
               <section className="info-card">
                 <h2>Specificaties</h2>
-                <ul className="plain-list">
-                  {[firstText(titleData?.media?.description, titleData?.mediumGroup?.description), language, titleData?.imprint, titleData?.annotationCollation, series]
-                    .filter(Boolean)
-                    .map((value, index) => (
-                      <li key={`${value}-${index}`}>{value}</li>
-                    ))}
-                </ul>
-              </section>
-
-              <section className="info-card">
-                <h2>Onderwerpen</h2>
-                <ul className="plain-list">
-                  {[...subjects, ...genres].length ? (
-                    [...subjects, ...genres].map((value, index) => <li key={`${value}-${index}`}>{value}</li>)
-                  ) : (
-                    <li>Geen onderwerpen beschikbaar</li>
-                  )}
-                </ul>
+                <dl className="raw-definition-list">
+                  {topSpecificationRows.map((row) => (
+                    <div key={row.label}>
+                      <dt>{row.label}</dt>
+                      <dd><RawValue value={row.value} /></dd>
+                    </div>
+                  ))}
+                </dl>
               </section>
             </div>
           </div>
 
           <div className="hero-right">
-            {cover ? <img src={cover} className="cover-large" alt={title || "Cover"} /> : <div className="cover-placeholder">Geen cover</div>}
+            {cover && !coverFailed ? (
+              <img
+                src={cover}
+                className="cover-large"
+                alt={combinedTitle || "Cover"}
+                onError={() => setCoverFailed(true)}
+              />
+            ) : (
+              <div className="cover-placeholder">Geen cover</div>
+            )}
           </div>
-        </section>
-
-        <section className="recommendations-section">
-          <div className="section-header">
-            <h2>Aanbevolen titels</h2>
-          </div>
-
-          {recommendationItems.length ? (
-            <div className="recommendation-grid">
-              {recommendationItems.map((item, index) => {
-                const recommendationId = text(item?.id);
-                const recommendationTitle = firstText(item?.title, `Aanbevolen titel ${index + 1}`);
-                const recommendationMeta = [
-                  text(item?.author),
-                  text(item?.publicationYear),
-                  text(item?.medium?.code),
-                ].filter(Boolean);
-
-                const content = (
-                  <>
-                    <h3>{recommendationTitle}</h3>
-                    {recommendationMeta.length ? (
-                      <p>{recommendationMeta.join(" · ")}</p>
-                    ) : null}
-                  </>
-                );
-
-                return recommendationId ? (
-                  <a
-                    className="recommendation-card"
-                    href={`/oclc-detail/${encodeURIComponent(recommendationId)}`}
-                    key={`${recommendationId}-${index}`}
-                  >
-                    {content}
-                  </a>
-                ) : (
-                  <div className="recommendation-card" key={`recommendation-${index}`}>
-                    {content}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="info-card">Geen aanbevolen titels beschikbaar</div>
-          )}
         </section>
 
         <div className="section-header">
@@ -286,28 +275,92 @@ export default function OclcDetailPage() {
           </div>
         </div>
 
+        {tab === "specs" ? <RawRows rows={practicalRows} /> : null}
+
         {tab === "availability" ? (
-          <section className="table-card">
+          <div className="availability-sections">
+            <section className="table-card">
+              <h3>Beschikbaarheid op titelniveau</h3>
+              <div className="table-wrap">
+                <table className="detail-table raw-data-table">
+                  <thead>
+                    <tr>
+                      <th>Bibliografisch record-ID</th><th>PPN</th><th>Catalogusgroep</th><th>Status</th>
+                      <th>Statuscode</th><th>Reserveren toegestaan</th><th>Wachtrijpositie</th><th>Aantal exemplaren</th><th>Materiaal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {titleAvailabilityRows.length ? titleAvailabilityRows.map((row) => (
+                      <tr key={row.key}>
+                        <td><RawValue value={row.bibliographicRecordId} /></td><td><RawValue value={row.ppn} /></td>
+                        <td><RawValue value={row.catGroup} /></td><td><RawValue value={row.status} /></td>
+                        <td><RawValue value={row.statusCode} /></td><td><RawValue value={row.holdAllowed} /></td>
+                        <td><RawValue value={row.holdQueuePosition} /></td><td><RawValue value={row.numberOfItems} /></td>
+                        <td><RawValue value={row.material} /></td>
+                      </tr>
+                    )) : <tr><td colSpan="9">Geen titleavailability-response beschikbaar</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section className="table-card">
+              <h3>Exemplaren</h3>
+              <div className="table-wrap">
+                <table className="detail-table raw-data-table">
+                  <thead>
+                    <tr>
+                      <th>Vestiging</th><th>Vestigings-ID</th><th>Locatie</th><th>Deellocatie</th><th>Vindplaats</th>
+                      <th>Boekcode / plaatsingscode</th><th>Status</th><th>Statuscode</th><th>Inleverdatum</th><th>Barcode</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {itemRows.length ? itemRows.map((row) => (
+                      <tr key={row.key}>
+                        <td><RawValue value={row.branchName} /></td><td><RawValue value={row.branchId} /></td>
+                        <td><RawValue value={row.location} /></td><td><RawValue value={row.subLocation} /></td>
+                        <td><RawValue value={row.shelfDescription} /></td><td><RawValue value={row.callNumber} /></td>
+                        <td><RawValue value={row.effectiveStatus} /></td><td><RawValue value={row.effectiveStatusCode} /></td>
+                        <td><RawValue value={row.returnDate} /></td><td><RawValue value={row.barcode} /></td>
+                      </tr>
+                    )) : <tr><td colSpan="10">Geen iteminformation-response beschikbaar</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        ) : null}
+
+        {tab === "oclc" ? (
+          <section className="table-card all-oclc-table-card">
+            <div className="all-oclc-summary">
+              <strong>{detailRows.length} ruwe velden</strong>
+              <span>Alle velden uit de vier OCLC-responses, inclusief lege en technische waarden.</span>
+            </div>
             <div className="table-wrap">
-              <table className="detail-table">
-                <thead><tr><th>Locatie</th><th>Plaats</th><th>Signatuur</th><th>Status</th></tr></thead>
+              <table className="detail-table all-oclc-table">
+                <thead>
+                  <tr>
+                    <th>Veldnaam OCLC</th><th>Veldnaam site</th><th>OBA.nl IST</th>
+                    <th>Endpoint path</th><th>Waarde</th><th>Opmerkingen</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  {availabilityRows.length ? availabilityRows.map((row) => (
-                    <tr key={row.key}><td>{row.location || "—"}</td><td>{row.place || "—"}</td><td>{row.shelf || "—"}</td><td>{row.status || "—"}</td></tr>
-                  )) : <tr><td>—</td><td>—</td><td>—</td><td>Geen exemplaren beschikbaar</td></tr>}
+                  {detailRows.map((row, index) => (
+                    <tr key={`${row.endpoint}-${row.veldnaamOclc}-${index}`}>
+                      <td><code>{row.veldnaamOclc}</code></td>
+                      <td>{row.veldnaamSite}</td>
+                      <td><span className={`mapping-status ${row.obaIst === "WEL" ? "mapping-status-yes" : "mapping-status-no"}`}>{row.obaIst}</span></td>
+                      <td><code>{row.endpoint}</code></td>
+                      <td><span className="raw-table-value">{row.waarde}</span></td>
+                      <td>{row.opmerkingen}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </section>
-        ) : tab === "specs" ? (
-          <section className="specs-list">
-            {specRows.map(([label, value]) => <div className="spec-row" key={label}><div className="spec-label">{label}</div><div className="spec-value">{value}</div></div>)}
-          </section>
-        ) : (
-          <section className="debug-block">
-            <div className="debug-content"><pre>{pretty(allOclc)}</pre></div>
-          </section>
-        )}
+        ) : null}
 
         <section className="debug-section">
           <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-detail-${id}.json`, pretty(allOclc), "application/json;charset=utf-8;")}>Download OCLC JSON</button>{" "}

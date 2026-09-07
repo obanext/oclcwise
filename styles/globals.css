@@ -69,6 +69,7 @@ a {
 .hero-right {
   width: 420px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
 }
@@ -120,6 +121,52 @@ a {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
+.raw-value {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.raw-headline-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.raw-headline-item {
+  display: grid;
+  gap: 3px;
+  min-width: 180px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: #f1f1f1;
+}
+
+.raw-headline-item strong {
+  font-size: 12px;
+}
+
+.raw-definition-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.raw-definition-list > div {
+  display: grid;
+  gap: 3px;
+}
+
+.raw-definition-list dt {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.raw-definition-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(220px, 1fr));
@@ -130,11 +177,20 @@ a {
   max-width: 680px;
 }
 
+.top-cards-single {
+  grid-template-columns: 1fr;
+}
+
 .info-card,
 .table-card {
   background: #e8e8e8;
   border-radius: 22px;
   padding: 20px;
+}
+
+.table-card h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
 }
 
 .info-card h2,
@@ -241,41 +297,76 @@ a {
   word-break: break-word;
 }
 
-
-.recommendations-section {
-  margin: 0 0 48px;
-}
-
-.recommendation-grid {
+.availability-sections {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 
-.recommendation-card {
-  display: block;
-  min-height: 150px;
-  padding: 18px;
-  border: 1px solid #d8d8d8;
-  border-radius: 18px;
-  background: #f2f2f2;
-  text-decoration: none;
+.raw-data-table {
+  min-width: 1180px;
 }
 
-.recommendation-card h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  line-height: 1.2;
+.all-oclc-table-card {
+  padding: 14px;
 }
 
-.recommendation-card p {
-  margin: 0;
+.all-oclc-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 4px 6px 10px;
+}
+
+.all-oclc-summary span {
   color: #555;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.recommendation-card:hover {
-  background: #e8e8e8;
+.all-oclc-table {
+  min-width: 1680px;
+  table-layout: fixed;
+}
+
+.all-oclc-table th:nth-child(1) { width: 250px; }
+.all-oclc-table th:nth-child(2) { width: 250px; }
+.all-oclc-table th:nth-child(3) { width: 100px; }
+.all-oclc-table th:nth-child(4) { width: 380px; }
+.all-oclc-table th:nth-child(5) { width: 330px; }
+.all-oclc-table th:nth-child(6) { width: 370px; }
+
+.all-oclc-table code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+
+.raw-table-value {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+}
+
+.mapping-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mapping-status-yes {
+  background: #d9ead3;
+  color: #274e13;
+}
+
+.mapping-status-no {
+  background: #f4cccc;
+  color: #990000;
 }
 
 /* Debug */
