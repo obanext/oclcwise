@@ -300,15 +300,15 @@ export default function OclcDetailPage() {
 
     const rows = [
       {
-        section: "Kop",
+        section: "Titel",
         label: "Samengestelde titel",
         field: [titleSource.field, subtitleSource.field, volumeSource.field, volumeNameSource.field].filter(Boolean).join(" | "),
         value: combinedTitle,
         endpoint: [titleSource.endpoint, subtitleSource.endpoint, volumeSource.endpoint, volumeNameSource.endpoint].filter(Boolean).filter((value, index, values) => values.indexOf(value) === index).join(" | "),
       },
-      { section: "Kop", label: "Eerste verantwoordelijke", field: authorSource.field, value: author, endpoint: authorSource.endpoint },
-      { section: "Kop", label: "Samenvatting", field: summarySource.field, value: summary, endpoint: summarySource.endpoint },
-      { section: "Kop", label: "Cover", field: coverSource.field, value: cover, endpoint: coverSource.endpoint },
+      { section: "Auteur", label: "Eerste verantwoordelijke", field: authorSource.field, value: author, endpoint: authorSource.endpoint },
+      { section: "Samenvatting", label: "Samenvatting", field: summarySource.field, value: summary, endpoint: summarySource.endpoint },
+      { section: "Cover", label: "Cover", field: coverSource.field, value: cover, endpoint: coverSource.endpoint },
       ...headlineRows.map((row) => ({ section: "Kop", ...row })),
       ...topSpecificationRows.map((row) => ({ section: "Specificaties bovenaan", ...row })),
       ...recommendationFieldRows,
