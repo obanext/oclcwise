@@ -46,6 +46,45 @@ function firstSource(candidates) {
   return candidates.find((candidate) => hasValue(candidate.value)) || candidates[0];
 }
 
+function splitAuthorName(value = "") {
+  const source = String(value || "").trim();
+  if (!source) return { firstName: "", lastName: "" };
+
+  if (source.includes(",")) {
+    const [lastName = "", ...firstNameParts] = source.split(",");
+    return {
+      firstName: firstNameParts.join(",").trim(),
+      lastName: lastName.trim(),
+    };
+  }
+
+  const parts = source.split(/\s+/).filter(Boolean);
+  return {
+    firstName: parts.slice(0, -1).join(" "),
+    lastName: parts.at(-1) || "",
+  };
+}
+
+function targetAudienceLabel(titleRecord = {}) {
+  if (titleRecord.categoryYouth === true && titleRecord.categoryAdult === true) {
+    return "Jeugd en volwassenen";
+  }
+  if (titleRecord.categoryYouth === true) return "Jeugd";
+  if (titleRecord.categoryAdult === true) return "Volwassenen";
+  return "";
+}
+
+function youthAgeRangeLabel(titleRecord = {}, ageRange = {}) {
+  if (titleRecord.categoryYouth !== true) return "";
+
+  const from = ageRange?.from;
+  const to = ageRange?.to;
+  if (hasValue(from) && hasValue(to)) return `${from}–${to} jaar`;
+  if (hasValue(from)) return `Vanaf ${from} jaar`;
+  if (hasValue(to)) return `Tot ${to} jaar`;
+  return "";
+}
+
 const ENDPOINTS = {
   discovery: "/discovery/title/{titleId}",
   title: "/title/{titleId}",
@@ -86,7 +125,7 @@ function RawRows({ rows }) {
 
 /**
  * ALL detail page.
- * oba.nl detailpagina as is concepten de data is ruwe oclc data
+ * The layout follows the OBA detail concepts while every displayed value remains raw OCLC data.
  */
 export default function OclcDetailPage() {
   const router = useRouter();
@@ -187,8 +226,11 @@ export default function OclcDetailPage() {
   const combinedTitle = titleParts.join(" / ");
 
   const author = authorSource.value;
+  const authorName = splitAuthorName(author);
   const summary = summarySource.value;
   const cover = coverSource.value;
+  const targetAudience = targetAudienceLabel(titleRecord);
+  const youthAgeRange = youthAgeRangeLabel(titleRecord, titleData?.ageRange);
 
   const headlineRows = useMemo(() => [
     { label: "Beschikbaar", value: titleData?.available, field: "available", endpoint: ENDPOINTS.discovery },
@@ -200,8 +242,10 @@ export default function OclcDetailPage() {
     { label: "Taal publicatie", value: titleData?.language, field: "language", endpoint: ENDPOINTS.discovery },
     { label: "Uitgave", value: titleData?.imprint, field: "imprint", endpoint: ENDPOINTS.discovery },
     { label: "Collatie", value: titleData?.annotationCollation, field: "annotationCollation", endpoint: ENDPOINTS.discovery },
-    { label: "Doelgroep", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
-  ].filter((row) => hasValue(row.value)), [titleData]);
+    { label: "Doelgroep", value: targetAudience, field: "[0].categoryYouth | [0].categoryAdult", endpoint: ENDPOINTS.title },
+    { label: "Leeftijdsindicatie", value: youthAgeRange, field: "ageRange.from | ageRange.to", endpoint: ENDPOINTS.discovery },
+    { label: "Doelgroepomschrijving", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
+  ].filter((row) => hasValue(row.value)), [targetAudience, titleData, youthAgeRange]);
 
   const practicalRows = useMemo(() => [
     { label: "ISBN Nummer", value: isbnSource.value, field: isbnSource.field, endpoint: isbnSource.endpoint },
@@ -211,6 +255,8 @@ export default function OclcDetailPage() {
     { label: "Hoofdtitel", value: titleSource.value, field: titleSource.field, endpoint: titleSource.endpoint },
     { label: "Algemene materiaalaanduiding", value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
     { label: "Eerste verantwoordelijke", value: authorSource.value, field: authorSource.field, endpoint: authorSource.endpoint },
+    { label: "Auteur Achternaam", value: authorName.lastName, field: authorSource.field, endpoint: authorSource.endpoint },
+    { label: "Auteur Voornaam", value: authorName.firstName, field: authorSource.field, endpoint: authorSource.endpoint },
     { label: "Titel - deeltitel", value: [subtitleSource.value, volumeSource.value, volumeNameSource.value].filter(hasValue), field: "subtitle | volume | volumeTitle", endpoint: ENDPOINTS.discovery },
     { label: "Impressum", value: titleData?.imprint, field: "imprint", endpoint: ENDPOINTS.discovery },
     { label: "Jaar van uitgave", value: publicationYearSource.value, field: publicationYearSource.field, endpoint: publicationYearSource.endpoint },
@@ -230,12 +276,11 @@ export default function OclcDetailPage() {
       field: "collaborators[].description",
       endpoint: ENDPOINTS.discovery,
     },
-    { label: "Doelgroep", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
     { label: "Reeks", value: titleData?.titleSeries, field: "titleSeries", endpoint: ENDPOINTS.discovery },
     { label: "Genre", value: titleData?.genre, field: "genre", endpoint: ENDPOINTS.discovery },
     { label: "Trefwoord - hoofdgeleding", value: titleData?.subjects, field: "subjects", endpoint: ENDPOINTS.discovery },
     { label: "Samenvatting - Tekst", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
-  ].filter((row) => hasValue(row.value)), [itemInformation, summarySource, titleData, titleSource, authorSource, subtitleSource, volumeSource, volumeNameSource, isbnSource, ppnSource, publicationYearSource]);
+  ].filter((row) => hasValue(row.value)), [authorName, itemInformation, summarySource, titleData, titleSource, authorSource, subtitleSource, volumeSource, volumeNameSource, isbnSource, ppnSource, publicationYearSource]);
 
   const titleAvailabilityRows = useMemo(() => titleAvailability.flatMap((record, recordIndex) => {
     const statuses = asArray(record?.availability);
@@ -537,6 +582,17 @@ export default function OclcDetailPage() {
               <strong>{displayedFieldRows.length} getoonde velden</strong>
               <span>In dezelfde conceptuele volgorde als op de detailpagina.</span>
             </div>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadFile(
+                `oclc-detail-${id}-gebruikte-velden.csv`,
+                toDisplayedFieldsCsv(displayedFieldRows),
+                "text/csv;charset=utf-8;"
+              )}
+            >
+              Download gebruikte velden CSV
+            </button>
             <div className="table-wrap">
               <table className="detail-table displayed-fields-table">
                 <thead>
@@ -568,6 +624,17 @@ export default function OclcDetailPage() {
               <strong>{detailRows.length} ruwe velden</strong>
               <span>Alle velden uit de vijf OCLC-responses, inclusief lege en technische waarden.</span>
             </div>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadFile(
+                `oclc-detail-${id}-alles-oclc.csv`,
+                toOclcDetailCsv(detailRows),
+                "text/csv;charset=utf-8;"
+              )}
+            >
+              Download Alles OCLC CSV
+            </button>
             <div className="table-wrap">
               <table className="detail-table all-oclc-table">
                 <thead>
@@ -595,28 +662,6 @@ export default function OclcDetailPage() {
 
         <section className="debug-section">
           <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-detail-${id}.json`, pretty(allOclc), "application/json;charset=utf-8;")}>Download OCLC JSON</button>{" "}
-          <button
-            type="button"
-            className="tab-button"
-            onClick={() => downloadFile(
-              `oclc-detail-${id}-gebruikte-velden.csv`,
-              toDisplayedFieldsCsv(displayedFieldRows),
-              "text/csv;charset=utf-8;"
-            )}
-          >
-            Gebruikte velden OCLC CSV
-          </button>{" "}
-          <button
-            type="button"
-            className="tab-button"
-            onClick={() => downloadFile(
-              `oclc-detail-${id}-alle-velden-oclc.csv`,
-              toOclcDetailCsv(detailRows),
-              "text/csv;charset=utf-8;"
-            )}
-          >
-            Alle velden OCLC CSV
-          </button>
 
           <details className="debug-block">
             <summary>OCLC API calls</summary>
