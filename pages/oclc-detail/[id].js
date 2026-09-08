@@ -309,10 +309,10 @@ export default function OclcDetailPage() {
       { section: "Auteur", label: "Eerste verantwoordelijke", field: authorSource.field, value: author, endpoint: authorSource.endpoint },
       { section: "Samenvatting", label: "Samenvatting", field: summarySource.field, value: summary, endpoint: summarySource.endpoint },
       { section: "Cover", label: "Cover", field: coverSource.field, value: cover, endpoint: coverSource.endpoint },
-      ...headlineRows.map((row) => ({ section: "Kop", ...row })),
-      ...topSpecificationRows.map((row) => ({ section: "Specificaties bovenaan", ...row })),
+      ...headlineRows.map((row) => ({ section: "Beschikbaarheid", ...row })),
+      ...topSpecificationRows.map((row) => ({ section: "Specificaties", ...row })),
       ...recommendationFieldRows,
-      ...practicalRows.map((row) => ({ section: "Tab specificaties", ...row })),
+      ...practicalRows.map((row) => ({ section: "Tab Praktische Informatie Specificatie", ...row })),
     ];
 
     titleAvailabilityRows.forEach((row, index) => {
@@ -328,7 +328,7 @@ export default function OclcDetailPage() {
         ["Aantal exemplaren", "numberOfItems", row.numberOfItems],
         ["Materiaal", "material", row.material],
       ].forEach(([label, field, value]) => rows.push({
-        section: "Tab beschikbaarheid – titelniveau",
+        section: "Tab Praktische Informatie Beschikbaarheid Titelniveau",
         label,
         field: `${prefix}.${field}`,
         value,
@@ -349,7 +349,7 @@ export default function OclcDetailPage() {
         ["Inleverdatum", "returnDate", row.returnDate],
         ["Barcode", "barcode", row.barcode],
       ].forEach(([label, field, value]) => rows.push({
-        section: "Tab beschikbaarheid – exemplaren",
+        section: "TTab Praktische Informatie Beschikbaarheid Exemplarenniveau",
         label,
         field: `[${index}].${field}`,
         value,
