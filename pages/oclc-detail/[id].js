@@ -349,7 +349,7 @@ export default function OclcDetailPage() {
         ["Inleverdatum", "returnDate", row.returnDate],
         ["Barcode", "barcode", row.barcode],
       ].forEach(([label, field, value]) => rows.push({
-        section: "TTab Praktische Informatie Beschikbaarheid Exemplarenniveau",
+        section: "Tab Praktische Informatie Beschikbaarheid Exemplarenniveau",
         label,
         field: `[${index}].${field}`,
         value,
