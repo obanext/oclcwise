@@ -86,7 +86,7 @@ function RawRows({ rows }) {
 
 /**
  * ALL detail page.
- * The layout follows the OBA detail concepts while every displayed value remains raw OCLC data.
+ * oba.nl detailpagina as is concepten de data is ruwe oclc data
  */
 export default function OclcDetailPage() {
   const router = useRouter();
