@@ -662,6 +662,28 @@ export default function OclcDetailPage() {
 
         <section className="debug-section">
           <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-detail-${id}.json`, pretty(allOclc), "application/json;charset=utf-8;")}>Download OCLC JSON</button>{" "}
+          <button
+            type="button"
+            className="tab-button"
+            onClick={() => downloadFile(
+              `oclc-detail-${id}-gebruikte-velden.csv`,
+              toDisplayedFieldsCsv(displayedFieldRows),
+              "text/csv;charset=utf-8;"
+            )}
+          >
+            Gebruikte velden OCLC CSV
+          </button>{" "}
+          <button
+            type="button"
+            className="tab-button"
+            onClick={() => downloadFile(
+              `oclc-detail-${id}-alle-velden-oclc.csv`,
+              toOclcDetailCsv(detailRows),
+              "text/csv;charset=utf-8;"
+            )}
+          >
+            Alle velden OCLC CSV
+          </button>
 
           <details className="debug-block">
             <summary>OCLC API calls</summary>
