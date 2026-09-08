@@ -466,6 +466,34 @@ export default function OclcDetailPage() {
         </section>
 
         <div className="section-header">
+          <h2>Downloads</h2>
+          <div className="tab-buttons">
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadFile(
+                `oclc-detail-${id}-gebruikte-velden.csv`,
+                toDisplayedFieldsCsv(displayedFieldRows),
+                "text/csv;charset=utf-8;"
+              )}
+            >
+              Gebruikte velden OCLC CSV
+            </button>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadFile(
+                `oclc-detail-${id}-alle-velden-oclc.csv`,
+                toOclcDetailCsv(detailRows),
+                "text/csv;charset=utf-8;"
+              )}
+            >
+              Alle velden OCLC CSV
+            </button>
+          </div>
+        </div>
+
+        <div className="section-header">
           <h2>Praktische informatie</h2>
           <div className="tab-buttons">
             <button type="button" className={tab === "specs" ? "tab-button active" : "tab-button"} onClick={() => setTab("specs")}>specificaties</button>
@@ -537,17 +565,6 @@ export default function OclcDetailPage() {
               <strong>{displayedFieldRows.length} getoonde velden</strong>
               <span>In dezelfde conceptuele volgorde als op de detailpagina.</span>
             </div>
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-gebruikte-velden.csv`,
-                toDisplayedFieldsCsv(displayedFieldRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Download gebruikte velden CSV
-            </button>
             <div className="table-wrap">
               <table className="detail-table displayed-fields-table">
                 <thead>
@@ -579,17 +596,6 @@ export default function OclcDetailPage() {
               <strong>{detailRows.length} ruwe velden</strong>
               <span>Alle velden uit de vijf OCLC-responses, inclusief lege en technische waarden.</span>
             </div>
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-alles-oclc.csv`,
-                toOclcDetailCsv(detailRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Download Alles OCLC CSV
-            </button>
             <div className="table-wrap">
               <table className="detail-table all-oclc-table">
                 <thead>
