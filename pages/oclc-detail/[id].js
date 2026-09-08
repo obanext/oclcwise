@@ -466,34 +466,6 @@ export default function OclcDetailPage() {
         </section>
 
         <div className="section-header">
-          <h2>Downloads</h2>
-          <div className="tab-buttons">
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-gebruikte-velden.csv`,
-                toDisplayedFieldsCsv(displayedFieldRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Gebruikte velden OCLC CSV
-            </button>
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-alle-velden-oclc.csv`,
-                toOclcDetailCsv(detailRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Alle velden OCLC CSV
-            </button>
-          </div>
-        </div>
-
-        <div className="section-header">
           <h2>Praktische informatie</h2>
           <div className="tab-buttons">
             <button type="button" className={tab === "specs" ? "tab-button active" : "tab-button"} onClick={() => setTab("specs")}>specificaties</button>
@@ -623,6 +595,28 @@ export default function OclcDetailPage() {
 
         <section className="debug-section">
           <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-detail-${id}.json`, pretty(allOclc), "application/json;charset=utf-8;")}>Download OCLC JSON</button>{" "}
+          <button
+            type="button"
+            className="tab-button"
+            onClick={() => downloadFile(
+              `oclc-detail-${id}-gebruikte-velden.csv`,
+              toDisplayedFieldsCsv(displayedFieldRows),
+              "text/csv;charset=utf-8;"
+            )}
+          >
+            Gebruikte velden OCLC CSV
+          </button>{" "}
+          <button
+            type="button"
+            className="tab-button"
+            onClick={() => downloadFile(
+              `oclc-detail-${id}-alle-velden-oclc.csv`,
+              toOclcDetailCsv(detailRows),
+              "text/csv;charset=utf-8;"
+            )}
+          >
+            Alle velden OCLC CSV
+          </button>
 
           <details className="debug-block">
             <summary>OCLC API calls</summary>
