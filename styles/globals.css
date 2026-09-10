@@ -779,8 +779,10 @@ button.filter-card-title {
   accent-color: #e30613;
 }
 
-.search-data-section {
-  margin-top: 34px;
+.download-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .oba-results-panel {

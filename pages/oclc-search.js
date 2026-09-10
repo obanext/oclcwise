@@ -154,7 +154,6 @@ export default function OclcSearchPage() {
   const [error, setError] = useState("");
   const [expandedFacets, setExpandedFacets] = useState({});
   const [openFilterCards, setOpenFilterCards] = useState({});
-  const [dataTab, setDataTab] = useState("used-fields");
 
   const [perspectiveId, setPerspectiveId] = useState(DEFAULT_PERSPECTIVE_ID);
   const [searchScope, setSearchScope] = useState(DEFAULT_SCOPE);
@@ -335,16 +334,6 @@ export default function OclcSearchPage() {
     navigateSearch({ q: query, nextPage: 1, nextTermFilters: [] });
   }
 
-  function searchFullCollection() {
-    navigateSearch({
-      q: "*.*",
-      nextPage: 1,
-      nextFacetFilters: [],
-      nextTermFilters: [],
-      nextFilterAvailableTitles: false,
-    });
-  }
-
   function changePerspective(nextPerspectiveId) {
     navigateSearch({
       q: query,
@@ -450,6 +439,7 @@ export default function OclcSearchPage() {
   const resultCount = Number(data?.pagination?.total || 0).toLocaleString("nl-NL");
   const currentPage = Number(data?.pagination?.page || page || 1);
   const hasQuery = Boolean(text(query));
+  const hasCompletedSearch = Boolean(text(data?.query));
   const hasNextPage = Number(data?.pagination?.offset || 0) + Number(data?.pagination?.limit || DEFAULT_LIMIT) < Number(data?.pagination?.total || 0);
 
   function renderFacetCard({ facet, definition }) {
@@ -561,7 +551,7 @@ export default function OclcSearchPage() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                placeholder="Waar ben je naar op zoek?"
+                placeholder="Waar ben je naar op zoek? (*.* voor volledige collectie)"
                 aria-label="Zoeken"
               />
 
@@ -616,9 +606,6 @@ export default function OclcSearchPage() {
             </button>
           </form>
 
-          <button type="button" className="oba-chip" onClick={searchFullCollection} style={{ marginTop: 10 }}>
-            Volledige collectie (*.*)
-          </button>
         </section>
 
         {error ? <div className="search-error">Fout: {error}</div> : null}
@@ -628,40 +615,44 @@ export default function OclcSearchPage() {
           <aside className="oba-filter-panel">
             {implementedFacets.map(renderFacetCard)}
 
-            <div className="filter-subsection-title">Niet geïmplementeerde filters</div>
+            {hasCompletedSearch ? (
+              <>
+                <div className="filter-subsection-title">Niet geïmplementeerde filters</div>
 
-            {labeledSearchScopes.length ? (
-              <div className={openFilterCards.searchScope ? "filter-card filter-card-open" : "filter-card"}>
-                <button
-                  type="button"
-                  className="filter-card-title"
-                  aria-expanded={Boolean(openFilterCards.searchScope)}
-                  onClick={() => toggleFilterCard("searchScope")}
-                >
-                  Zoeken op
-                </button>
+                {labeledSearchScopes.length ? (
+                  <div className={openFilterCards.searchScope ? "filter-card filter-card-open" : "filter-card"}>
+                    <button
+                      type="button"
+                      className="filter-card-title"
+                      aria-expanded={Boolean(openFilterCards.searchScope)}
+                      onClick={() => toggleFilterCard("searchScope")}
+                    >
+                      Zoeken op
+                    </button>
 
-                {openFilterCards.searchScope ? <div className="filter-options">
-                  {labeledSearchScopes.map((scope) => {
-                    const scopeValue = text(scope.value || scope.id);
+                    {openFilterCards.searchScope ? <div className="filter-options">
+                      {labeledSearchScopes.map((scope) => {
+                        const scopeValue = text(scope.value || scope.id);
 
-                    return (
-                      <button
-                        key={scope.id || scopeValue}
-                        type="button"
-                        className={String(scopeValue) === String(searchScope) ? "filter-radio active" : "filter-radio"}
-                        onClick={() => changeScope(scopeValue)}
-                      >
-                        <span className="radio-dot" />
-                        <span>{scope.label}</span>
-                      </button>
-                    );
-                  })}
-                </div> : null}
-              </div>
+                        return (
+                          <button
+                            key={scope.id || scopeValue}
+                            type="button"
+                            className={String(scopeValue) === String(searchScope) ? "filter-radio active" : "filter-radio"}
+                            onClick={() => changeScope(scopeValue)}
+                          >
+                            <span className="radio-dot" />
+                            <span>{scope.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div> : null}
+                  </div>
+                ) : null}
+
+                {additionalFacets.map(renderFacetCard)}
+              </>
             ) : null}
-
-            {additionalFacets.map(renderFacetCard)}
           </aside>
 
           <main className="oba-results-panel">
@@ -692,14 +683,7 @@ export default function OclcSearchPage() {
                   </select>
                 </label>
               </div>
-            ) : (
-              <div className="oba-results-heading">
-                <div>
-                  <h1>OCLC zoeken</h1>
-                  <div className="oba-result-count">Zoek op een term of gebruik volledige collectie (*.*).</div>
-                </div>
-              </div>
-            )}
+            ) : null}
 
             {hasQuery ? (
               <section className="oba-result-list">
@@ -781,168 +765,52 @@ export default function OclcSearchPage() {
           </main>
         </section>
 
-        <section className="search-data-section">
-          <div className="section-header">
-            <h2>OCLC-gegevens</h2>
-            <div className="tab-buttons">
-              <button
-                type="button"
-                className={dataTab === "used-fields" ? "tab-button active" : "tab-button"}
-                onClick={() => setDataTab("used-fields")}
-              >
-                gebruikte velden
-              </button>
-              <button
-                type="button"
-                className={dataTab === "filters" ? "tab-button active" : "tab-button"}
-                onClick={() => setDataTab("filters")}
-              >
-                filters oclc
-              </button>
-              <button
-                type="button"
-                className={dataTab === "all-fields" ? "tab-button active" : "tab-button"}
-                onClick={() => setDataTab("all-fields")}
-              >
-                alles oclc
-              </button>
-            </div>
-          </div>
-
-          {dataTab === "used-fields" ? (
-            <section className="table-card displayed-fields-table-card">
-              <div className="all-oclc-summary">
-                <strong>{usedFieldRows.length} gebruikte veldwaarden</strong>
-                <span>De velden die daadwerkelijk in de zichtbare zoekresultaten worden gebruikt.</span>
-              </div>
-              <button
-                type="button"
-                className="tab-button"
-                onClick={() => downloadCsv(
-                  `oclc-search-${query || "zoekopdracht"}-gebruikte-velden.csv`,
-                  toOclcUsedFieldsCsv(usedFieldRows)
-                )}
-              >
-                Gebruikte velden OCLC CSV
-              </button>
-              <div className="table-wrap">
-                <table className="detail-table displayed-fields-table">
-                  <thead>
-                    <tr>
-                      <th>Volgorde</th><th>Resultaat</th><th>Detail-ID</th><th>Onderdeel</th>
-                      <th>OCLC-veldnaam</th><th>Veldnaam site</th><th>OBA.nl IST</th>
-                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Waarde</th><th>Opmerking</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {usedFieldRows.length ? usedFieldRows.map((row) => (
-                      <tr key={`${row.order}-${row.resultIndex}-${row.oclcField}`}>
-                        <td>{row.order}</td><td>{row.resultIndex}</td><td>{row.detailId}</td><td>{row.section}</td>
-                        <td><code>{row.oclcField}</code></td><td>{row.siteField}</td><td>{row.obaIst}</td>
-                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td>
-                        <td><span className="raw-table-value">{row.value}</span></td><td>{row.note}</td>
-                      </tr>
-                    )) : <tr><td colSpan="11">Geen gebruikte zoekvelden beschikbaar</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ) : null}
-
-          {dataTab === "filters" ? (
-            <section className="table-card all-oclc-table-card">
-              <div className="all-oclc-summary">
-                <strong>{filterRows.length} instellingen en filterwaarden</strong>
-                <span>Inclusief de vertaling, technische filterwaarde en bronroute.</span>
-              </div>
-              <button
-                type="button"
-                className="tab-button"
-                onClick={() => downloadCsv(
-                  `oclc-search-${query || "zoekopdracht"}-filters.csv`,
-                  toOclcFilterCsv(filterRows)
-                )}
-              >
-                Filters OCLC CSV
-              </button>
-              <div className="table-wrap">
-                <table className="detail-table all-oclc-table">
-                  <thead>
-                    <tr>
-                      <th>Volgorde</th><th>Groep</th><th>OCLC-veldnaam</th><th>OCLC-labelKey</th>
-                      <th>OCLC-label</th><th>Veldnaam site</th><th>OBA.nl IST</th>
-                      <th>OCLC-waardelabel</th><th>Technische filterwaarde</th>
-                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Opmerking</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filterRows.length ? filterRows.map((row) => (
-                      <tr key={`${row.order}-${row.group}-${row.oclcField}-${row.technicalValue}`}>
-                        <td>{row.order}</td><td>{row.group}</td><td><code>{row.oclcField}</code></td>
-                        <td><code>{row.oclcLabelKey}</code></td><td>{row.oclcLabel}</td><td>{row.siteField}</td>
-                        <td>{row.obaIst}</td><td>{row.valueLabel}</td><td><code>{row.technicalValue}</code></td>
-                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td><td>{row.note}</td>
-                      </tr>
-                    )) : <tr><td colSpan="12">Geen filterinformatie beschikbaar</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ) : null}
-
-          {dataTab === "all-fields" ? (
-            <section className="table-card all-oclc-table-card">
-              <div className="all-oclc-summary">
-                <strong>{allFieldRows.length} ruwe OCLC-velden</strong>
-                <span>Alle velden uit de perspective- en zoekresponse, inclusief lege en technische waarden.</span>
-              </div>
-              <button
-                type="button"
-                className="tab-button"
-                onClick={() => downloadCsv(
-                  `oclc-search-${query || "zoekopdracht"}-alle-velden.csv`,
-                  toOclcAllFieldsCsv(allFieldRows)
-                )}
-              >
-                Alle velden OCLC CSV
-              </button>
-              <div className="table-wrap">
-                <table className="detail-table all-oclc-table">
-                  <thead>
-                    <tr>
-                      <th>Volgorde</th><th>OCLC-veldnaam</th><th>Veldnaam site</th><th>OBA.nl IST</th>
-                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Waarde</th><th>Opmerking</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {allFieldRows.length ? allFieldRows.map((row) => (
-                      <tr key={`${row.order}-${row.oclcField}`}>
-                        <td>{row.order}</td><td><code>{row.oclcField}</code></td><td>{row.siteField}</td><td>{row.obaIst}</td>
-                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td>
-                        <td><span className="raw-table-value">{row.value}</span></td><td>{row.note}</td>
-                      </tr>
-                    )) : <tr><td colSpan="8">Geen ruwe OCLC-velden beschikbaar</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ) : null}
-        </section>
-
         <section className="debug-section">
-          <button
-            type="button"
-            className="tab-button"
-            onClick={() =>
-              downloadFile(
-                `oclc-search-${query || "zoekopdracht"}.json`,
-                pretty(allOclc),
-                "application/json;charset=utf-8;"
-              )
-            }
-          >
-            Download OCLC JSON
-          </button>
+          <div className="download-buttons-row">
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadCsv(
+                `oclc-search-${query || "zoekopdracht"}-gebruikte-velden.csv`,
+                toOclcUsedFieldsCsv(usedFieldRows)
+              )}
+            >
+              Gebruikte velden OCLC CSV
+            </button>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadCsv(
+                `oclc-search-${query || "zoekopdracht"}-filters.csv`,
+                toOclcFilterCsv(filterRows)
+              )}
+            >
+              Filters OCLC CSV
+            </button>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() => downloadCsv(
+                `oclc-search-${query || "zoekopdracht"}-alle-velden.csv`,
+                toOclcAllFieldsCsv(allFieldRows)
+              )}
+            >
+              Alle velden OCLC CSV
+            </button>
+            <button
+              type="button"
+              className="tab-button"
+              onClick={() =>
+                downloadFile(
+                  `oclc-search-${query || "zoekopdracht"}.json`,
+                  pretty(allOclc),
+                  "application/json;charset=utf-8;"
+                )
+              }
+            >
+              Download OCLC JSON
+            </button>
+          </div>
 
           <details className="debug-block">
             <summary>Alles OCLC</summary>
