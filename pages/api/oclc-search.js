@@ -37,6 +37,32 @@ function appendRepeatedParam(url, key, values) {
   return asArray(values).reduce((nextUrl, value) => appendParam(nextUrl, key, value), url);
 }
 
+function combineFacetFilters(values) {
+  const grouped = new Map();
+  const ungrouped = [];
+
+  asArray(values).map(text).filter(Boolean).forEach((filter) => {
+    const separatorIndex = filter.indexOf(":");
+
+    if (separatorIndex <= 0 || separatorIndex === filter.length - 1) {
+      if (!ungrouped.includes(filter)) ungrouped.push(filter);
+      return;
+    }
+
+    const field = filter.slice(0, separatorIndex);
+    const term = filter.slice(separatorIndex + 1);
+    const terms = grouped.get(field) || [];
+
+    if (!terms.includes(term)) terms.push(term);
+    grouped.set(field, terms);
+  });
+
+  return [
+    ...Array.from(grouped, ([field, terms]) => `${field}:${terms.join("|")}`),
+    ...ungrouped,
+  ];
+}
+
 function extractItems(body) {
   if (!body || typeof body !== "object") return [];
   return asArray(
@@ -466,7 +492,7 @@ export default async function handler(req, res) {
     searchUrl = appendParam(searchUrl, "term", query);
   }
 
-  searchUrl = appendRepeatedParam(searchUrl, "facetFilter", selectedFacetFilters);
+  searchUrl = appendRepeatedParam(searchUrl, "facetFilter", combineFacetFilters(selectedFacetFilters));
   searchUrl = appendRepeatedParam(searchUrl, "termFilter", selectedTermFilters);
 
   const searchCall = await fetchWiseResponse(searchUrl);

@@ -28,7 +28,7 @@ export const OCLC_SEARCH_FACET_DEFINITIONS = [
   { order: 6, name: "languageCode", labelKey: "LABELKEY-LANGUAGE-CODE", siteLabel: "Taal", group: "Bestaande OBA.nl-filters", obaIst: "WEL" },
   { order: 7, name: "publicationYear", labelKey: "LABELKEY-PUBLICATION-YEAR", siteLabel: "Jaar van uitgave", group: "Bestaande OBA.nl-filters", obaIst: "WEL" },
   { order: 8, name: "branchId", labelKey: "LABELKEY-BRANCH-ID", siteLabel: "Waar", group: "Bestaande OBA.nl-filters", obaIst: "WEL" },
-  { order: 9, name: "availableNow", labelKey: "LABELKEY-AVAILABLE-NOW", siteLabel: "Nu beschikbaar", group: "Niet geïmplementeerde filters", obaIst: "NIET" },
+  { order: 9, name: "availableNow", labelKey: "LABELKEY-AVAILABLE-NOW", siteLabel: "Beschikbaarheid", group: "Niet geïmplementeerde filters", obaIst: "NIET" },
   { order: 10, name: "fictionNonfictionCode", labelKey: "LABELKEY-FICTION-NONFICTION-CODE", siteLabel: "Fictie/Non Fictie", group: "Niet geïmplementeerde filters", obaIst: "NIET" },
   { order: 11, name: "targetAudienceCode", labelKey: "LABELKEY-TARGET-AUDIENCE-CODE", siteLabel: "Leeftijd / Niveau", group: "Niet geïmplementeerde filters", obaIst: "NIET" },
   { order: 12, name: "series", labelKey: "LABELKEY-SERIES", siteLabel: "Serie", group: "Niet geïmplementeerde filters", obaIst: "NIET" },
@@ -155,6 +155,7 @@ export function buildOclcFilterRows(data = {}) {
         siteField: definition.siteLabel,
         obaIst: definition.obaIst,
         valueLabel: "",
+        siteValueLabel: "",
         technicalValue: "",
         endpoint,
         mockupRoute: MOCKUP_ROUTE,
@@ -165,6 +166,7 @@ export function buildOclcFilterRows(data = {}) {
 
     values.forEach((value) => {
       const valueLabel = text(value?.raw?.label);
+      const siteValueLabel = definition.name === "availableNow" ? "Nu aanwezig" : valueLabel;
       rows.push({
         order: rows.length + 1,
         group: definition.group,
@@ -174,11 +176,14 @@ export function buildOclcFilterRows(data = {}) {
         siteField: definition.siteLabel,
         obaIst: definition.obaIst,
         valueLabel,
+        siteValueLabel,
         technicalValue: text(value?.facetFilter),
         endpoint,
         mockupRoute: MOCKUP_ROUTE,
-        note: valueLabel
-          ? "Zichtbare filterwaarde uitsluitend uit de ruwe OCLC-eigenschap label."
+        note: definition.name === "availableNow"
+          ? "De OCLC-filterwaarde wordt op de site vertaald naar Nu aanwezig."
+          : valueLabel
+            ? "Zichtbare filterwaarde uitsluitend uit de ruwe OCLC-eigenschap label."
           : "Niet zichtbaar in de interface omdat de ruwe OCLC-eigenschap label ontbreekt.",
       });
     });
@@ -195,6 +200,7 @@ export function buildOclcFilterRows(data = {}) {
       siteField: "Zoek in",
       obaIst: "WEL",
       valueLabel: text(perspective?.label),
+      siteValueLabel: text(perspective?.label),
       technicalValue: text(perspective?.id),
       endpoint: PERSPECTIVE_ENDPOINT,
       mockupRoute: MOCKUP_ROUTE,
@@ -215,6 +221,7 @@ export function buildOclcFilterRows(data = {}) {
     siteField: "Zoeken op",
     obaIst: "NIET",
     valueLabel: text(scope?.label),
+    siteValueLabel: text(scope?.label),
     technicalValue: text(scope?.value || scope?.id),
     endpoint: PERSPECTIVE_ENDPOINT,
     mockupRoute: MOCKUP_ROUTE,
@@ -236,6 +243,7 @@ export function buildOclcFilterRows(data = {}) {
     siteField: "Sorteren op",
     obaIst: "WEL",
     valueLabel: text(sorting?.label),
+    siteValueLabel: text(sorting?.label),
     technicalValue: text(sorting?.id),
     endpoint: sortingsFromSearch ? endpoint : PERSPECTIVE_ENDPOINT,
     mockupRoute: MOCKUP_ROUTE,
@@ -304,6 +312,7 @@ export function toOclcFilterCsv(rows = []) {
     ["order", "Volgorde"], ["group", "Groep"], ["oclcField", "OCLC-veldnaam"],
     ["oclcLabelKey", "OCLC-labelKey"], ["oclcLabel", "OCLC-label"], ["siteField", "Veldnaam site"],
     ["obaIst", "OBA.nl IST"], ["valueLabel", "OCLC-waardelabel"],
+    ["siteValueLabel", "Waarde site"],
     ["technicalValue", "Technische filterwaarde"], ["endpoint", "OCLC endpoint path"],
     ["mockupRoute", "Mockup-route"], ["note", "Opmerking"],
   ]);

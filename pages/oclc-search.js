@@ -47,6 +47,11 @@ function rawFacetValueLabel(option = {}) {
   return text(option?.raw?.label);
 }
 
+function displayedFacetValueLabel(definition = {}, option = {}) {
+  if (definition.name === "availableNow") return "Nu aanwezig";
+  return rawFacetValueLabel(option);
+}
+
 function rawFacetFilterValue(facet = {}, option = {}) {
   const existing = text(option.facetFilter);
   if (existing) return existing;
@@ -368,10 +373,12 @@ export default function OclcSearchPage() {
 
   function toggleFacet(filterValue, options = {}) {
     if (options.isAvailableNow) {
+      const nextAvailable = !filterAvailableTitles;
+      setFilterAvailableTitles(nextAvailable);
       navigateSearch({
         q: query,
         nextPage: 1,
-        nextFilterAvailableTitles: !filterAvailableTitles,
+        nextFilterAvailableTitles: nextAvailable,
       });
 
       return;
@@ -383,6 +390,7 @@ export default function OclcSearchPage() {
     const exists = facetFilters.includes(value);
     const nextFilters = exists ? facetFilters.filter((item) => item !== value) : [...facetFilters, value];
 
+    setFacetFilters(nextFilters);
     navigateSearch({
       q: query,
       nextPage: 1,
@@ -448,7 +456,7 @@ export default function OclcSearchPage() {
     const isOpen = Boolean(openFilterCards[filterCardKey]);
     const expanded = Boolean(expandedFacets[key]);
     const labeledValues = asArray(facet.values || facet.filterList)
-      .filter((option) => rawFacetValueLabel(option));
+      .filter((option) => displayedFacetValueLabel(definition, option));
     const visibleValues = expanded
       ? labeledValues
       : labeledValues.slice(0, DEFAULT_VISIBLE_FACET_VALUES);
@@ -467,7 +475,7 @@ export default function OclcSearchPage() {
         {isOpen && visibleValues.length ? (
           <div className="filter-options">
             {visibleValues.map((option) => {
-              const valueLabel = rawFacetValueLabel(option);
+              const valueLabel = displayedFacetValueLabel(definition, option);
               const filterValue = rawFacetFilterValue(facet, option);
               const isAvailableNow = isAvailableNowFilter(facet, option, filterValue);
               const checked = isAvailableNow ? filterAvailableTitles : selectedFilters.has(filterValue);
