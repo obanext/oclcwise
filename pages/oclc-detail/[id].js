@@ -99,11 +99,8 @@ function youthAgeRangeLabel(titleRecord = {}, ageRange = {}) {
   return "";
 }
 
-function audienceSearchHref(titleRecord = {}) {
-  const youth = titleRecord.categoryYouth === true;
-  const adult = titleRecord.categoryAdult === true;
-  const audienceCode = youth && !adult ? "JN" : adult && !youth ? "NJ" : "";
-  if (!audienceCode) return "";
+function facetSearchHref(facetName, facetValue) {
+  if (!hasValue(facetName) || !hasValue(facetValue)) return "";
 
   const params = new URLSearchParams({
     q: "*.*",
@@ -112,8 +109,15 @@ function audienceSearchHref(titleRecord = {}) {
     searchScope: "title",
     sort: "2910",
   });
-  params.append("facetFilter", `audienceCode:${audienceCode}`);
+  params.append("facetFilter", `${facetName}:${facetValue}`);
   return `/oclc-search?${params.toString()}`;
+}
+
+function audienceSearchHref(titleRecord = {}) {
+  const youth = titleRecord.categoryYouth === true;
+  const adult = titleRecord.categoryAdult === true;
+  const audienceCode = youth && !adult ? "JN" : adult && !youth ? "NJ" : "";
+  return facetSearchHref("audienceCode", audienceCode);
 }
 
 function readableValues(value, preferredKeys = []) {
@@ -187,6 +191,14 @@ function RawValue({ value, empty = "—" }) {
   return <span className="raw-value">{hasValue(value) ? rawText(value) : empty}</span>;
 }
 
+function LinkedRawValue({ value, href }) {
+  return href ? (
+    <Link href={href} style={{ color: "inherit", textDecoration: "underline" }}>
+      <RawValue value={value} />
+    </Link>
+  ) : <RawValue value={value} />;
+}
+
 function RawRows({ rows }) {
   return (
     <section className="specs-list">
@@ -196,9 +208,13 @@ function RawRows({ rows }) {
           <div className="spec-value">
             {Array.isArray(row.value) ? (
               <ul className="raw-value-list">
-                {row.value.map((value, index) => <li key={`${row.label}-${index}`}><RawValue value={value} /></li>)}
+                {row.value.map((value, index) => (
+                  <li key={`${row.label}-${index}`}>
+                    <LinkedRawValue value={value} href={row.hrefs?.[index]} />
+                  </li>
+                ))}
               </ul>
-            ) : <RawValue value={row.value} />}
+            ) : <LinkedRawValue value={row.value} href={row.href} />}
           </div>
         </div>
       ))}
@@ -328,11 +344,21 @@ export default function OclcDetailPage() {
     ? `${titleBlockParts[0]}, ${titleBlockParts[1]}, (${titleBlockParts[2]})`
     : titleBlockParts.join(", ");
   const seriesValues = asArray(titleData?.titleSeries).map(seriesLabel).filter(hasValue);
+  const seriesSearchLinks = asArray(titleData?.titleSeries)
+    .filter((entry) => hasValue(entry?.description))
+    .map((entry) => facetSearchHref("series", entry.description));
   const isbnValues = readableValues(isbnSource.value);
   const collaboratorValues = collaborators.map(personLabel).filter(hasValue);
   const languageValues = readableValues(titleData?.language, ["description", "code"]);
   const genreValues = readableValues(titleData?.genre, ["description", "code"]);
+  const genreSearchLinks = asArray(titleData?.genre)
+    .filter((entry) => hasValue(entry?.description) || hasValue(entry?.code))
+    .map((entry) => facetSearchHref("genreCode", entry?.code || entry?.description));
   const subjectValues = readableValues(titleData?.subjects, ["description", "code"]);
+  const subjectSearchLinks = asArray(titleData?.subjects)
+    .filter((entry) => hasValue(entry?.description) || hasValue(entry?.code))
+    .map((entry) => facetSearchHref("subject", entry?.description || entry?.code));
+  const authorSearchHref = facetSearchHref("authorFacet", titleData?.author?.description || authorSource.value);
   const classificationValues = [
     titleData?.narrative === true || titleRecord?.categoryNarrative === true ? "Verhalend" : "",
     titleData?.informative === true || titleRecord?.categoryInformative === true ? "Informatief" : "",
@@ -375,7 +401,8 @@ export default function OclcDetailPage() {
         value: firstReadableValue(entry, ["description", "code"]),
         field: `subjects[${index}]${property ? `.${property}` : ""}`,
         endpoint: ENDPOINTS.discovery,
-        note: "Onderwerpen worden afzonderlijk als leesbare waarden getoond; de objectnotatie wordt niet weergegeven.",
+        href: facetSearchHref("subject", entry?.description || entry?.code),
+        note: "Onderwerpen worden afzonderlijk getoond en linken via facetFilter=subject:<omschrijving> naar OCLC zoeken.",
       };
     })
     .filter((row) => hasValue(row.value)), [titleData]);
@@ -436,9 +463,10 @@ export default function OclcDetailPage() {
     {
       label: "Serie",
       value: seriesValues,
+      hrefs: seriesSearchLinks,
       field: "titleSeries[].description | titleSeries[].addition | titleSeries[].number",
       endpoint: ENDPOINTS.discovery,
-      note: "Alle reeksen worden getoond; description wordt gecombineerd met het aanwezige addition- of number-veld.",
+      note: "Alle reeksen worden getoond; description wordt gecombineerd met addition/number en linkt via facetFilter=series:<description>.",
     },
     { label: "Noot", value: titleData?.annotationNoMarc, field: "annotationNoMarc", endpoint: ENDPOINTS.discovery },
     { label: "Inhoud", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
@@ -452,9 +480,10 @@ export default function OclcDetailPage() {
     {
       label: "Auteur",
       value: personLabel(titleData?.author) || authorSource.value,
+      href: authorSearchHref,
       field: "author.description | author.qualifier",
       endpoint: ENDPOINTS.discovery,
-      note: "De ruwe auteursbeschrijving wordt met de aanwezige qualifier tussen haakjes gecombineerd.",
+      note: "De auteursbeschrijving wordt met qualifier gecombineerd en linkt via facetFilter=authorFacet:<description>.",
     },
     { label: "Materiaal", value: materialSource.value, field: materialSource.field, endpoint: materialSource.endpoint },
     {
@@ -490,21 +519,23 @@ export default function OclcDetailPage() {
     {
       label: "Genre",
       value: genreValues,
+      hrefs: genreSearchLinks,
       field: "genre[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Alle genreomschrijvingen worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
+      note: "Alle genres worden getoond en linken via facetFilter=genreCode:<code>; in de CSV zijn meerdere waarden gescheiden met |.",
     },
     { label: "Titel", value: titleSource.value, field: titleSource.field, endpoint: titleSource.endpoint },
     {
       label: "Onderwerpen",
       value: subjectValues,
+      hrefs: subjectSearchLinks,
       field: "subjects[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Alle onderwerpsomschrijvingen worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
+      note: "Alle onderwerpen worden getoond en linken via facetFilter=subject:<omschrijving>; in de CSV zijn meerdere waarden gescheiden met |.",
     },
     { label: "Aanschafinfo", value: titleData?.acquisitionInformation, field: "acquisitionInformation", endpoint: ENDPOINTS.discovery },
     { label: "Titelnummer", value: titleData?.id, field: "id", endpoint: ENDPOINTS.discovery },
-  ].filter((row) => hasValue(row.value)), [ageCategorySource, authorSource.value, classificationValues, collaboratorValues, genreValues, isbnSource.endpoint, isbnSource.field, isbnValues, languageValues, materialSource, publicationYearSource, publisher, seriesValues, subjectValues, summarySource, titleBlockValue, titleData, titleSource]);
+  ].filter((row) => hasValue(row.value)), [ageCategorySource, authorSearchHref, authorSource.value, classificationValues, collaboratorValues, genreSearchLinks, genreValues, isbnSource.endpoint, isbnSource.field, isbnValues, languageValues, materialSource, publicationYearSource, publisher, seriesSearchLinks, seriesValues, subjectSearchLinks, subjectValues, summarySource, titleBlockValue, titleData, titleSource]);
 
   const itemRows = useMemo(() => itemInformation.map((item, index) => ({
     key: `${item?.id ?? item?.barcode ?? "item"}-${index}`,
@@ -611,7 +642,7 @@ export default function OclcDetailPage() {
         <section className="hero">
           <div className="hero-left">
             <h1 className="title">{combinedTitle || "Onbekende titel"}</h1>
-            {hasValue(author) ? <div className="author-line"><RawValue value={author} /></div> : null}
+            {hasValue(author) ? <div className="author-line"><LinkedRawValue value={author} href={authorSearchHref} /></div> : null}
             {hasValue(summary) ? <div className="summary-text"><RawValue value={summary} /></div> : null}
 
             {hasValue(availabilitySummary) ? (
@@ -653,7 +684,7 @@ export default function OclcDetailPage() {
                   <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                     {subjectRows.map((row) => (
                       <li key={row.key} style={{ marginBottom: "10px", textDecoration: "underline" }}>
-                        <RawValue value={row.value} />
+                        <LinkedRawValue value={row.value} href={row.href} />
                       </li>
                     ))}
                   </ul>
