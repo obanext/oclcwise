@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { buildOclcDetailRows, toOclcDetailCsv } from "../../utils/oclcDetailRows.js";
@@ -96,6 +97,23 @@ function youthAgeRangeLabel(titleRecord = {}, ageRange = {}) {
   if (hasValue(from)) return `Vanaf ${from} jaar`;
   if (hasValue(to)) return `Tot ${to} jaar`;
   return "";
+}
+
+function audienceSearchHref(titleRecord = {}) {
+  const youth = titleRecord.categoryYouth === true;
+  const adult = titleRecord.categoryAdult === true;
+  const audienceCode = youth && !adult ? "JN" : adult && !youth ? "NJ" : "";
+  if (!audienceCode) return "";
+
+  const params = new URLSearchParams({
+    q: "*.*",
+    page: "1",
+    perspectiveId: "3682",
+    searchScope: "title",
+    sort: "2910",
+  });
+  params.append("facetFilter", `audienceCode:${audienceCode}`);
+  return `/oclc-search?${params.toString()}`;
 }
 
 function readableValues(value, preferredKeys = []) {
@@ -289,6 +307,7 @@ export default function OclcDetailPage() {
   const summary = summarySource.value;
   const cover = coverSource.value;
   const targetAudience = targetAudienceLabel(titleRecord);
+  const targetAudienceHref = audienceSearchHref(titleRecord);
   const youthAgeRange = youthAgeRangeLabel(titleRecord, titleData?.ageRange);
 
   const languageProperty = firstReadableProperty(titleData?.language, ["description", "code"]);
@@ -395,17 +414,13 @@ export default function OclcDetailPage() {
       value: targetAudience,
       field: "[0].categoryYouth | [0].categoryAdult",
       endpoint: ENDPOINTS.title,
-      note: "Doelgroep wordt bepaald met de jeugd- en volwassenenindicatoren van het eerste /title-record.",
-    },
-    {
-      label: "Leeftijdsindicatie",
-      value: youthAgeRange,
-      field: "ageRange.from | ageRange.to",
-      endpoint: ENDPOINTS.discovery,
-      note: "Leeftijdsgrenzen worden alleen bij doelgroep Jeugd als één leesbare waarde getoond.",
+      href: targetAudienceHref,
+      note: targetAudienceHref
+        ? `Doelgroep wordt bepaald met de jeugd- en volwassenenindicatoren en linkt naar ${targetAudienceHref}.`
+        : "Doelgroep wordt bepaald met de jeugd- en volwassenenindicatoren; bij een gecombineerde of ontbrekende doelgroep wordt geen zoeklink gemaakt.",
     },
     { label: "Doelgroepomschrijving", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
-  ].filter((row) => hasValue(row.value)), [language, languageField, publisher, targetAudience, titleData, youthAgeRange]);
+  ].filter((row) => hasValue(row.value)), [language, languageField, publisher, targetAudience, targetAudienceHref, titleData]);
 
   const practicalRows = useMemo(() => [
     {
@@ -621,7 +636,13 @@ export default function OclcDetailPage() {
                 <h2>Specificaties</h2>
                 <ul className="raw-specification-values">
                   {topSpecificationRows.map((row) => (
-                    <li key={row.label}><RawValue value={row.value} /></li>
+                    <li key={row.label}>
+                      {row.href ? (
+                        <Link href={row.href} style={{ color: "inherit", textDecoration: "underline" }}>
+                          <RawValue value={row.value} />
+                        </Link>
+                      ) : <RawValue value={row.value} />}
+                    </li>
                   ))}
                 </ul>
               </section>
