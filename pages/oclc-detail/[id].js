@@ -609,14 +609,11 @@ export default function OclcDetailPage() {
             <div className="card-grid top-cards">
               <section className="info-card">
                 <h2>Specificaties</h2>
-                <dl className="raw-definition-list">
+                <ul className="raw-specification-values">
                   {topSpecificationRows.map((row) => (
-                    <div key={row.label}>
-                      <dt>{row.label}</dt>
-                      <dd><RawValue value={row.value} /></dd>
-                    </div>
+                    <li key={row.label}><RawValue value={row.value} /></li>
                   ))}
-                </dl>
+                </ul>
               </section>
 
               <section className="info-card">

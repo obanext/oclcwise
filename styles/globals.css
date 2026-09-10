@@ -785,6 +785,14 @@ button.filter-card-title {
   gap: 8px;
 }
 
+.raw-specification-values {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .oba-results-panel {
   min-width: 0;
 }
