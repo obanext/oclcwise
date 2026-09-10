@@ -19,6 +19,29 @@ const rawText = (value) => {
   return String(value);
 };
 
+const ITEM_STATUS_LABELS = {
+  AVAILABLE: "Beschikbaar",
+  MISSING: "Niet beschikbaar",
+  ON_HOLD: "Gereserveerd",
+};
+
+function dateOnly(value) {
+  const match = rawText(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? `${match[3]}-${match[2]}-${match[1]}` : rawText(value);
+}
+
+function itemAvailability(status, returnDate) {
+  if (!hasValue(status)) return "";
+
+  const statusCode = rawText(status).trim().toUpperCase().replace(/[ -]+/g, "_");
+
+  if (statusCode === "ON_LOAN") {
+    return hasValue(returnDate) ? `Uitgeleend tot ${dateOnly(returnDate)}` : "Uitgeleend";
+  }
+
+  return ITEM_STATUS_LABELS[statusCode] || rawText(status);
+}
+
 const pretty = (value) => JSON.stringify(value, null, 2);
 
 function escapeCsvCell(value) {
@@ -34,7 +57,6 @@ function toDisplayedFieldsCsv(rows = []) {
     ["field", "OCLC-veldnaam"],
     ["value", "Waarde"],
     ["endpoint", "Endpoint path"],
-    ["note", "Opmerking"],
   ];
 
   return [
@@ -45,72 +67,6 @@ function toDisplayedFieldsCsv(rows = []) {
 
 function firstSource(candidates) {
   return candidates.find((candidate) => hasValue(candidate.value)) || candidates[0];
-}
-
-function firstValue(value) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function firstReadableValue(value, preferredKeys = []) {
-  const selected = firstValue(value);
-  if (!selected || typeof selected !== "object") return selected;
-
-  for (const key of preferredKeys) {
-    if (hasValue(selected?.[key])) return selected[key];
-  }
-
-  return "";
-}
-
-function firstReadableProperty(value, preferredKeys = []) {
-  const selected = firstValue(value);
-  if (!selected || typeof selected !== "object") return "";
-  return preferredKeys.find((key) => hasValue(selected?.[key])) || "";
-}
-
-function firstValueField(field, value, property = "") {
-  const arrayPart = Array.isArray(value) ? "[0]" : "";
-  const propertyPart = property ? `.${property}` : "";
-  return `${field}${arrayPart}${propertyPart}`;
-}
-
-function splitAuthorName(value = "") {
-  const source = String(value || "").trim();
-  if (!source) return { firstName: "", lastName: "" };
-
-  if (source.includes(",")) {
-    const [lastName = "", ...firstNameParts] = source.split(",");
-    return {
-      firstName: firstNameParts.join(",").trim(),
-      lastName: lastName.trim(),
-    };
-  }
-
-  const parts = source.split(/\s+/).filter(Boolean);
-  return {
-    firstName: parts.slice(0, -1).join(" "),
-    lastName: parts.at(-1) || "",
-  };
-}
-
-function targetAudienceLabel(titleRecord = {}) {
-  if (titleRecord.categoryYouth === true && titleRecord.categoryAdult === true) {
-    return "Jeugd en volwassenen";
-  }
-  if (titleRecord.categoryYouth === true) return "Jeugd";
-  if (titleRecord.categoryAdult === true) return "Volwassenen";
-  return "";
-}
-
-function youthAgeRangeLabel(titleRecord = {}, ageRange = {}) {
-  if (titleRecord.categoryYouth !== true) return "";
-
-  const from = ageRange?.from;
-  const to = ageRange?.to;
-  if (hasValue(from) && hasValue(to)) return `${from}–${to} jaar`;
-  if (hasValue(from)) return `Vanaf ${from} jaar`;
-  if (hasValue(to)) return `Tot ${to} jaar`;
-  return "";
 }
 
 const ENDPOINTS = {
@@ -254,161 +210,32 @@ export default function OclcDetailPage() {
   const combinedTitle = titleParts.join(" / ");
 
   const author = authorSource.value;
-  const authorName = splitAuthorName(author);
   const summary = summarySource.value;
   const cover = coverSource.value;
-  const targetAudience = targetAudienceLabel(titleRecord);
-  const youthAgeRange = youthAgeRangeLabel(titleRecord, titleData?.ageRange);
-
-  const languageProperty = firstReadableProperty(titleData?.language, ["description", "code"]);
-  const language = firstReadableValue(titleData?.language, ["description", "code"]);
-  const languageField = firstValueField("language", titleData?.language, languageProperty);
-  const publisher = titleData?.imprint;
-
-  const firstCallNumberIndex = itemInformation.findIndex((item) => hasValue(item?.callNumber));
-  const firstCallNumber = firstCallNumberIndex >= 0 ? itemInformation[firstCallNumberIndex]?.callNumber : "";
-
-  const collaborators = asArray(titleData?.collaborators);
-  const firstCollaborator = collaborators[0] || {};
-  const secondaryAuthorName = splitAuthorName(firstCollaborator?.description);
-
-  const seriesProperty = firstReadableProperty(titleData?.titleSeries, ["description", "title", "name"]);
-  const series = firstReadableValue(titleData?.titleSeries, ["description", "title", "name"]);
-  const genreProperty = firstReadableProperty(titleData?.genre, ["description", "code"]);
-  const genre = firstReadableValue(titleData?.genre, ["description", "code"]);
-  const subjectProperty = firstReadableProperty(titleData?.subjects, ["description", "code"]);
-  const subject = firstReadableValue(titleData?.subjects, ["description", "code"]);
-
-  const availableLocations = useMemo(() => {
-    const locations = itemInformation
-      .filter((item) => String(item?.effectiveStatus || "").toUpperCase() === "AVAILABLE")
-      .map((item) => item?.branchName || item?.branchId)
-      .filter(hasValue);
-    return [...new Set(locations)];
-  }, [itemInformation]);
-
-  const availabilitySummary = availableLocations.length
-    ? `Beschikbaar in ${availableLocations.length} ${availableLocations.length === 1 ? "locatie" : "locaties"}`
-    : titleData?.available === true
-      ? "Beschikbaar"
-      : titleData?.available === false
-        ? "Niet beschikbaar"
-        : "";
-
-  const subjectRows = useMemo(() => asArray(titleData?.subjects)
-    .map((entry, index) => {
-      const property = firstReadableProperty(entry, ["description", "code"]);
-      return {
-        key: `subject-${index}`,
-        label: "Onderwerp",
-        value: firstReadableValue(entry, ["description", "code"]),
-        field: `subjects[${index}]${property ? `.${property}` : ""}`,
-        endpoint: ENDPOINTS.discovery,
-        note: "Onderwerpen worden afzonderlijk als leesbare waarden getoond; de objectnotatie wordt niet weergegeven.",
-      };
-    })
-    .filter((row) => hasValue(row.value)), [titleData]);
 
   const headlineRows = useMemo(() => [
-    {
-      label: "Beschikbaar in",
-      value: availabilitySummary,
-      field: availableLocations.length ? "[].effectiveStatus | [].branchName" : "available",
-      endpoint: availableLocations.length ? ENDPOINTS.items : ENDPOINTS.discovery,
-      note: availableLocations.length
-        ? "Aantal unieke vestigingen met exemplaarstatus AVAILABLE."
-        : "Geen beschikbare vestigingen in iteminformation; daarom is de ruwe titelstatus gebruikt.",
-    },
-  ].filter((row) => hasValue(row.value)), [availabilitySummary, availableLocations.length]);
+    { label: "Beschikbaar", value: titleData?.available, field: "available", endpoint: ENDPOINTS.discovery },
+    { label: "Reserveren toegestaan", value: titleAvailability[0]?.holdAllowed, field: "[0].holdAllowed", endpoint: ENDPOINTS.availability },
+  ], [titleData, titleAvailability]);
 
   const topSpecificationRows = useMemo(() => [
     { label: "Algemene materiaalaanduiding", value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
-    {
-      label: "Taal publicatie",
-      value: language,
-      field: languageField,
-      endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere talen wordt de eerste waarde gebruikt en zonder array- of objectnotatie getoond.",
-    },
-    {
-      label: "Uitgever",
-      value: publisher,
-      field: "imprint",
-      endpoint: ENDPOINTS.discovery,
-      note: "De conceptuele veldnaam is Uitgever; de getoonde waarde blijft de ruwe OCLC-imprintwaarde.",
-    },
+    { label: "Taal publicatie", value: titleData?.language, field: "language", endpoint: ENDPOINTS.discovery },
+    { label: "Uitgave", value: titleData?.imprint, field: "imprint", endpoint: ENDPOINTS.discovery },
     { label: "Collatie", value: titleData?.annotationCollation, field: "annotationCollation", endpoint: ENDPOINTS.discovery },
-    {
-      label: "Doelgroep",
-      value: targetAudience,
-      field: "[0].categoryYouth | [0].categoryAdult",
-      endpoint: ENDPOINTS.title,
-      note: "Doelgroep wordt bepaald met de jeugd- en volwassenenindicatoren van het eerste /title-record.",
-    },
-    {
-      label: "Leeftijdsindicatie",
-      value: youthAgeRange,
-      field: "ageRange.from | ageRange.to",
-      endpoint: ENDPOINTS.discovery,
-      note: "Leeftijdsgrenzen worden alleen bij doelgroep Jeugd als één leesbare waarde getoond.",
-    },
-    { label: "Doelgroepomschrijving", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
-  ].filter((row) => hasValue(row.value)), [language, languageField, publisher, targetAudience, titleData, youthAgeRange]);
+    { label: "Doelgroep", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
+  ].filter((row) => hasValue(row.value)), [titleData]);
 
   const practicalRows = useMemo(() => [
-    {
-      label: "ISBN Nummer",
-      value: firstReadableValue(isbnSource.value),
-      field: firstValueField(isbnSource.field, isbnSource.value),
-      endpoint: isbnSource.endpoint,
-      note: "Bij meerdere ISBN-nummers wordt de eerste waarde gebruikt.",
-    },
-    {
-      label: "PPN Nummer",
-      value: firstReadableValue(ppnSource.value),
-      field: firstValueField(ppnSource.field, ppnSource.value),
-      endpoint: ppnSource.endpoint,
-      note: "Bij meerdere PPN-nummers wordt de eerste waarde gebruikt.",
-    },
-    {
-      label: "Boekcode / plaatsingscode",
-      value: firstCallNumber,
-      field: firstCallNumberIndex >= 0 ? `[${firstCallNumberIndex}].callNumber` : "[].callNumber",
-      endpoint: ENDPOINTS.items,
-      note: "Bij meerdere exemplaren wordt de eerste aanwezige plaatsingscode gebruikt.",
-    },
-    {
-      label: "Taal publicatie",
-      value: language,
-      field: languageField,
-      endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere talen wordt de eerste waarde gebruikt en zonder array- of objectnotatie getoond.",
-    },
+    { label: "ISBN Nummer", value: isbnSource.value, field: isbnSource.field, endpoint: isbnSource.endpoint },
+    { label: "PPN Nummer", value: ppnSource.value, field: ppnSource.field, endpoint: ppnSource.endpoint },
+    { label: "Boekcode / plaatsingscode", value: itemInformation.map((item) => item?.callNumber).filter(hasValue), field: "[].callNumber", endpoint: ENDPOINTS.items },
+    { label: "Taal publicatie", value: titleData?.language, field: "language", endpoint: ENDPOINTS.discovery },
     { label: "Hoofdtitel", value: titleSource.value, field: titleSource.field, endpoint: titleSource.endpoint },
     { label: "Algemene materiaalaanduiding", value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
     { label: "Eerste verantwoordelijke", value: authorSource.value, field: authorSource.field, endpoint: authorSource.endpoint },
-    {
-      label: "Auteur Achternaam",
-      value: authorName.lastName,
-      field: authorSource.field,
-      endpoint: authorSource.endpoint,
-      note: "Achternaam uit de beschrijving van de eerste verantwoordelijke.",
-    },
-    {
-      label: "Auteur Voornaam",
-      value: authorName.firstName,
-      field: authorSource.field,
-      endpoint: authorSource.endpoint,
-      note: "Voornaam uit de beschrijving van de eerste verantwoordelijke.",
-    },
-    { label: "Titel - Ondertitel", value: subtitleSource.value, field: subtitleSource.field, endpoint: subtitleSource.endpoint },
-    {
-      label: "Uitgever",
-      value: publisher,
-      field: "imprint",
-      endpoint: ENDPOINTS.discovery,
-      note: "De conceptuele veldnaam is Uitgever; de getoonde waarde blijft de ruwe OCLC-imprintwaarde.",
-    },
+    { label: "Titel - deeltitel", value: [subtitleSource.value, volumeSource.value, volumeNameSource.value].filter(hasValue), field: "subtitle | volume | volumeTitle", endpoint: ENDPOINTS.discovery },
+    { label: "Impressum", value: titleData?.imprint, field: "imprint", endpoint: ENDPOINTS.discovery },
     { label: "Jaar van uitgave", value: publicationYearSource.value, field: publicationYearSource.field, endpoint: publicationYearSource.endpoint },
     { label: "Collatie", value: titleData?.annotationCollation, field: "annotationCollation", endpoint: ENDPOINTS.discovery },
     { label: "Annotatie", value: titleData?.annotationNoMarc, field: "annotationNoMarc", endpoint: ENDPOINTS.discovery },
@@ -416,80 +243,31 @@ export default function OclcDetailPage() {
     { label: "Auteur Functie", value: titleData?.author?.addition, field: "author.addition", endpoint: ENDPOINTS.discovery },
     {
       label: "Auteur - secundaire - Functie",
-      value: firstCollaborator?.addition,
-      field: "collaborators[0].addition",
+      value: asArray(titleData?.collaborators).map((entry) => entry?.addition).filter(hasValue),
+      field: "collaborators[].addition",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere secundaire auteurs wordt de eerste auteur gebruikt.",
     },
     {
-      label: "Auteur - secundaire - Achternaam",
-      value: secondaryAuthorName.lastName,
-      field: "collaborators[0].description",
+      label: "Auteur - secundaire",
+      value: asArray(titleData?.collaborators).map((entry) => entry?.description).filter(hasValue),
+      field: "collaborators[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Achternaam uit de beschrijving van de eerste secundaire auteur.",
     },
-    {
-      label: "Auteur - secundaire - Voornaam",
-      value: secondaryAuthorName.firstName,
-      field: "collaborators[0].description",
-      endpoint: ENDPOINTS.discovery,
-      note: "Voornaam uit de beschrijving van de eerste secundaire auteur.",
-    },
-    {
-      label: "Reeks",
-      value: series,
-      field: firstValueField("titleSeries", titleData?.titleSeries, seriesProperty),
-      endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere reeksen wordt de eerste leesbare waarde gebruikt.",
-    },
-    {
-      label: "Genre",
-      value: genre,
-      field: firstValueField("genre", titleData?.genre, genreProperty),
-      endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere genres wordt de eerste leesbare waarde gebruikt.",
-    },
-    {
-      label: "Trefwoord - hoofdgeleding",
-      value: subject,
-      field: firstValueField("subjects", titleData?.subjects, subjectProperty),
-      endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere onderwerpen wordt in de praktische specificaties de eerste leesbare waarde gebruikt; het Onderwerpenblok toont ze allemaal.",
-    },
+    { label: "Doelgroep", value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
+    { label: "Reeks", value: titleData?.titleSeries, field: "titleSeries", endpoint: ENDPOINTS.discovery },
+    { label: "Genre", value: titleData?.genre, field: "genre", endpoint: ENDPOINTS.discovery },
+    { label: "Trefwoord - hoofdgeleding", value: titleData?.subjects, field: "subjects", endpoint: ENDPOINTS.discovery },
     { label: "Samenvatting - Tekst", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
-  ].filter((row) => hasValue(row.value)), [authorName, authorSource, firstCallNumber, firstCallNumberIndex, firstCollaborator, genre, genreProperty, isbnSource, language, languageField, ppnSource, publicationYearSource, publisher, secondaryAuthorName, series, seriesProperty, subject, subjectProperty, subtitleSource, summarySource, titleData, titleSource]);
-
-  const titleAvailabilityRows = useMemo(() => titleAvailability.flatMap((record, recordIndex) => {
-    const statuses = asArray(record?.availability);
-    const statusRows = statuses.length ? statuses : [{}];
-
-    return statusRows.map((status, statusIndex) => ({
-      key: `title-availability-${recordIndex}-${statusIndex}`,
-      bibliographicRecordId: record?.bibliographicRecordId,
-      ppn: record?.ppn,
-      catGroup: status?.catGroup,
-      status: status?.status,
-      statusCode: status?.statusCode,
-      holdAllowed: record?.holdAllowed,
-      holdQueuePosition: record?.holdQueuePosition,
-      numberOfItems: record?.numberOfItems,
-      material: record?.material,
-    }));
-  }), [titleAvailability]);
+  ].filter((row) => hasValue(row.value)), [itemInformation, summarySource, titleData, titleSource, authorSource, subtitleSource, volumeSource, volumeNameSource, isbnSource, ppnSource, publicationYearSource]);
 
   const itemRows = useMemo(() => itemInformation.map((item, index) => ({
     key: `${item?.id ?? item?.barcode ?? "item"}-${index}`,
-    branchName: item?.branchName,
-    branchId: item?.branchId,
-    location: item?.location,
-    subLocation: item?.subLocation,
-    shelfDescription: item?.shelfDescription,
-    callNumber: item?.callNumber,
-    effectiveStatus: item?.effectiveStatus,
-    effectiveStatusCode: item?.effectiveStatusCode,
-    returnDate: item?.returnDate,
-    barcode: item?.barcode,
-  })), [itemInformation]);
+    location: item?.branchName,
+    publisher: titleData?.imprint,
+    place: item?.callNumber,
+    whereToFind: item?.shelfDescription,
+    availability: itemAvailability(item?.effectiveStatus, item?.returnDate),
+  })), [itemInformation, titleData]);
 
   const recommendationItems = useMemo(
     () => asArray(data?.recommendations?.items).slice(0, 5),
@@ -527,64 +305,36 @@ export default function OclcDetailPage() {
         field: [titleSource.field, subtitleSource.field, volumeSource.field, volumeNameSource.field].filter(Boolean).join(" | "),
         value: combinedTitle,
         endpoint: [titleSource.endpoint, subtitleSource.endpoint, volumeSource.endpoint, volumeNameSource.endpoint].filter(Boolean).filter((value, index, values) => values.indexOf(value) === index).join(" | "),
-        note: "Samengestelde weergavetitel uit hoofdtitel, ondertitel en eventuele deel-/volumewaarden.",
       },
       { section: "Auteur", label: "Eerste verantwoordelijke", field: authorSource.field, value: author, endpoint: authorSource.endpoint },
       { section: "Samenvatting", label: "Samenvatting", field: summarySource.field, value: summary, endpoint: summarySource.endpoint },
       { section: "Cover", label: "Cover", field: coverSource.field, value: cover, endpoint: coverSource.endpoint },
       ...headlineRows.map((row) => ({ section: "Beschikbaarheid", ...row })),
       ...topSpecificationRows.map((row) => ({ section: "Specificaties", ...row })),
-      ...subjectRows.map((row) => ({ section: "Onderwerpen", ...row })),
       ...recommendationFieldRows,
       ...practicalRows.map((row) => ({ section: "Tab Praktische Informatie Specificatie", ...row })),
     ];
 
-    titleAvailabilityRows.forEach((row, index) => {
-      const prefix = `[${index}]`;
-      [
-        ["Bibliografisch record-ID", "bibliographicRecordId", row.bibliographicRecordId],
-        ["PPN", "ppn", row.ppn],
-        ["Catalogusgroep", "availability[].catGroup", row.catGroup],
-        ["Status", "availability[].status", row.status],
-        ["Statuscode", "availability[].statusCode", row.statusCode],
-        ["Reserveren toegestaan", "holdAllowed", row.holdAllowed],
-        ["Wachtrijpositie", "holdQueuePosition", row.holdQueuePosition],
-        ["Aantal exemplaren", "numberOfItems", row.numberOfItems],
-        ["Materiaal", "material", row.material],
-      ].forEach(([label, field, value]) => rows.push({
-        section: "Tab Praktische Informatie Beschikbaarheid Titelniveau",
-        label,
-        field: `${prefix}.${field}`,
-        value,
-        endpoint: ENDPOINTS.availability,
-      }));
-    });
-
     itemRows.forEach((row, index) => {
       [
-        ["Vestiging", "branchName", row.branchName],
-        ["Vestigings-ID", "branchId", row.branchId],
-        ["Locatie", "location", row.location],
-        ["Deellocatie", "subLocation", row.subLocation],
-        ["Vindplaats", "shelfDescription", row.shelfDescription],
-        ["Boekcode / plaatsingscode", "callNumber", row.callNumber],
-        ["Status", "effectiveStatus", row.effectiveStatus],
-        ["Statuscode", "effectiveStatusCode", row.effectiveStatusCode],
-        ["Inleverdatum", "returnDate", row.returnDate],
-        ["Barcode", "barcode", row.barcode],
-      ].forEach(([label, field, value]) => rows.push({
+        ["Locatie", `[${index}].branchName`, row.location, ENDPOINTS.items],
+        ["Uitgave", "imprint", row.publisher, ENDPOINTS.discovery],
+        ["Plaats", `[${index}].callNumber`, row.place, ENDPOINTS.items],
+        ["Waar te vinden", `[${index}].shelfDescription`, row.whereToFind, ENDPOINTS.items],
+        ["Beschikbaarheid", `[${index}].effectiveStatus | [${index}].returnDate`, row.availability, ENDPOINTS.items],
+      ].forEach(([label, field, value, endpoint]) => rows.push({
         section: "Tab Praktische Informatie Beschikbaarheid Exemplarenniveau",
         label,
-        field: `[${index}].${field}`,
+        field,
         value,
-        endpoint: ENDPOINTS.items,
+        endpoint,
       }));
     });
 
     return rows
       .filter((row) => hasValue(row.value))
       .map((row, index) => ({ ...row, order: index + 1 }));
-  }, [author, authorSource, combinedTitle, cover, coverSource, headlineRows, itemRows, practicalRows, recommendationItems, subjectRows, subtitleSource, summary, summarySource, titleAvailabilityRows, titleSource, topSpecificationRows, volumeNameSource, volumeSource]);
+  }, [author, authorSource, combinedTitle, cover, coverSource, headlineRows, itemRows, practicalRows, recommendationItems, subtitleSource, summary, summarySource, titleSource, topSpecificationRows, volumeNameSource, volumeSource]);
 
   if (error) return <div className="container">Fout: {error}</div>;
   if (!data) return <div className="container">Loading...</div>;
@@ -615,24 +365,16 @@ export default function OclcDetailPage() {
             {hasValue(author) ? <div className="author-line"><RawValue value={author} /></div> : null}
             {hasValue(summary) ? <div className="summary-text"><RawValue value={summary} /></div> : null}
 
-            {hasValue(availabilitySummary) ? (
-              <div style={{ alignItems: "center", display: "flex", gap: "8px", margin: "22px 0" }}>
-                <span
-                  aria-hidden="true"
-                  style={{
-                    background: availableLocations.length || titleData?.available === true ? "#69ad79" : "#c44",
-                    borderRadius: "50%",
-                    display: "inline-block",
-                    flex: "0 0 13px",
-                    height: "13px",
-                    width: "13px",
-                  }}
-                />
-                <span>{availabilitySummary}</span>
-              </div>
-            ) : null}
+            <div className="raw-headline-grid">
+              {headlineRows.map((row) => (
+                <div className="raw-headline-item" key={row.label}>
+                  <strong>{row.label}</strong>
+                  <RawValue value={row.value} />
+                </div>
+              ))}
+            </div>
 
-            <div className="card-grid top-cards">
+            <div className="card-grid top-cards top-cards-single">
               <section className="info-card">
                 <h2>Specificaties</h2>
                 <dl className="raw-definition-list">
@@ -643,19 +385,6 @@ export default function OclcDetailPage() {
                     </div>
                   ))}
                 </dl>
-              </section>
-
-              <section className="info-card">
-                <h2>Onderwerpen</h2>
-                {subjectRows.length ? (
-                  <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-                    {subjectRows.map((row) => (
-                      <li key={row.key} style={{ marginBottom: "10px", textDecoration: "underline" }}>
-                        <RawValue value={row.value} />
-                      </li>
-                    ))}
-                  </ul>
-                ) : <span>Geen onderwerpen beschikbaar</span>}
               </section>
             </div>
           </div>
@@ -725,50 +454,21 @@ export default function OclcDetailPage() {
         {tab === "availability" ? (
           <div className="availability-sections">
             <section className="table-card">
-              <h3>Beschikbaarheid op titelniveau</h3>
               <div className="table-wrap">
                 <table className="detail-table raw-data-table">
                   <thead>
                     <tr>
-                      <th>Bibliografisch record-ID</th><th>PPN</th><th>Catalogusgroep</th><th>Status</th>
-                      <th>Statuscode</th><th>Reserveren toegestaan</th><th>Wachtrijpositie</th><th>Aantal exemplaren</th><th>Materiaal</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {titleAvailabilityRows.length ? titleAvailabilityRows.map((row) => (
-                      <tr key={row.key}>
-                        <td><RawValue value={row.bibliographicRecordId} /></td><td><RawValue value={row.ppn} /></td>
-                        <td><RawValue value={row.catGroup} /></td><td><RawValue value={row.status} /></td>
-                        <td><RawValue value={row.statusCode} /></td><td><RawValue value={row.holdAllowed} /></td>
-                        <td><RawValue value={row.holdQueuePosition} /></td><td><RawValue value={row.numberOfItems} /></td>
-                        <td><RawValue value={row.material} /></td>
-                      </tr>
-                    )) : <tr><td colSpan="9">Geen titleavailability-response beschikbaar</td></tr>}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            <section className="table-card">
-              <h3>Exemplaren</h3>
-              <div className="table-wrap">
-                <table className="detail-table raw-data-table">
-                  <thead>
-                    <tr>
-                      <th>Vestiging</th><th>Vestigings-ID</th><th>Locatie</th><th>Deellocatie</th><th>Vindplaats</th>
-                      <th>Boekcode / plaatsingscode</th><th>Status</th><th>Statuscode</th><th>Inleverdatum</th><th>Barcode</th>
+                      <th>Locatie</th><th>Uitgave</th><th>Plaats</th><th>Waar te vinden</th><th>Beschikbaarheid</th>
                     </tr>
                   </thead>
                   <tbody>
                     {itemRows.length ? itemRows.map((row) => (
                       <tr key={row.key}>
-                        <td><RawValue value={row.branchName} /></td><td><RawValue value={row.branchId} /></td>
-                        <td><RawValue value={row.location} /></td><td><RawValue value={row.subLocation} /></td>
-                        <td><RawValue value={row.shelfDescription} /></td><td><RawValue value={row.callNumber} /></td>
-                        <td><RawValue value={row.effectiveStatus} /></td><td><RawValue value={row.effectiveStatusCode} /></td>
-                        <td><RawValue value={row.returnDate} /></td><td><RawValue value={row.barcode} /></td>
+                        <td><RawValue value={row.location} /></td><td><RawValue value={row.publisher} /></td>
+                        <td><RawValue value={row.place} /></td><td><RawValue value={row.whereToFind} /></td>
+                        <td><RawValue value={row.availability} /></td>
                       </tr>
-                    )) : <tr><td colSpan="10">Geen iteminformation-response beschikbaar</td></tr>}
+                    )) : <tr><td colSpan="5">Geen iteminformation-response beschikbaar</td></tr>}
                   </tbody>
                 </table>
               </div>
@@ -782,23 +482,12 @@ export default function OclcDetailPage() {
               <strong>{displayedFieldRows.length} getoonde velden</strong>
               <span>In dezelfde conceptuele volgorde als op de detailpagina.</span>
             </div>
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-gebruikte-velden.csv`,
-                toDisplayedFieldsCsv(displayedFieldRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Download gebruikte velden CSV
-            </button>
             <div className="table-wrap">
               <table className="detail-table displayed-fields-table">
                 <thead>
                   <tr>
                     <th>Volgorde</th><th>Onderdeel</th><th>Getoonde veldnaam</th>
-                    <th>OCLC-veldnaam</th><th>Waarde</th><th>Endpoint path</th><th>Opmerking</th>
+                    <th>OCLC-veldnaam</th><th>Waarde</th><th>Endpoint path</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -810,7 +499,6 @@ export default function OclcDetailPage() {
                       <td><code>{row.field}</code></td>
                       <td><span className="raw-table-value">{rawText(row.value)}</span></td>
                       <td><code>{row.endpoint}</code></td>
-                      <td>{row.note || ""}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -825,17 +513,6 @@ export default function OclcDetailPage() {
               <strong>{detailRows.length} ruwe velden</strong>
               <span>Alle velden uit de vijf OCLC-responses, inclusief lege en technische waarden.</span>
             </div>
-            <button
-              type="button"
-              className="tab-button"
-              onClick={() => downloadFile(
-                `oclc-detail-${id}-alles-oclc.csv`,
-                toOclcDetailCsv(detailRows),
-                "text/csv;charset=utf-8;"
-              )}
-            >
-              Download Alles OCLC CSV
-            </button>
             <div className="table-wrap">
               <table className="detail-table all-oclc-table">
                 <thead>
