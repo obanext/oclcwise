@@ -26,7 +26,7 @@ const DEFAULT_PERSPECTIVE_ID = "3682";
 const DEFAULT_SCOPE = "title";
 const DEFAULT_SORT = "2910";
 const DEFAULT_LIMIT = 20;
-const DEFAULT_VISIBLE_FACET_VALUES = 15;
+const DEFAULT_VISIBLE_FACET_VALUES = 100;
 
 function rawSortLabel(sort = {}) {
   return text(sort.label);
