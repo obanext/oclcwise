@@ -660,6 +660,19 @@ button.oba-chip {
   line-height: 1;
 }
 
+button.filter-card-title {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.filter-card-open > .filter-card-title::after {
+  transform: rotate(180deg);
+}
+
 .filter-card-open .filter-card-title {
   background: #fff;
 }
@@ -725,6 +738,49 @@ button.oba-chip {
   padding: 8px 13px 12px;
   color: #666;
   font-size: 12px;
+}
+
+.filter-subsection-title {
+  margin: 16px 4px 3px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.search-perspective-selector {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+
+.search-perspective-selector legend {
+  margin-bottom: 9px;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.search-perspective-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+}
+
+.search-perspective-option {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.search-perspective-option input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #e30613;
+}
+
+.search-data-section {
+  margin-top: 34px;
 }
 
 .oba-results-panel {

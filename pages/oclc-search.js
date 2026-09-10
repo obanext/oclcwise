@@ -2,10 +2,14 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
-  buildOclcFacetRows,
-  buildOclcResultRows,
-  toOclcFacetCsv,
-  toOclcResultCsv,
+  OCLC_SEARCH_FACET_DEFINITIONS,
+  buildOclcAllFieldRows,
+  buildOclcFilterRows,
+  buildOclcUsedFieldRows,
+  findOclcSearchFacetDefinition,
+  toOclcAllFieldsCsv,
+  toOclcFilterCsv,
+  toOclcUsedFieldsCsv,
 } from "../utils/oclcSearchMappingRows";
 
 const pretty = (value) => JSON.stringify(value, null, 2);
@@ -25,10 +29,13 @@ const DEFAULT_LIMIT = 20;
 const DEFAULT_VISIBLE_FACET_VALUES = 15;
 
 function rawSortLabel(sort = {}) {
-  return text(sort.label || sort.labelText || sort.labelKey || sort.id);
+  return text(sort.label);
 }
 
 function rawFacetTitle(facet = {}) {
+  const definition = findOclcSearchFacetDefinition(facet);
+  if (definition) return definition.siteLabel;
+
   const name = text(facet.name);
   const label = text(facet.label || facet.labelKey);
 
@@ -37,15 +44,7 @@ function rawFacetTitle(facet = {}) {
 }
 
 function rawFacetValueLabel(option = {}) {
-  return text(option.label || option.term || option.value || option.id);
-}
-
-function rawFacetValueMeta(option = {}) {
-  const key = text(option.key);
-  const term = text(option.term);
-
-  if (key && term) return `${key}:${term}`;
-  return text(option.facetFilter);
+  return text(option?.raw?.label);
 }
 
 function rawFacetFilterValue(facet = {}, option = {}) {
@@ -154,6 +153,8 @@ export default function OclcSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [expandedFacets, setExpandedFacets] = useState({});
+  const [openFilterCards, setOpenFilterCards] = useState({});
+  const [dataTab, setDataTab] = useState("used-fields");
 
   const [perspectiveId, setPerspectiveId] = useState(DEFAULT_PERSPECTIVE_ID);
   const [searchScope, setSearchScope] = useState(DEFAULT_SCOPE);
@@ -407,18 +408,37 @@ export default function OclcSearchPage() {
     }));
   }
 
+  function toggleFilterCard(filterName) {
+    setOpenFilterCards((current) => ({
+      ...current,
+      [filterName]: !current[filterName],
+    }));
+  }
+
   const perspectives = asArray(data?.perspectives);
   const selectedPerspective =
     perspectives.find((item) => String(item.id) === String(perspectiveId)) || data?.selectedPerspective || perspectives[0] || null;
   const searchScopes = asArray(selectedPerspective?.searchScopes || data?.searchScopes);
   const sortkeys = asArray(data?.sortkeys?.length ? data.sortkeys : selectedPerspective?.sortings);
   const facets = asArray(data?.facets);
+  const configuredFacets = useMemo(() => OCLC_SEARCH_FACET_DEFINITIONS
+    .map((definition) => ({
+      definition,
+      facet: facets.find((facet) => findOclcSearchFacetDefinition(facet)?.name === definition.name),
+    }))
+    .filter(({ facet }) => Boolean(facet)), [facets]);
+  const implementedFacets = configuredFacets.filter(({ definition }) => definition.obaIst === "WEL");
+  const additionalFacets = configuredFacets.filter(({ definition }) => definition.obaIst === "NIET");
+  const labeledPerspectives = perspectives.filter((perspective) => text(perspective?.label));
+  const labeledSearchScopes = searchScopes.filter((scope) => text(scope?.label));
+  const labeledSortkeys = sortkeys.filter((sorting) => text(sorting?.label));
   const items = asArray(data?.items);
   const calls = asArray(data?.debug?.calls);
   const selectedFilters = selectedSet(facetFilters);
 
-  const resultRows = useMemo(() => buildOclcResultRows(data), [data]);
-  const facetRows = useMemo(() => buildOclcFacetRows(data), [data]);
+  const usedFieldRows = useMemo(() => buildOclcUsedFieldRows(data), [data]);
+  const filterRows = useMemo(() => buildOclcFilterRows(data), [data]);
+  const allFieldRows = useMemo(() => buildOclcAllFieldRows(data), [data]);
   const allOclc = useMemo(
     () => ({
       perspectiveResponse: data?.raw?.perspectiveResponse || null,
@@ -431,6 +451,69 @@ export default function OclcSearchPage() {
   const currentPage = Number(data?.pagination?.page || page || 1);
   const hasQuery = Boolean(text(query));
   const hasNextPage = Number(data?.pagination?.offset || 0) + Number(data?.pagination?.limit || DEFAULT_LIMIT) < Number(data?.pagination?.total || 0);
+
+  function renderFacetCard({ facet, definition }) {
+    const key = text(facet.name || facet.labelKey || facet.id || definition.name);
+    const filterCardKey = `facet-${definition.name}`;
+    const isOpen = Boolean(openFilterCards[filterCardKey]);
+    const expanded = Boolean(expandedFacets[key]);
+    const labeledValues = asArray(facet.values || facet.filterList)
+      .filter((option) => rawFacetValueLabel(option));
+    const visibleValues = expanded
+      ? labeledValues
+      : labeledValues.slice(0, DEFAULT_VISIBLE_FACET_VALUES);
+
+    return (
+      <div className={isOpen ? "filter-card filter-card-open" : "filter-card"} key={key}>
+        <button
+          type="button"
+          className="filter-card-title"
+          aria-expanded={isOpen}
+          onClick={() => toggleFilterCard(filterCardKey)}
+        >
+          {rawFacetTitle(facet)}
+        </button>
+
+        {isOpen && visibleValues.length ? (
+          <div className="filter-options">
+            {visibleValues.map((option) => {
+              const valueLabel = rawFacetValueLabel(option);
+              const filterValue = rawFacetFilterValue(facet, option);
+              const isAvailableNow = isAvailableNowFilter(facet, option, filterValue);
+              const checked = isAvailableNow ? filterAvailableTitles : selectedFilters.has(filterValue);
+
+              return (
+                <button
+                  key={`${key}-${filterValue}-${valueLabel}`}
+                  type="button"
+                  className={checked ? "filter-checkbox active" : "filter-checkbox"}
+                  onClick={() => toggleFacet(filterValue, { isAvailableNow })}
+                >
+                  <span className="checkbox-dot" />
+                  <span className="filter-label">{valueLabel}</span>
+                  <span className="filter-count">{Number(option.count || 0).toLocaleString("nl-NL")}</span>
+                </button>
+              );
+            })}
+
+            {labeledValues.length > DEFAULT_VISIBLE_FACET_VALUES ? (
+              <button
+                type="button"
+                className="filter-checkbox"
+                onClick={() => toggleFacetExpansion(key)}
+              >
+                <span />
+                <span className="filter-label">{expanded ? "Minder" : `Meer (${labeledValues.length})`}</span>
+                <span />
+              </button>
+            ) : null}
+          </div>
+        ) : isOpen ? (
+          <div className="filter-empty">Geen waarden met een OCLC-label</div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -448,6 +531,26 @@ export default function OclcSearchPage() {
         </nav>
 
         <section className="oba-search-top">
+          {labeledPerspectives.length ? (
+            <fieldset className="search-perspective-selector">
+              <legend>Zoek in</legend>
+              <div className="search-perspective-options">
+                {labeledPerspectives.map((perspective) => (
+                  <label className="search-perspective-option" key={perspective.id}>
+                    <input
+                      type="radio"
+                      name="search-perspective"
+                      value={perspective.id}
+                      checked={String(perspective.id) === String(perspectiveId)}
+                      onChange={() => changePerspective(String(perspective.id))}
+                    />
+                    <span>{perspective.label}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : null}
+
           <form className="oba-search-form" onSubmit={submit}>
             <div className="search-input-wrap">
               <input
@@ -523,35 +626,24 @@ export default function OclcSearchPage() {
 
         <section className="oba-search-layout">
           <aside className="oba-filter-panel">
-            <div className="filter-card filter-card-open">
-              <div className="filter-card-title">Zoeken in</div>
+            {implementedFacets.map(renderFacetCard)}
 
-              <div className="filter-options">
-                {perspectives.length ? (
-                  perspectives.map((perspective) => (
-                    <button
-                      key={perspective.id}
-                      type="button"
-                      className={String(perspective.id) === String(perspectiveId) ? "filter-radio active" : "filter-radio"}
-                      onClick={() => changePerspective(String(perspective.id))}
-                    >
-                      <span className="radio-dot" />
-                      <span>{text(perspective.label || perspective.labelText || perspective.labelKey || perspective.id)}</span>
-                    </button>
-                  ))
-                ) : (
-                  <div className="filter-empty">Catalogi laden...</div>
-                )}
-              </div>
-            </div>
+            <div className="filter-subsection-title">Niet geïmplementeerde filters</div>
 
-            {searchScopes.length ? (
-              <div className="filter-card filter-card-open">
-                <div className="filter-card-title">Zoekveld</div>
+            {labeledSearchScopes.length ? (
+              <div className={openFilterCards.searchScope ? "filter-card filter-card-open" : "filter-card"}>
+                <button
+                  type="button"
+                  className="filter-card-title"
+                  aria-expanded={Boolean(openFilterCards.searchScope)}
+                  onClick={() => toggleFilterCard("searchScope")}
+                >
+                  Zoeken op
+                </button>
 
-                <div className="filter-options">
-                  {searchScopes.map((scope) => {
-                    const scopeValue = text(scope.value || scope.labelText || scope.label || DEFAULT_SCOPE);
+                {openFilterCards.searchScope ? <div className="filter-options">
+                  {labeledSearchScopes.map((scope) => {
+                    const scopeValue = text(scope.value || scope.id);
 
                     return (
                       <button
@@ -561,68 +653,15 @@ export default function OclcSearchPage() {
                         onClick={() => changeScope(scopeValue)}
                       >
                         <span className="radio-dot" />
-                        <span>{text(scope.label || scope.labelText || scope.value || scope.labelKey)}</span>
+                        <span>{scope.label}</span>
                       </button>
                     );
                   })}
-                </div>
+                </div> : null}
               </div>
             ) : null}
 
-            {facets.map((facet) => {
-              const key = text(facet.name || facet.labelKey || facet.label || facet.id);
-              const expanded = Boolean(expandedFacets[key]);
-              const values = asArray(facet.values || facet.filterList);
-              const visibleValues = expanded ? values : values.slice(0, DEFAULT_VISIBLE_FACET_VALUES);
-
-              return (
-                <div className="filter-card filter-card-open" key={key}>
-                  <div className="filter-card-title">{rawFacetTitle(facet)}</div>
-
-                  {visibleValues.length ? (
-                    <div className="filter-options">
-                      {visibleValues.map((option) => {
-                        const valueLabel = rawFacetValueLabel(option);
-                        const valueMeta = rawFacetValueMeta(option);
-                        const filterValue = rawFacetFilterValue(facet, option);
-                        const isAvailableNow = isAvailableNowFilter(facet, option, filterValue);
-                        const checked = isAvailableNow ? filterAvailableTitles : selectedFilters.has(filterValue);
-
-                        return (
-                          <button
-                            key={`${key}-${filterValue}-${valueLabel}`}
-                            type="button"
-                            className={checked ? "filter-checkbox active" : "filter-checkbox"}
-                            onClick={() => toggleFacet(filterValue, { isAvailableNow })}
-                          >
-                            <span className="checkbox-dot" />
-                            <span className="filter-label">
-                              {valueLabel}
-                              {valueMeta && valueMeta !== valueLabel ? <small className="oclc-raw-filter-value">{valueMeta}</small> : null}
-                            </span>
-                            <span className="filter-count">{Number(option.count || 0).toLocaleString("nl-NL")}</span>
-                          </button>
-                        );
-                      })}
-
-                      {values.length > DEFAULT_VISIBLE_FACET_VALUES ? (
-                        <button
-                          type="button"
-                          className="filter-checkbox"
-                          onClick={() => toggleFacetExpansion(key)}
-                        >
-                          <span />
-                          <span className="filter-label">{expanded ? "Minder" : `Meer (${values.length})`}</span>
-                          <span />
-                        </button>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div className="filter-empty">Geen waarden geladen</div>
-                  )}
-                </div>
-              );
-            })}
+            {additionalFacets.map(renderFacetCard)}
           </aside>
 
           <main className="oba-results-panel">
@@ -637,15 +676,18 @@ export default function OclcSearchPage() {
 
                 <label className="oba-sort">
                   <span>Sorteren op:</span>
-                  <select value={sort} onChange={(event) => changeSort(event.target.value)}>
-                    {sortkeys.length ? (
-                      sortkeys.map((sorting) => (
+                  <select
+                    value={labeledSortkeys.some((sorting) => String(sorting.id) === String(sort)) ? sort : ""}
+                    onChange={(event) => changeSort(event.target.value)}
+                  >
+                    {labeledSortkeys.length ? (
+                      labeledSortkeys.map((sorting) => (
                         <option key={sorting.id} value={sorting.id}>
                           {rawSortLabel(sorting)}
                         </option>
                       ))
                     ) : (
-                      <option value={DEFAULT_SORT}>{DEFAULT_SORT}</option>
+                      <option value="" disabled>Geen OCLC-labels beschikbaar</option>
                     )}
                   </select>
                 </label>
@@ -739,6 +781,154 @@ export default function OclcSearchPage() {
           </main>
         </section>
 
+        <section className="search-data-section">
+          <div className="section-header">
+            <h2>OCLC-gegevens</h2>
+            <div className="tab-buttons">
+              <button
+                type="button"
+                className={dataTab === "used-fields" ? "tab-button active" : "tab-button"}
+                onClick={() => setDataTab("used-fields")}
+              >
+                gebruikte velden
+              </button>
+              <button
+                type="button"
+                className={dataTab === "filters" ? "tab-button active" : "tab-button"}
+                onClick={() => setDataTab("filters")}
+              >
+                filters oclc
+              </button>
+              <button
+                type="button"
+                className={dataTab === "all-fields" ? "tab-button active" : "tab-button"}
+                onClick={() => setDataTab("all-fields")}
+              >
+                alles oclc
+              </button>
+            </div>
+          </div>
+
+          {dataTab === "used-fields" ? (
+            <section className="table-card displayed-fields-table-card">
+              <div className="all-oclc-summary">
+                <strong>{usedFieldRows.length} gebruikte veldwaarden</strong>
+                <span>De velden die daadwerkelijk in de zichtbare zoekresultaten worden gebruikt.</span>
+              </div>
+              <button
+                type="button"
+                className="tab-button"
+                onClick={() => downloadCsv(
+                  `oclc-search-${query || "zoekopdracht"}-gebruikte-velden.csv`,
+                  toOclcUsedFieldsCsv(usedFieldRows)
+                )}
+              >
+                Gebruikte velden OCLC CSV
+              </button>
+              <div className="table-wrap">
+                <table className="detail-table displayed-fields-table">
+                  <thead>
+                    <tr>
+                      <th>Volgorde</th><th>Resultaat</th><th>Detail-ID</th><th>Onderdeel</th>
+                      <th>OCLC-veldnaam</th><th>Veldnaam site</th><th>OBA.nl IST</th>
+                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Waarde</th><th>Opmerking</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {usedFieldRows.length ? usedFieldRows.map((row) => (
+                      <tr key={`${row.order}-${row.resultIndex}-${row.oclcField}`}>
+                        <td>{row.order}</td><td>{row.resultIndex}</td><td>{row.detailId}</td><td>{row.section}</td>
+                        <td><code>{row.oclcField}</code></td><td>{row.siteField}</td><td>{row.obaIst}</td>
+                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td>
+                        <td><span className="raw-table-value">{row.value}</span></td><td>{row.note}</td>
+                      </tr>
+                    )) : <tr><td colSpan="11">Geen gebruikte zoekvelden beschikbaar</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ) : null}
+
+          {dataTab === "filters" ? (
+            <section className="table-card all-oclc-table-card">
+              <div className="all-oclc-summary">
+                <strong>{filterRows.length} instellingen en filterwaarden</strong>
+                <span>Inclusief de vertaling, technische filterwaarde en bronroute.</span>
+              </div>
+              <button
+                type="button"
+                className="tab-button"
+                onClick={() => downloadCsv(
+                  `oclc-search-${query || "zoekopdracht"}-filters.csv`,
+                  toOclcFilterCsv(filterRows)
+                )}
+              >
+                Filters OCLC CSV
+              </button>
+              <div className="table-wrap">
+                <table className="detail-table all-oclc-table">
+                  <thead>
+                    <tr>
+                      <th>Volgorde</th><th>Groep</th><th>OCLC-veldnaam</th><th>OCLC-labelKey</th>
+                      <th>OCLC-label</th><th>Veldnaam site</th><th>OBA.nl IST</th>
+                      <th>OCLC-waardelabel</th><th>Technische filterwaarde</th>
+                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Opmerking</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filterRows.length ? filterRows.map((row) => (
+                      <tr key={`${row.order}-${row.group}-${row.oclcField}-${row.technicalValue}`}>
+                        <td>{row.order}</td><td>{row.group}</td><td><code>{row.oclcField}</code></td>
+                        <td><code>{row.oclcLabelKey}</code></td><td>{row.oclcLabel}</td><td>{row.siteField}</td>
+                        <td>{row.obaIst}</td><td>{row.valueLabel}</td><td><code>{row.technicalValue}</code></td>
+                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td><td>{row.note}</td>
+                      </tr>
+                    )) : <tr><td colSpan="12">Geen filterinformatie beschikbaar</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ) : null}
+
+          {dataTab === "all-fields" ? (
+            <section className="table-card all-oclc-table-card">
+              <div className="all-oclc-summary">
+                <strong>{allFieldRows.length} ruwe OCLC-velden</strong>
+                <span>Alle velden uit de perspective- en zoekresponse, inclusief lege en technische waarden.</span>
+              </div>
+              <button
+                type="button"
+                className="tab-button"
+                onClick={() => downloadCsv(
+                  `oclc-search-${query || "zoekopdracht"}-alle-velden.csv`,
+                  toOclcAllFieldsCsv(allFieldRows)
+                )}
+              >
+                Alle velden OCLC CSV
+              </button>
+              <div className="table-wrap">
+                <table className="detail-table all-oclc-table">
+                  <thead>
+                    <tr>
+                      <th>Volgorde</th><th>OCLC-veldnaam</th><th>Veldnaam site</th><th>OBA.nl IST</th>
+                      <th>OCLC endpoint path</th><th>Mockup-route</th><th>Waarde</th><th>Opmerking</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allFieldRows.length ? allFieldRows.map((row) => (
+                      <tr key={`${row.order}-${row.oclcField}`}>
+                        <td>{row.order}</td><td><code>{row.oclcField}</code></td><td>{row.siteField}</td><td>{row.obaIst}</td>
+                        <td><code>{row.endpoint}</code></td><td><code>{row.mockupRoute}</code></td>
+                        <td><span className="raw-table-value">{row.value}</span></td><td>{row.note}</td>
+                      </tr>
+                    )) : <tr><td colSpan="8">Geen ruwe OCLC-velden beschikbaar</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ) : null}
+        </section>
+
         <section className="debug-section">
           <button
             type="button"
@@ -752,20 +942,6 @@ export default function OclcSearchPage() {
             }
           >
             Download OCLC JSON
-          </button>{" "}
-          <button
-            type="button"
-            className="tab-button"
-            onClick={() => downloadCsv(`oclc-resultaten-${query || "zoekopdracht"}.csv`, toOclcResultCsv(resultRows))}
-          >
-            Download resultaten CSV
-          </button>{" "}
-          <button
-            type="button"
-            className="tab-button"
-            onClick={() => downloadCsv(`oclc-facetten-${query || "zoekopdracht"}.csv`, toOclcFacetCsv(facetRows))}
-          >
-            Download facetten CSV
           </button>
 
           <details className="debug-block">
