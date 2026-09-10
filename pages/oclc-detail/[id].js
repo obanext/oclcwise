@@ -39,7 +39,11 @@ function toDisplayedFieldsCsv(rows = []) {
 
   return [
     columns.map(([, label]) => escapeCsvCell(label)).join(";"),
-    ...rows.map((row) => columns.map(([key]) => escapeCsvCell(row?.[key])).join(";")),
+    ...rows.map((row) => columns.map(([key]) => escapeCsvCell(
+      key === "value" && Array.isArray(row?.value)
+        ? row.value.map(rawText).join(" | ")
+        : row?.[key]
+    )).join(";")),
   ].join("\n");
 }
 
@@ -74,25 +78,6 @@ function firstValueField(field, value, property = "") {
   return `${field}${arrayPart}${propertyPart}`;
 }
 
-function splitAuthorName(value = "") {
-  const source = String(value || "").trim();
-  if (!source) return { firstName: "", lastName: "" };
-
-  if (source.includes(",")) {
-    const [lastName = "", ...firstNameParts] = source.split(",");
-    return {
-      firstName: firstNameParts.join(",").trim(),
-      lastName: lastName.trim(),
-    };
-  }
-
-  const parts = source.split(/\s+/).filter(Boolean);
-  return {
-    firstName: parts.slice(0, -1).join(" "),
-    lastName: parts.at(-1) || "",
-  };
-}
-
 function targetAudienceLabel(titleRecord = {}) {
   if (titleRecord.categoryYouth === true && titleRecord.categoryAdult === true) {
     return "Jeugd en volwassenen";
@@ -111,6 +96,29 @@ function youthAgeRangeLabel(titleRecord = {}, ageRange = {}) {
   if (hasValue(from)) return `Vanaf ${from} jaar`;
   if (hasValue(to)) return `Tot ${to} jaar`;
   return "";
+}
+
+function readableValues(value, preferredKeys = []) {
+  return asArray(value)
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return entry;
+      const key = preferredKeys.find((candidate) => hasValue(entry?.[candidate]));
+      return key ? entry[key] : "";
+    })
+    .filter(hasValue);
+}
+
+function personLabel(person = {}) {
+  if (!hasValue(person?.description)) return "";
+  return hasValue(person?.qualifier)
+    ? `${person.description} (${person.qualifier})`
+    : person.description;
+}
+
+function seriesLabel(series = {}) {
+  if (!hasValue(series?.description)) return "";
+  const number = hasValue(series?.addition) ? series.addition : series?.number;
+  return hasValue(number) ? `${series.description} ${number}` : series.description;
 }
 
 const ITEM_STATUS_LABELS = {
@@ -167,7 +175,13 @@ function RawRows({ rows }) {
       {rows.map((row) => (
         <div className="spec-row" key={row.key || row.label}>
           <div className="spec-label">{row.label}</div>
-          <div className="spec-value"><RawValue value={row.value} /></div>
+          <div className="spec-value">
+            {Array.isArray(row.value) ? (
+              <ul className="raw-value-list">
+                {row.value.map((value, index) => <li key={`${row.label}-${index}`}><RawValue value={value} /></li>)}
+              </ul>
+            ) : <RawValue value={row.value} />}
+          </div>
         </div>
       ))}
     </section>
@@ -258,10 +272,6 @@ export default function OclcDetailPage() {
     { value: titleData?.isbn, field: "isbn", endpoint: ENDPOINTS.discovery },
     { value: titleRecord?.isbn, field: "[0].isbn", endpoint: ENDPOINTS.title },
   ]);
-  const ppnSource = firstSource([
-    { value: titleData?.ppn, field: "ppn", endpoint: ENDPOINTS.discovery },
-    { value: titleRecord?.ppn, field: "[0].ppn", endpoint: ENDPOINTS.title },
-  ]);
   const publicationYearSource = firstSource([
     { value: titleData?.publicationYear, field: "publicationYear", endpoint: ENDPOINTS.discovery },
     { value: titleRecord?.publicationYear, field: "[0].publicationYear", endpoint: ENDPOINTS.title },
@@ -276,7 +286,6 @@ export default function OclcDetailPage() {
   const combinedTitle = titleParts.join(" / ");
 
   const author = authorSource.value;
-  const authorName = splitAuthorName(author);
   const summary = summarySource.value;
   const cover = coverSource.value;
   const targetAudience = targetAudienceLabel(titleRecord);
@@ -287,19 +296,40 @@ export default function OclcDetailPage() {
   const languageField = firstValueField("language", titleData?.language, languageProperty);
   const publisher = titleData?.imprint;
 
-  const firstCallNumberIndex = itemInformation.findIndex((item) => hasValue(item?.callNumber));
-  const firstCallNumber = firstCallNumberIndex >= 0 ? itemInformation[firstCallNumberIndex]?.callNumber : "";
-
   const collaborators = asArray(titleData?.collaborators);
-  const firstCollaborator = collaborators[0] || {};
-  const secondaryAuthorName = splitAuthorName(firstCollaborator?.description);
 
-  const seriesProperty = firstReadableProperty(titleData?.titleSeries, ["description", "title", "name"]);
-  const series = firstReadableValue(titleData?.titleSeries, ["description", "title", "name"]);
-  const genreProperty = firstReadableProperty(titleData?.genre, ["description", "code"]);
-  const genre = firstReadableValue(titleData?.genre, ["description", "code"]);
-  const subjectProperty = firstReadableProperty(titleData?.subjects, ["description", "code"]);
-  const subject = firstReadableValue(titleData?.subjects, ["description", "code"]);
+  const titleBlockParts = [
+    titleSource.value,
+    titleData?.media?.description,
+    [titleData?.author?.description, ...collaborators.map((entry) => entry?.description)]
+      .filter(hasValue)
+      .join(", "),
+  ].filter(hasValue);
+  const titleBlockValue = titleBlockParts.length > 2
+    ? `${titleBlockParts[0]}, ${titleBlockParts[1]}, (${titleBlockParts[2]})`
+    : titleBlockParts.join(", ");
+  const seriesValues = asArray(titleData?.titleSeries).map(seriesLabel).filter(hasValue);
+  const isbnValues = readableValues(isbnSource.value);
+  const collaboratorValues = collaborators.map(personLabel).filter(hasValue);
+  const languageValues = readableValues(titleData?.language, ["description", "code"]);
+  const genreValues = readableValues(titleData?.genre, ["description", "code"]);
+  const subjectValues = readableValues(titleData?.subjects, ["description", "code"]);
+  const classificationValues = [
+    titleData?.narrative === true || titleRecord?.categoryNarrative === true ? "Verhalend" : "",
+    titleData?.informative === true || titleRecord?.categoryInformative === true ? "Informatief" : "",
+    titleData?.documentary === true ? "Documentair" : "",
+    titleData?.youth === true || titleRecord?.categoryYouth === true ? "Jeugd" : "",
+    titleData?.adult === true || titleRecord?.categoryAdult === true ? "Volwassenen" : "",
+  ].filter(hasValue);
+  const materialSource = firstSource([
+    { value: titleData?.material, field: "material", endpoint: ENDPOINTS.discovery },
+    { value: titleData?.youthMaterial?.description, field: "youthMaterial.description", endpoint: ENDPOINTS.discovery },
+    { value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
+  ]);
+  const ageCategorySource = firstSource([
+    { value: titleData?.audience?.description, field: "audience.description", endpoint: ENDPOINTS.discovery },
+    { value: youthAgeRange, field: "ageRange.from | ageRange.to", endpoint: ENDPOINTS.discovery },
+  ]);
 
   const availableLocations = useMemo(() => {
     const locations = itemInformation
@@ -379,107 +409,87 @@ export default function OclcDetailPage() {
 
   const practicalRows = useMemo(() => [
     {
-      label: "ISBN Nummer",
-      value: firstReadableValue(isbnSource.value),
-      field: firstValueField(isbnSource.field, isbnSource.value),
-      endpoint: isbnSource.endpoint,
-      note: "Bij meerdere ISBN-nummers wordt de eerste waarde gebruikt.",
-    },
-    {
-      label: "PPN Nummer",
-      value: firstReadableValue(ppnSource.value),
-      field: firstValueField(ppnSource.field, ppnSource.value),
-      endpoint: ppnSource.endpoint,
-      note: "Bij meerdere PPN-nummers wordt de eerste waarde gebruikt.",
-    },
-    {
-      label: "Boekcode / plaatsingscode",
-      value: firstCallNumber,
-      field: firstCallNumberIndex >= 0 ? `[${firstCallNumberIndex}].callNumber` : "[].callNumber",
-      endpoint: ENDPOINTS.items,
-      note: "Bij meerdere exemplaren wordt de eerste aanwezige plaatsingscode gebruikt.",
-    },
-    {
-      label: "Taal publicatie",
-      value: language,
-      field: languageField,
+      label: "Titelblok",
+      value: titleBlockValue,
+      field: "mainTitle | media.description | author.description | collaborators[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere talen wordt de eerste waarde gebruikt en zonder array- of objectnotatie getoond.",
+      note: "Samengestelde weergave uit de ruwe hoofdtitel, mediumsoort, eerste auteur en alle medewerkers.",
     },
-    { label: "Hoofdtitel", value: titleSource.value, field: titleSource.field, endpoint: titleSource.endpoint },
-    { label: "Algemene materiaalaanduiding", value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
-    { label: "Eerste verantwoordelijke", value: authorSource.value, field: authorSource.field, endpoint: authorSource.endpoint },
-    {
-      label: "Auteur Achternaam",
-      value: authorName.lastName,
-      field: authorSource.field,
-      endpoint: authorSource.endpoint,
-      note: "Achternaam uit de beschrijving van de eerste verantwoordelijke.",
-    },
-    {
-      label: "Auteur Voornaam",
-      value: authorName.firstName,
-      field: authorSource.field,
-      endpoint: authorSource.endpoint,
-      note: "Voornaam uit de beschrijving van de eerste verantwoordelijke.",
-    },
-    { label: "Titel - Ondertitel", value: subtitleSource.value, field: subtitleSource.field, endpoint: subtitleSource.endpoint },
-    {
-      label: "Uitgever",
-      value: publisher,
-      field: "imprint",
-      endpoint: ENDPOINTS.discovery,
-      note: "De conceptuele veldnaam is Uitgever; de getoonde waarde blijft de ruwe OCLC-imprintwaarde.",
-    },
-    { label: "Jaar van uitgave", value: publicationYearSource.value, field: publicationYearSource.field, endpoint: publicationYearSource.endpoint },
-    { label: "Collatie", value: titleData?.annotationCollation, field: "annotationCollation", endpoint: ENDPOINTS.discovery },
-    { label: "Annotatie", value: titleData?.annotationNoMarc, field: "annotationNoMarc", endpoint: ENDPOINTS.discovery },
     { label: "Editie", value: titleData?.annotationEdition ?? titleData?.edition, field: hasValue(titleData?.annotationEdition) ? "annotationEdition" : "edition", endpoint: ENDPOINTS.discovery },
-    { label: "Auteur Functie", value: titleData?.author?.addition, field: "author.addition", endpoint: ENDPOINTS.discovery },
+    { label: "Uitgave", value: publisher, field: "imprint", endpoint: ENDPOINTS.discovery, note: "De ruwe OCLC-imprintwaarde wordt als één waarde getoond." },
+    { label: "Collatie", value: titleData?.annotationCollation, field: "annotationCollation", endpoint: ENDPOINTS.discovery },
     {
-      label: "Auteur - secundaire - Functie",
-      value: firstCollaborator?.addition,
-      field: "collaborators[0].addition",
+      label: "Serie",
+      value: seriesValues,
+      field: "titleSeries[].description | titleSeries[].addition | titleSeries[].number",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere secundaire auteurs wordt de eerste auteur gebruikt.",
+      note: "Alle reeksen worden getoond; description wordt gecombineerd met het aanwezige addition- of number-veld.",
+    },
+    { label: "Noot", value: titleData?.annotationNoMarc, field: "annotationNoMarc", endpoint: ENDPOINTS.discovery },
+    { label: "Inhoud", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
+    {
+      label: "ISBN",
+      value: isbnValues,
+      field: `${isbnSource.field}[]`,
+      endpoint: isbnSource.endpoint,
+      note: "Alle ISBN-waarden worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
     },
     {
-      label: "Auteur - secundaire - Achternaam",
-      value: secondaryAuthorName.lastName,
-      field: "collaborators[0].description",
+      label: "Auteur",
+      value: personLabel(titleData?.author) || authorSource.value,
+      field: "author.description | author.qualifier",
       endpoint: ENDPOINTS.discovery,
-      note: "Achternaam uit de beschrijving van de eerste secundaire auteur.",
+      note: "De ruwe auteursbeschrijving wordt met de aanwezige qualifier tussen haakjes gecombineerd.",
+    },
+    { label: "Materiaal", value: materialSource.value, field: materialSource.field, endpoint: materialSource.endpoint },
+    {
+      label: "Medewerker",
+      value: collaboratorValues,
+      field: "collaborators[].description | collaborators[].qualifier",
+      endpoint: ENDPOINTS.discovery,
+      note: "Alle medewerkers worden getoond; description wordt met de aanwezige qualifier gecombineerd.",
     },
     {
-      label: "Auteur - secundaire - Voornaam",
-      value: secondaryAuthorName.firstName,
-      field: "collaborators[0].description",
-      endpoint: ENDPOINTS.discovery,
-      note: "Voornaam uit de beschrijving van de eerste secundaire auteur.",
+      label: "Leeftijdscategorie",
+      value: ageCategorySource.value,
+      field: ageCategorySource.field,
+      endpoint: ageCategorySource.endpoint,
+      note: "De ruwe audience.description heeft voorrang; alleen als die ontbreekt wordt de leeftijdsrange gebruikt.",
     },
     {
-      label: "Reeks",
-      value: series,
-      field: firstValueField("titleSeries", titleData?.titleSeries, seriesProperty),
+      label: "Taal",
+      value: languageValues,
+      field: "language[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere reeksen wordt de eerste leesbare waarde gebruikt.",
+      note: "Alle taalbeschrijvingen worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
+    },
+    { label: "Mediumsoort", value: titleData?.media?.description, field: "media.description", endpoint: ENDPOINTS.discovery },
+    { label: "Publicatiejaar", value: publicationYearSource.value, field: publicationYearSource.field, endpoint: publicationYearSource.endpoint },
+    {
+      label: "Soort classificatie",
+      value: classificationValues,
+      field: "narrative | informative | documentary | youth | adult",
+      endpoint: ENDPOINTS.discovery,
+      note: "De true-indicatoren worden leesbaar weergegeven als Verhalend, Informatief, Documentair, Jeugd of Volwassenen; in de CSV zijn meerdere waarden gescheiden met |.",
     },
     {
       label: "Genre",
-      value: genre,
-      field: firstValueField("genre", titleData?.genre, genreProperty),
+      value: genreValues,
+      field: "genre[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere genres wordt de eerste leesbare waarde gebruikt.",
+      note: "Alle genreomschrijvingen worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
     },
+    { label: "Titel", value: titleSource.value, field: titleSource.field, endpoint: titleSource.endpoint },
     {
-      label: "Trefwoord - hoofdgeleding",
-      value: subject,
-      field: firstValueField("subjects", titleData?.subjects, subjectProperty),
+      label: "Onderwerpen",
+      value: subjectValues,
+      field: "subjects[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Bij meerdere onderwerpen wordt in de praktische specificaties de eerste leesbare waarde gebruikt; het Onderwerpenblok toont ze allemaal.",
+      note: "Alle onderwerpsomschrijvingen worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
     },
-    { label: "Samenvatting - Tekst", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
-  ].filter((row) => hasValue(row.value)), [authorName, authorSource, firstCallNumber, firstCallNumberIndex, firstCollaborator, genre, genreProperty, isbnSource, language, languageField, ppnSource, publicationYearSource, publisher, secondaryAuthorName, series, seriesProperty, subject, subjectProperty, subtitleSource, summarySource, titleData, titleSource]);
+    { label: "Aanschafinfo", value: titleData?.acquisitionInformation, field: "acquisitionInformation", endpoint: ENDPOINTS.discovery },
+    { label: "Titelnummer", value: titleData?.id, field: "id", endpoint: ENDPOINTS.discovery },
+  ].filter((row) => hasValue(row.value)), [ageCategorySource, authorSource.value, classificationValues, collaboratorValues, genreValues, isbnSource.endpoint, isbnSource.field, isbnValues, languageValues, materialSource, publicationYearSource, publisher, seriesValues, subjectValues, summarySource, titleBlockValue, titleData, titleSource]);
 
   const itemRows = useMemo(() => itemInformation.map((item, index) => ({
     key: `${item?.id ?? item?.barcode ?? "item"}-${index}`,
@@ -750,7 +760,7 @@ export default function OclcDetailPage() {
                       <td>{row.section}</td>
                       <td>{row.label}</td>
                       <td><code>{row.field}</code></td>
-                      <td><span className="raw-table-value">{rawText(row.value)}</span></td>
+                      <td><span className="raw-table-value">{Array.isArray(row.value) ? row.value.map(rawText).join(" | ") : rawText(row.value)}</span></td>
                       <td><code>{row.endpoint}</code></td>
                       <td>{row.note || ""}</td>
                     </tr>

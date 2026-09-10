@@ -297,6 +297,13 @@ a {
   word-break: break-word;
 }
 
+.raw-value-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .availability-sections {
   display: grid;
   gap: 24px;
