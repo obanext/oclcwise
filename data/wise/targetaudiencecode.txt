@@ -1,0 +1,116 @@
+{
+    "id": "",
+    "items": [
+        {
+            "id": "bctabel_880",
+            "key": "LFTA",
+            "code": "A",
+            "value": "6-9 jaar",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_38982",
+            "key": "LFTAB",
+            "code": "AB",
+            "value": "BoekStart",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_882",
+            "key": "LFTAJ",
+            "code": "AJ",
+            "value": "AJ-studie",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_883",
+            "key": "LFTAK",
+            "code": "AK",
+            "value": "Kleuters",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_884",
+            "key": "LFTAP",
+            "code": "AP",
+            "value": "Peuters",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_885",
+            "key": "LFTB",
+            "code": "B",
+            "value": "9-12 jaar",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_886",
+            "key": "LFTC",
+            "code": "C",
+            "value": "13 jaar en ouder",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_34678",
+            "key": "LFTD",
+            "code": "D",
+            "value": "Young adult",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_411431",
+            "key": "LFTDJ",
+            "code": "DJ",
+            "value": "DJ - studie 15+ jaar",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_14704",
+            "key": "LFTE",
+            "code": "E",
+            "value": "Eerste leesboekjes",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_16645",
+            "key": "LFTJ",
+            "code": "J",
+            "value": "Jeugd studie",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        }
+    ],
+    "uriTemplate": "/item/metadatafield/{fieldIds}/entry",
+    "links": [
+        {
+            "rel": "self",
+            "href": "/restapi/title/metadatafield/targetAudienceCode/entry"
+        }
+    ],
+    "validationErrors": [],
+    "fieldName": "targetAudienceCode",
+    "offset": 0,
+    "limit": 0,
+    "total": 11
+}

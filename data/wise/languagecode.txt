@@ -1,0 +1,4499 @@
+{
+    "id": "",
+    "items": [
+        {
+            "id": "bctabel_196293",
+            "key": "L21AAR",
+            "code": "AAR",
+            "value": "Afar",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196294",
+            "key": "L21ABK",
+            "code": "ABK",
+            "value": "Abchazisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196295",
+            "key": "L21ACE",
+            "code": "ACE",
+            "value": "Atjehs",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196296",
+            "key": "L21ACH",
+            "code": "ACH",
+            "value": "Akoli",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196297",
+            "key": "L21ADA",
+            "code": "ADA",
+            "value": "Adangme",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196298",
+            "key": "L21ADY",
+            "code": "ADY",
+            "value": "Adygees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196299",
+            "key": "L21AFA",
+            "code": "AFA",
+            "value": "Afro-Aziatische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196300",
+            "key": "L21AFH",
+            "code": "AFH",
+            "value": "Afrihili",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196301",
+            "key": "L21AFR",
+            "code": "AFR",
+            "value": "Afrikaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196304",
+            "key": "L21AIN",
+            "code": "AIN",
+            "value": "Ainu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196305",
+            "key": "L21AKA",
+            "code": "AKA",
+            "value": "Akan",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196306",
+            "key": "L21AKK",
+            "code": "AKK",
+            "value": "Akkadisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196307",
+            "key": "L21ALB",
+            "code": "ALB",
+            "value": "Albanees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196308",
+            "key": "L21ALE",
+            "code": "ALE",
+            "value": "Aleoets",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196309",
+            "key": "L21ALG",
+            "code": "ALG",
+            "value": "Algonkische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196310",
+            "key": "L21ALT",
+            "code": "ALT",
+            "value": "Zuid-Altaïsch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196311",
+            "key": "L21AMH",
+            "code": "AMH",
+            "value": "Amhaars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196312",
+            "key": "L21ANG",
+            "code": "ANG",
+            "value": "Angelsaksisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196313",
+            "key": "L21ANP",
+            "code": "ANP",
+            "value": "Angika",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196314",
+            "key": "L21APA",
+            "code": "APA",
+            "value": "Na-Denétalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196315",
+            "key": "L21ARA",
+            "code": "ARA",
+            "value": "Arabisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196316",
+            "key": "L21ARC",
+            "code": "ARC",
+            "value": "Aramees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196318",
+            "key": "L21ARG",
+            "code": "ARG",
+            "value": "Aragonees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196319",
+            "key": "L21ARM",
+            "code": "ARM",
+            "value": "Armeens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196320",
+            "key": "L21ARN",
+            "code": "ARN",
+            "value": "Mapudungun (Araukaans)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196321",
+            "key": "L21ARP",
+            "code": "ARP",
+            "value": "Arapaho",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196322",
+            "key": "L21ART",
+            "code": "ART",
+            "value": "Kunsttalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196323",
+            "key": "L21ARW",
+            "code": "ARW",
+            "value": "Arawak",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196325",
+            "key": "L21ASM",
+            "code": "ASM",
+            "value": "Assamees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196326",
+            "key": "L21AST",
+            "code": "AST",
+            "value": "Asturisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196327",
+            "key": "L21ATH",
+            "code": "ATH",
+            "value": "Athabaskische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196328",
+            "key": "L21AUS",
+            "code": "AUS",
+            "value": "Australische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196329",
+            "key": "L21AVA",
+            "code": "AVA",
+            "value": "Avaars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196330",
+            "key": "L21AVE",
+            "code": "AVE",
+            "value": "Avestisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196331",
+            "key": "L21AWA",
+            "code": "AWA",
+            "value": "Awadhi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196332",
+            "key": "L21AYM",
+            "code": "AYM",
+            "value": "Aymara",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196333",
+            "key": "L21AZE",
+            "code": "AZE",
+            "value": "Azerbeidzjaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196335",
+            "key": "L21BAD",
+            "code": "BAD",
+            "value": "Bandatalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196336",
+            "key": "L21BAI",
+            "code": "BAI",
+            "value": "Bamileke",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196337",
+            "key": "L21BAK",
+            "code": "BAK",
+            "value": "Basjkiers",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196338",
+            "key": "L21BAL",
+            "code": "BAL",
+            "value": "Baloetsji",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196339",
+            "key": "L21BAM",
+            "code": "BAM",
+            "value": "Bambara",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196340",
+            "key": "L21BAN",
+            "code": "BAN",
+            "value": "Balinees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196341",
+            "key": "L21BAQ",
+            "code": "BAQ",
+            "value": "Baskisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196342",
+            "key": "L21BAS",
+            "code": "BAS",
+            "value": "Basa",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196343",
+            "key": "L21BAT",
+            "code": "BAT",
+            "value": "Baltische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196344",
+            "key": "L21BEJ",
+            "code": "BEJ",
+            "value": "Beja; Bedawi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196345",
+            "key": "L21BEL",
+            "code": "BEL",
+            "value": "Witrussisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196346",
+            "key": "L21BEM",
+            "code": "BEM",
+            "value": "Bemba",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196347",
+            "key": "L21BEN",
+            "code": "BEN",
+            "value": "Bengaals",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196348",
+            "key": "L21BER",
+            "code": "BER",
+            "value": "Berbertalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196349",
+            "key": "L21BHO",
+            "code": "BHO",
+            "value": "Bhojpuri",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196350",
+            "key": "L21BIH",
+            "code": "BIH",
+            "value": "Bihari",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196351",
+            "key": "L21BIK",
+            "code": "BIK",
+            "value": "Bicol",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196352",
+            "key": "L21BIN",
+            "code": "BIN",
+            "value": "Edo (Bini)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196353",
+            "key": "L21BIS",
+            "code": "BIS",
+            "value": "Bislama",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196354",
+            "key": "L21BLA",
+            "code": "BLA",
+            "value": "Siksika (Blackfoot)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196355",
+            "key": "L21BNT",
+            "code": "BNT",
+            "value": "Bantoetalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196356",
+            "key": "L21BOS",
+            "code": "BOS",
+            "value": "Bosnisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196357",
+            "key": "L21BRA",
+            "code": "BRA",
+            "value": "Braj",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196358",
+            "key": "L21BRE",
+            "code": "BRE",
+            "value": "Bretons",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196359",
+            "key": "L21BTK",
+            "code": "BTK",
+            "value": "Bataktalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196360",
+            "key": "L21BUA",
+            "code": "BUA",
+            "value": "Boerjatisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196361",
+            "key": "L21BUG",
+            "code": "BUG",
+            "value": "Buginees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196362",
+            "key": "L21BUL",
+            "code": "BUL",
+            "value": "Bulgaars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196363",
+            "key": "L21BUR",
+            "code": "BUR",
+            "value": "Burmees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196365",
+            "key": "L21BYN",
+            "code": "BYN",
+            "value": "Blin; Bilin",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196366",
+            "key": "L21CAD",
+            "code": "CAD",
+            "value": "Caddo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196367",
+            "key": "L21CAI",
+            "code": "CAI",
+            "value": "Midden-Amerikaanse Indiaanse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196368",
+            "key": "L21CAR",
+            "code": "CAR",
+            "value": "Caribische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196369",
+            "key": "L21CAT",
+            "code": "CAT",
+            "value": "Catalaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196370",
+            "key": "L21CAU",
+            "code": "CAU",
+            "value": "Kaukasische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196371",
+            "key": "L21CEB",
+            "code": "CEB",
+            "value": "Cebuano",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196372",
+            "key": "L21CEL",
+            "code": "CEL",
+            "value": "Keltische tln (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196374",
+            "key": "L21CHA",
+            "code": "CHA",
+            "value": "Chamorro",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196375",
+            "key": "L21CHB",
+            "code": "CHB",
+            "value": "Chibcha",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196376",
+            "key": "L21CHE",
+            "code": "CHE",
+            "value": "Tsjetsjeens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196377",
+            "key": "L21CHG",
+            "code": "CHG",
+            "value": "Chagatai (Tsjagatai)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196378",
+            "key": "L21CHI",
+            "code": "CHI",
+            "value": "Chinees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196379",
+            "key": "L21CHK",
+            "code": "CHK",
+            "value": "Chuukees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196380",
+            "key": "L21CHM",
+            "code": "CHM",
+            "value": "Mari",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196381",
+            "key": "L21CHN",
+            "code": "CHN",
+            "value": "Chinook",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196382",
+            "key": "L21CHO",
+            "code": "CHO",
+            "value": "Choctaw",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196383",
+            "key": "L21CHP",
+            "code": "CHP",
+            "value": "Chipewyan",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196384",
+            "key": "L21CHR",
+            "code": "CHR",
+            "value": "Cherokee",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196385",
+            "key": "L21CHU",
+            "code": "CHU",
+            "value": "Kerkslavisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196386",
+            "key": "L21CHV",
+            "code": "CHV",
+            "value": "Tsjoevasjisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196387",
+            "key": "L21CHY",
+            "code": "CHY",
+            "value": "Cheyenne",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196388",
+            "key": "L21CMC",
+            "code": "CMC",
+            "value": "Chamische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196389",
+            "key": "L21COP",
+            "code": "COP",
+            "value": "Koptisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196390",
+            "key": "L21COR",
+            "code": "COR",
+            "value": "Cornisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196391",
+            "key": "L21COS",
+            "code": "COS",
+            "value": "Corsicaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196392",
+            "key": "L21CPE",
+            "code": "CPE",
+            "value": "Engelse creoolse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196395",
+            "key": "L21CPF",
+            "code": "CPF",
+            "value": "Franse creoolse talen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196396",
+            "key": "L21CPP",
+            "code": "CPP",
+            "value": "Portugese creoolse talen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196397",
+            "key": "L21CRE",
+            "code": "CRE",
+            "value": "Cree",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196398",
+            "key": "L21CRH",
+            "code": "CRH",
+            "value": "Krim-Tataars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196399",
+            "key": "L21CRP",
+            "code": "CRP",
+            "value": "Creools en Pidgin (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196401",
+            "key": "L21CSB",
+            "code": "CSB",
+            "value": "Kasjoebisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196402",
+            "key": "L21CUS",
+            "code": "CUS",
+            "value": "Koesjitische talen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196403",
+            "key": "L21CZE",
+            "code": "CZE",
+            "value": "Tsjechisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196404",
+            "key": "L21DAK",
+            "code": "DAK",
+            "value": "Dakota",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196405",
+            "key": "L21DAN",
+            "code": "DAN",
+            "value": "Deens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196406",
+            "key": "L21DAR",
+            "code": "DAR",
+            "value": "Darginisch (Dargwa)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196407",
+            "key": "L21DAY",
+            "code": "DAY",
+            "value": "Dajaktalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196409",
+            "key": "L21DEL",
+            "code": "DEL",
+            "value": "Unami (Delaware)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196410",
+            "key": "L21DEN",
+            "code": "DEN",
+            "value": "Slavey",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196411",
+            "key": "L21DGR",
+            "code": "DGR",
+            "value": "Dogrib",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196412",
+            "key": "L21DIA",
+            "code": "DIA",
+            "value": "Dialecten",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196413",
+            "key": "L21DIN",
+            "code": "DIN",
+            "value": "Dinka (Thuongjang)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196414",
+            "key": "L21DIV",
+            "code": "DIV",
+            "value": "Divehi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196415",
+            "key": "L21DOI",
+            "code": "DOI",
+            "value": "Dogri",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196416",
+            "key": "L21DRA",
+            "code": "DRA",
+            "value": "Dravidische talen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196417",
+            "key": "L21DRE",
+            "code": "DRE",
+            "value": "Drents",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196418",
+            "key": "L21DSB",
+            "code": "DSB",
+            "value": "Nedersorbisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196419",
+            "key": "L21DUA",
+            "code": "DUA",
+            "value": "Duala",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196420",
+            "key": "L21DUM",
+            "code": "DUM",
+            "value": "Nederlands, middel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196421",
+            "key": "L21DUT",
+            "code": "DUT",
+            "value": "Nederlands",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196422",
+            "key": "L21DYU",
+            "code": "DYU",
+            "value": "Dioula",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196423",
+            "key": "L21DZO",
+            "code": "DZO",
+            "value": "Dzongkha",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196424",
+            "key": "L21EFI",
+            "code": "EFI",
+            "value": "Efik",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196425",
+            "key": "L21EGY",
+            "code": "EGY",
+            "value": "Egyptisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196427",
+            "key": "L21EKA",
+            "code": "EKA",
+            "value": "Ekajuk",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196428",
+            "key": "L21ELX",
+            "code": "ELX",
+            "value": "Elamitisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196429",
+            "key": "L21ENG",
+            "code": "ENG",
+            "value": "Engels",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196430",
+            "key": "L21ENM",
+            "code": "ENM",
+            "value": "Engels, middel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196431",
+            "key": "L21EPO",
+            "code": "EPO",
+            "value": "Esperanto",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196432",
+            "key": "L21EST",
+            "code": "EST",
+            "value": "Estisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196433",
+            "key": "L21ESX",
+            "code": "ESX",
+            "value": "Eskimo-Aleoetische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196434",
+            "key": "L21ETT",
+            "code": "ETT",
+            "value": "Etruskisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196435",
+            "key": "L21EWE",
+            "code": "EWE",
+            "value": "Ewe",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196436",
+            "key": "L21EWO",
+            "code": "EWO",
+            "value": "Ewondo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196437",
+            "key": "L21FAN",
+            "code": "FAN",
+            "value": "Fang",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196438",
+            "key": "L21FAO",
+            "code": "FAO",
+            "value": "Faeröers",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196439",
+            "key": "L21FAT",
+            "code": "FAT",
+            "value": "Fante",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196440",
+            "key": "L21FIJ",
+            "code": "FIJ",
+            "value": "Fijisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196441",
+            "key": "L21FIL",
+            "code": "FIL",
+            "value": "Filipijns",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196443",
+            "key": "L21FIN",
+            "code": "FIN",
+            "value": "Fins",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196444",
+            "key": "L21FIU",
+            "code": "FIU",
+            "value": "Fins-Oegrische talen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196445",
+            "key": "L21FON",
+            "code": "FON",
+            "value": "Fon",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196446",
+            "key": "L21FRE",
+            "code": "FRE",
+            "value": "Frans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196447",
+            "key": "L21FRM",
+            "code": "FRM",
+            "value": "Frans, middel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196448",
+            "key": "L21FRO",
+            "code": "FRO",
+            "value": "Frans, oud",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196449",
+            "key": "L21FRR",
+            "code": "FRR",
+            "value": "Noord-Fries",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196450",
+            "key": "L21FRS",
+            "code": "FRS",
+            "value": "Oosterlauwers Fries",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196451",
+            "key": "L21FRY",
+            "code": "FRY",
+            "value": "Fries",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196452",
+            "key": "L21FUL",
+            "code": "FUL",
+            "value": "Fula",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196453",
+            "key": "L21FUR",
+            "code": "FUR",
+            "value": "Friulisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196454",
+            "key": "L21GAA",
+            "code": "GAA",
+            "value": "Ga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196455",
+            "key": "L21GAY",
+            "code": "GAY",
+            "value": "Gajo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196456",
+            "key": "L21GBA",
+            "code": "GBA",
+            "value": "Gbaya",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196457",
+            "key": "L21GEM",
+            "code": "GEM",
+            "value": "Germaanse tln (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196458",
+            "key": "L21GEO",
+            "code": "GEO",
+            "value": "Georgisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196459",
+            "key": "L21GER",
+            "code": "GER",
+            "value": "Duits",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196460",
+            "key": "L21GEZ",
+            "code": "GEZ",
+            "value": "Ethiopisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196461",
+            "key": "L21GIL",
+            "code": "GIL",
+            "value": "Kiribatisch (Gilbertees)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196462",
+            "key": "L21GLA",
+            "code": "GLA",
+            "value": "Schots-Gaelisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196463",
+            "key": "L21GLE",
+            "code": "GLE",
+            "value": "Iers",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196464",
+            "key": "L21GLG",
+            "code": "GLG",
+            "value": "Galicisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196465",
+            "key": "L21GLV",
+            "code": "GLV",
+            "value": "Manx-Gaelisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196466",
+            "key": "L21GMH",
+            "code": "GMH",
+            "value": "Duits, middel hoog",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196467",
+            "key": "L21GMQ",
+            "code": "GMQ",
+            "value": "Noord-Germaanse/Scand. talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196468",
+            "key": "L21GOH",
+            "code": "GOH",
+            "value": "Duits, oud hoog",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196469",
+            "key": "L21GON",
+            "code": "GON",
+            "value": "Gondi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196470",
+            "key": "L21GOR",
+            "code": "GOR",
+            "value": "Gorontalo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196471",
+            "key": "L21GOT",
+            "code": "GOT",
+            "value": "Gotisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196472",
+            "key": "L21GRB",
+            "code": "GRB",
+            "value": "Grebo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196473",
+            "key": "L21GRC",
+            "code": "GRC",
+            "value": "Grieks, klassiek",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196476",
+            "key": "L21GRE",
+            "code": "GRE",
+            "value": "Grieks, modern",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196479",
+            "key": "L21GRN",
+            "code": "GRN",
+            "value": "Guaraní",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196480",
+            "key": "L21GSW",
+            "code": "GSW",
+            "value": "Zwitserduits",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196481",
+            "key": "L21GUJ",
+            "code": "GUJ",
+            "value": "Gujarati",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196482",
+            "key": "L21GWI",
+            "code": "GWI",
+            "value": "Gwich’in",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196483",
+            "key": "L21HAI",
+            "code": "HAI",
+            "value": "Haida",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196484",
+            "key": "L21HAT",
+            "code": "HAT",
+            "value": "Haïtiaans Creools",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196485",
+            "key": "L21HAU",
+            "code": "HAU",
+            "value": "Hausa",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196486",
+            "key": "L21HAW",
+            "code": "HAW",
+            "value": "Hawaïaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196487",
+            "key": "L21HEB",
+            "code": "HEB",
+            "value": "Hebreews",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196488",
+            "key": "L21HER",
+            "code": "HER",
+            "value": "Herero",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196489",
+            "key": "L21HIL",
+            "code": "HIL",
+            "value": "Hiligaynon",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196490",
+            "key": "L21HIM",
+            "code": "HIM",
+            "value": "Himachali",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196492",
+            "key": "L21HIN",
+            "code": "HIN",
+            "value": "Hindi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196493",
+            "key": "L21HIT",
+            "code": "HIT",
+            "value": "Hettitisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196495",
+            "key": "L21HMN",
+            "code": "HMN",
+            "value": "Hmong",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196496",
+            "key": "L21HMO",
+            "code": "HMO",
+            "value": "Hiri Motu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196497",
+            "key": "L21HRV",
+            "code": "HRV",
+            "value": "Servo-Kroat. (Lat.)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196500",
+            "key": "L21HSB",
+            "code": "HSB",
+            "value": "Oppersorbisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196501",
+            "key": "L21HUN",
+            "code": "HUN",
+            "value": "Hongaars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196502",
+            "key": "L21HUP",
+            "code": "HUP",
+            "value": "Hupa",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196503",
+            "key": "L21IBA",
+            "code": "IBA",
+            "value": "Iban",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196504",
+            "key": "L21IBO",
+            "code": "IBO",
+            "value": "Igbo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196505",
+            "key": "L21ICE",
+            "code": "ICE",
+            "value": "IJslands",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196506",
+            "key": "L21IDO",
+            "code": "IDO",
+            "value": "Ido",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196507",
+            "key": "L21III",
+            "code": "III",
+            "value": "Yi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196508",
+            "key": "L21IJO",
+            "code": "IJO",
+            "value": "Ijawtalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196509",
+            "key": "L21IKU",
+            "code": "IKU",
+            "value": "Inuktitut",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196510",
+            "key": "L21ILE",
+            "code": "ILE",
+            "value": "Interlingue",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196511",
+            "key": "L21ILO",
+            "code": "ILO",
+            "value": "Ilokano",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196512",
+            "key": "L21INA",
+            "code": "INA",
+            "value": "Interlingua",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196513",
+            "key": "L21INC",
+            "code": "INC",
+            "value": "Indische talen (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196515",
+            "key": "L21IND",
+            "code": "IND",
+            "value": "Indonesisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196518",
+            "key": "L21INE",
+            "code": "INE",
+            "value": "Indo-Europ. tl (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196519",
+            "key": "L21INH",
+            "code": "INH",
+            "value": "Ingoesjetisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196520",
+            "key": "L21IPK",
+            "code": "IPK",
+            "value": "Inupiak",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196521",
+            "key": "L21IRA",
+            "code": "IRA",
+            "value": "Iraans (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196522",
+            "key": "L21IRO",
+            "code": "IRO",
+            "value": "Irokese talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196523",
+            "key": "L21ITA",
+            "code": "ITA",
+            "value": "Italiaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196524",
+            "key": "L21JAV",
+            "code": "JAV",
+            "value": "Javaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196526",
+            "key": "L21JBO",
+            "code": "JBO",
+            "value": "Lojban",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196527",
+            "key": "L21JPN",
+            "code": "JPN",
+            "value": "Japans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196528",
+            "key": "L21JPR",
+            "code": "JPR",
+            "value": "Judeo-Perzisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196529",
+            "key": "L21JRB",
+            "code": "JRB",
+            "value": "Judeo-Arabisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196530",
+            "key": "L21KAA",
+            "code": "KAA",
+            "value": "Karakalpaks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196531",
+            "key": "L21KAB",
+            "code": "KAB",
+            "value": "Kabylisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196532",
+            "key": "L21KAC",
+            "code": "KAC",
+            "value": "Kachin (Jingpho)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196533",
+            "key": "L21KAL",
+            "code": "KAL",
+            "value": "Groenlands",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196534",
+            "key": "L21KAM",
+            "code": "KAM",
+            "value": "Kamba",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196535",
+            "key": "L21KAN",
+            "code": "KAN",
+            "value": "Kannada (Kanarees, Kanara)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196536",
+            "key": "L21KAR",
+            "code": "KAR",
+            "value": "Karen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196537",
+            "key": "L21KAS",
+            "code": "KAS",
+            "value": "Kasjmiri",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196538",
+            "key": "L21KAU",
+            "code": "KAU",
+            "value": "Kanuri",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196539",
+            "key": "L21KAW",
+            "code": "KAW",
+            "value": "Kawi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196540",
+            "key": "L21KAZ",
+            "code": "KAZ",
+            "value": "Kazachs",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196541",
+            "key": "L21KBD",
+            "code": "KBD",
+            "value": "Kabardisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196542",
+            "key": "L21KHA",
+            "code": "KHA",
+            "value": "Khasi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196543",
+            "key": "L21KHI",
+            "code": "KHI",
+            "value": "Khoisantalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196544",
+            "key": "L21KHM",
+            "code": "KHM",
+            "value": "Khmer, Cambodjaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196546",
+            "key": "L21KHO",
+            "code": "KHO",
+            "value": "Hotanees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196547",
+            "key": "L21KIK",
+            "code": "KIK",
+            "value": "Gikuyu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196548",
+            "key": "L21KIN",
+            "code": "KIN",
+            "value": "Kinyarwanda",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196549",
+            "key": "L21KIR",
+            "code": "KIR",
+            "value": "Kirgizisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196550",
+            "key": "L21KMB",
+            "code": "KMB",
+            "value": "Kimbundu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196551",
+            "key": "L21KOK",
+            "code": "KOK",
+            "value": "Konkani",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196552",
+            "key": "L21KOM",
+            "code": "KOM",
+            "value": "Zurjeens (Komi)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196553",
+            "key": "L21KON",
+            "code": "KON",
+            "value": "Kongo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196554",
+            "key": "L21KOR",
+            "code": "KOR",
+            "value": "Koreaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196555",
+            "key": "L21KOS",
+            "code": "KOS",
+            "value": "Kosraeaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196556",
+            "key": "L21KPE",
+            "code": "KPE",
+            "value": "Kpelle",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196557",
+            "key": "L21KRC",
+            "code": "KRC",
+            "value": "Karatsjaj-Balkarisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196558",
+            "key": "L21KRL",
+            "code": "KRL",
+            "value": "Karelisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196559",
+            "key": "L21KRO",
+            "code": "KRO",
+            "value": "Krutalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196560",
+            "key": "L21KRU",
+            "code": "KRU",
+            "value": "Kurukh",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196561",
+            "key": "L21KSU",
+            "code": "KSU",
+            "value": "Kleine Sunda eilanden",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196562",
+            "key": "L21KUA",
+            "code": "KUA",
+            "value": "Kwanyama",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196563",
+            "key": "L21KUM",
+            "code": "KUM",
+            "value": "Kumyk",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196564",
+            "key": "L21KUR",
+            "code": "KUR",
+            "value": "Koerdisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196565",
+            "key": "L21KUT",
+            "code": "KUT",
+            "value": "Kutenai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196566",
+            "key": "L21LAD",
+            "code": "LAD",
+            "value": "Ladinisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196567",
+            "key": "L21LAH",
+            "code": "LAH",
+            "value": "Lahnda",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196568",
+            "key": "L21LAM",
+            "code": "LAM",
+            "value": "Lamba",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196569",
+            "key": "L21LAO",
+            "code": "LAO",
+            "value": "Laotiaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196570",
+            "key": "L21LAT",
+            "code": "LAT",
+            "value": "Latijn, klassiek",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196573",
+            "key": "L21LAV",
+            "code": "LAV",
+            "value": "Lets",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196574",
+            "key": "L21LEZ",
+            "code": "LEZ",
+            "value": "Lezgisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196575",
+            "key": "L21LIM",
+            "code": "LIM",
+            "value": "Limburg",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196576",
+            "key": "L21LIN",
+            "code": "LIN",
+            "value": "Lingala",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196577",
+            "key": "L21LIT",
+            "code": "LIT",
+            "value": "Litouws",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196578",
+            "key": "L21LOL",
+            "code": "LOL",
+            "value": "Mongo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196579",
+            "key": "L21LOZ",
+            "code": "LOZ",
+            "value": "Lozi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196580",
+            "key": "L21LTZ",
+            "code": "LTZ",
+            "value": "Luxemburgs",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196581",
+            "key": "L21LUA",
+            "code": "LUA",
+            "value": "Luba-Lulua",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196582",
+            "key": "L21LUB",
+            "code": "LUB",
+            "value": "Luba-Katanga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196583",
+            "key": "L21LUG",
+            "code": "LUG",
+            "value": "Luganda",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196584",
+            "key": "L21LUI",
+            "code": "LUI",
+            "value": "Luiseño",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196585",
+            "key": "L21LUN",
+            "code": "LUN",
+            "value": "Lunda",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196586",
+            "key": "L21LUO",
+            "code": "LUO",
+            "value": "Luo (Kenia en Tanzania)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196587",
+            "key": "L21LUS",
+            "code": "LUS",
+            "value": "Mizo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196588",
+            "key": "L21MAC",
+            "code": "MAC",
+            "value": "Macedonisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196589",
+            "key": "L21MAD",
+            "code": "MAD",
+            "value": "Madoerees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196590",
+            "key": "L21MAG",
+            "code": "MAG",
+            "value": "Magahi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196591",
+            "key": "L21MAH",
+            "code": "MAH",
+            "value": "Marshallees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196592",
+            "key": "L21MAI",
+            "code": "MAI",
+            "value": "Maithili",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196593",
+            "key": "L21MAK",
+            "code": "MAK",
+            "value": "Makassaars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196594",
+            "key": "L21MAL",
+            "code": "MAL",
+            "value": "Malayalam",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196595",
+            "key": "L21MAN",
+            "code": "MAN",
+            "value": "Mandinka",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196596",
+            "key": "L21MAO",
+            "code": "MAO",
+            "value": "Maori",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196597",
+            "key": "L21MAP",
+            "code": "MAP",
+            "value": "Austronesische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196599",
+            "key": "L21MAR",
+            "code": "MAR",
+            "value": "Marathi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196600",
+            "key": "L21MAS",
+            "code": "MAS",
+            "value": "Masai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196601",
+            "key": "L21MAY",
+            "code": "MAY",
+            "value": "Maleis",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196603",
+            "key": "L21MDF",
+            "code": "MDF",
+            "value": "Moksha",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196604",
+            "key": "L21MDR",
+            "code": "MDR",
+            "value": "Mandar",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196605",
+            "key": "L21MEN",
+            "code": "MEN",
+            "value": "Mende",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196606",
+            "key": "L21MGA",
+            "code": "MGA",
+            "value": "Middel-iers",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196607",
+            "key": "L21MIC",
+            "code": "MIC",
+            "value": "Micmac",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196608",
+            "key": "L21MIN",
+            "code": "MIN",
+            "value": "Minangkabau",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196609",
+            "key": "L21MIS",
+            "code": "MIS",
+            "value": "Versch. tln/teksten",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196610",
+            "key": "L21MKH",
+            "code": "MKH",
+            "value": "Mon-Khmertalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196611",
+            "key": "L21MLG",
+            "code": "MLG",
+            "value": "Plateaumalagasi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196612",
+            "key": "L21MLT",
+            "code": "MLT",
+            "value": "Maltees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196613",
+            "key": "L21MNC",
+            "code": "MNC",
+            "value": "Mantsjoe",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196614",
+            "key": "L21MNI",
+            "code": "MNI",
+            "value": "Meitei (Manipuri)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196615",
+            "key": "L21MNO",
+            "code": "MNO",
+            "value": "Manobotalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196616",
+            "key": "L21MOH",
+            "code": "MOH",
+            "value": "Mohawk",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196617",
+            "key": "L21MOL",
+            "code": "MOL",
+            "value": "Moldavisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196618",
+            "key": "L21MON",
+            "code": "MON",
+            "value": "Mongools",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196619",
+            "key": "L21MOS",
+            "code": "MOS",
+            "value": "Mossi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196620",
+            "key": "L21MUK",
+            "code": "MUK",
+            "value": "Molukse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196621",
+            "key": "L21MUL",
+            "code": "MUL",
+            "value": "Zelfde tkst/vers. tl",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196625",
+            "key": "L21MUN",
+            "code": "MUN",
+            "value": "Mundatalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196626",
+            "key": "L21MUS",
+            "code": "MUS",
+            "value": "Muskogitalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196627",
+            "key": "L21MWL",
+            "code": "MWL",
+            "value": "Mirandees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196628",
+            "key": "L21MWR",
+            "code": "MWR",
+            "value": "Marwari",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196629",
+            "key": "L21MYN",
+            "code": "MYN",
+            "value": "Mayatalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196630",
+            "key": "L21MYV",
+            "code": "MYV",
+            "value": "Erzja",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196631",
+            "key": "L21NAH",
+            "code": "NAH",
+            "value": "Nahuatl",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196632",
+            "key": "L21NAI",
+            "code": "NAI",
+            "value": "Noord-Amerikaans Indiaanse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196633",
+            "key": "L21NAP",
+            "code": "NAP",
+            "value": "Napolitaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196634",
+            "key": "L21NAU",
+            "code": "NAU",
+            "value": "Nauruaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196635",
+            "key": "L21NAV",
+            "code": "NAV",
+            "value": "Navajo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196636",
+            "key": "L21NBL",
+            "code": "NBL",
+            "value": "Zuid-Ndebele",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196637",
+            "key": "L21NDE",
+            "code": "NDE",
+            "value": "Noord-Ndebele",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196638",
+            "key": "L21NDI",
+            "code": "NDI",
+            "value": "Nederlands dialect",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196640",
+            "key": "L21NDO",
+            "code": "NDO",
+            "value": "Ndonga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196641",
+            "key": "L21NDS",
+            "code": "NDS",
+            "value": "Duits, neder",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196642",
+            "key": "L21NEP",
+            "code": "NEP",
+            "value": "Nepalees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196643",
+            "key": "L21NEW",
+            "code": "NEW",
+            "value": "Nepalbhasa (Newari)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196644",
+            "key": "L21NIA",
+            "code": "NIA",
+            "value": "Nias",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196645",
+            "key": "L21NIC",
+            "code": "NIC",
+            "value": "Niger-Congotalen (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196646",
+            "key": "L21NIU",
+            "code": "NIU",
+            "value": "Niueaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196647",
+            "key": "L21NNO",
+            "code": "NNO",
+            "value": "Nynorsk (Nieuw-Noors)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196648",
+            "key": "L21NOB",
+            "code": "NOB",
+            "value": "Bokmål-Noors",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196649",
+            "key": "L21NOG",
+            "code": "NOG",
+            "value": "Nogai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196650",
+            "key": "L21NON",
+            "code": "NON",
+            "value": "Oudnoords",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196651",
+            "key": "L21NOR",
+            "code": "NOR",
+            "value": "Noors",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196652",
+            "key": "L21NQO",
+            "code": "NQO",
+            "value": "N.ko",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196653",
+            "key": "L21NSO",
+            "code": "NSO",
+            "value": "Pedi (Sepedi, Noord-Sothotisch)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196654",
+            "key": "L21NUB",
+            "code": "NUB",
+            "value": "Nubisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196655",
+            "key": "L21NWC",
+            "code": "NWC",
+            "value": "Klassiek Newari (Klassiek Nepalbhasa)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196656",
+            "key": "L21NYA",
+            "code": "NYA",
+            "value": "Nyanja",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196657",
+            "key": "L21NYM",
+            "code": "NYM",
+            "value": "Nyamwezi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196658",
+            "key": "L21NYN",
+            "code": "NYN",
+            "value": "Nyankole",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196659",
+            "key": "L21NYO",
+            "code": "NYO",
+            "value": "Nyoro",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196660",
+            "key": "L21NZI",
+            "code": "NZI",
+            "value": "Nzima",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196661",
+            "key": "L21OCI",
+            "code": "OCI",
+            "value": "Occitaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196662",
+            "key": "L21OJI",
+            "code": "OJI",
+            "value": "Ojibweg",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196663",
+            "key": "L21ORI",
+            "code": "ORI",
+            "value": "Odia (Oriya)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196664",
+            "key": "L21ORM",
+            "code": "ORM",
+            "value": "Afaan Oromo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196665",
+            "key": "L21OSA",
+            "code": "OSA",
+            "value": "Osage",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196666",
+            "key": "L21OSS",
+            "code": "OSS",
+            "value": "Ossetisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196667",
+            "key": "L21OTA",
+            "code": "OTA",
+            "value": "Osmaans-Turks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196668",
+            "key": "L21OTO",
+            "code": "OTO",
+            "value": "Otomi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196669",
+            "key": "L21PAA",
+            "code": "PAA",
+            "value": "Papoea",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196672",
+            "key": "L21PAC",
+            "code": "PAC",
+            "value": "Pacific talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196673",
+            "key": "L21PAG",
+            "code": "PAG",
+            "value": "Pangasinan",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196674",
+            "key": "L21PAL",
+            "code": "PAL",
+            "value": "Parthisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196675",
+            "key": "L21PAM",
+            "code": "PAM",
+            "value": "Pampanga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196676",
+            "key": "L21PAN",
+            "code": "PAN",
+            "value": "Punjabi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196678",
+            "key": "L21PAP",
+            "code": "PAP",
+            "value": "Papiaments",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196680",
+            "key": "L21PAU",
+            "code": "PAU",
+            "value": "Palaus",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196681",
+            "key": "L21PEO",
+            "code": "PEO",
+            "value": "Perzisch, oud",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196682",
+            "key": "L21PER",
+            "code": "PER",
+            "value": "Perzisch, modern (Farsi)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196683",
+            "key": "L21PHI",
+            "code": "PHI",
+            "value": "Filipijns (overige)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196684",
+            "key": "L21PHN",
+            "code": "PHN",
+            "value": "Fenicisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196685",
+            "key": "L21PLI",
+            "code": "PLI",
+            "value": "Pali",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196686",
+            "key": "L21POL",
+            "code": "POL",
+            "value": "Pools",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196687",
+            "key": "L21PON",
+            "code": "PON",
+            "value": "Pohnpeiaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196688",
+            "key": "L21POR",
+            "code": "POR",
+            "value": "Portugees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196689",
+            "key": "L21POZ",
+            "code": "POZ",
+            "value": "Polynesisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196690",
+            "key": "L21PRA",
+            "code": "PRA",
+            "value": "Prakrit",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196691",
+            "key": "L21PRO",
+            "code": "PRO",
+            "value": "Oudprovençaals (tot 1500); Oud-occitaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196692",
+            "key": "L21PUS",
+            "code": "PUS",
+            "value": "Pasjtoe",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196693",
+            "key": "L21QUE",
+            "code": "QUE",
+            "value": "Quechua",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196694",
+            "key": "L21RAJ",
+            "code": "RAJ",
+            "value": "Rajasthani",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196695",
+            "key": "L21RAP",
+            "code": "RAP",
+            "value": "Rapa Nui",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196696",
+            "key": "L21RAR",
+            "code": "RAR",
+            "value": "Cookeilandmaori",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196697",
+            "key": "L21ROA",
+            "code": "ROA",
+            "value": "Romaanse talen (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196699",
+            "key": "L21ROH",
+            "code": "ROH",
+            "value": "Reto-Romaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196700",
+            "key": "L21ROM",
+            "code": "ROM",
+            "value": "Zigeunertalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196701",
+            "key": "L21RUM",
+            "code": "RUM",
+            "value": "Roemeens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196702",
+            "key": "L21RUN",
+            "code": "RUN",
+            "value": "Kirundi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196703",
+            "key": "L21RUP",
+            "code": "RUP",
+            "value": "Aroemeens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196704",
+            "key": "L21RUS",
+            "code": "RUS",
+            "value": "Russisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196705",
+            "key": "L21SAD",
+            "code": "SAD",
+            "value": "Sandawe",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196706",
+            "key": "L21SAG",
+            "code": "SAG",
+            "value": "Sango",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196707",
+            "key": "L21SAH",
+            "code": "SAH",
+            "value": "Jakoets",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196708",
+            "key": "L21SAI",
+            "code": "SAI",
+            "value": "Indianentln, Zuid-Am",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196712",
+            "key": "L21SAL",
+            "code": "SAL",
+            "value": "Salishtalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196713",
+            "key": "L21SAM",
+            "code": "SAM",
+            "value": "Samaritaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196714",
+            "key": "L21SAN",
+            "code": "SAN",
+            "value": "Sanskriet",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196715",
+            "key": "L21SAS",
+            "code": "SAS",
+            "value": "Sasak",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196716",
+            "key": "L21SAT",
+            "code": "SAT",
+            "value": "Santali",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196717",
+            "key": "L21SCN",
+            "code": "SCN",
+            "value": "Siciliaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196718",
+            "key": "L21SCO",
+            "code": "SCO",
+            "value": "Schots (Lallans)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196720",
+            "key": "L21SEL",
+            "code": "SEL",
+            "value": "Selkoeps",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196721",
+            "key": "L21SEM",
+            "code": "SEM",
+            "value": "Semitische tln (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196722",
+            "key": "L21SGA",
+            "code": "SGA",
+            "value": "Oud-iers (tot 900)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196723",
+            "key": "L21SGN",
+            "code": "SGN",
+            "value": "Gebarentaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196724",
+            "key": "L21SHN",
+            "code": "SHN",
+            "value": "Shan",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196725",
+            "key": "L21SID",
+            "code": "SID",
+            "value": "Sidamo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_272405",
+            "key": "L21SIL",
+            "code": "SIL",
+            "value": "Stil",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196726",
+            "key": "L21SIN",
+            "code": "SIN",
+            "value": "Singalees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196728",
+            "key": "L21SIO",
+            "code": "SIO",
+            "value": "Sioux-Catawbatalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196729",
+            "key": "L21SIT",
+            "code": "SIT",
+            "value": "Sino-Tibetaanse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196730",
+            "key": "L21SLA",
+            "code": "SLA",
+            "value": "Slavische tln (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196731",
+            "key": "L21SLO",
+            "code": "SLO",
+            "value": "Slovaaks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196732",
+            "key": "L21SLV",
+            "code": "SLV",
+            "value": "Sloveens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196733",
+            "key": "L21SMA",
+            "code": "SMA",
+            "value": "Zuid-Samisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196734",
+            "key": "L21SME",
+            "code": "SME",
+            "value": "Noord-Samisch (Noord-Laps)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196735",
+            "key": "L21SMI",
+            "code": "SMI",
+            "value": "Samisch (Laps)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196736",
+            "key": "L21SMJ",
+            "code": "SMJ",
+            "value": "Lule-Sami",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196737",
+            "key": "L21SMN",
+            "code": "SMN",
+            "value": "Inari-Sami",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196738",
+            "key": "L21SMO",
+            "code": "SMO",
+            "value": "Samoaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196739",
+            "key": "L21SMS",
+            "code": "SMS",
+            "value": "Skolt-Sami",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196740",
+            "key": "L21SNA",
+            "code": "SNA",
+            "value": "Shona",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196741",
+            "key": "L21SND",
+            "code": "SND",
+            "value": "Sindhi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_411430",
+            "key": "L21SNE",
+            "code": "SNE",
+            "value": "Surinaams-Nederlands",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196743",
+            "key": "L21SNK",
+            "code": "SNK",
+            "value": "Soninke",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196744",
+            "key": "L21SOG",
+            "code": "SOG",
+            "value": "Sogdisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196745",
+            "key": "L21SOM",
+            "code": "SOM",
+            "value": "Somalisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196746",
+            "key": "L21SON",
+            "code": "SON",
+            "value": "Songhai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196747",
+            "key": "L21SOT",
+            "code": "SOT",
+            "value": "Zuid-Sotho",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196748",
+            "key": "L21SPA",
+            "code": "SPA",
+            "value": "Spaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196750",
+            "key": "L21SRD",
+            "code": "SRD",
+            "value": "Sardijns",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196751",
+            "key": "L21SRN",
+            "code": "SRN",
+            "value": "Surinaams-Nederlands",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196753",
+            "key": "L21SRP",
+            "code": "SRP",
+            "value": "Servo-Kroat. (Cyr.)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196755",
+            "key": "L21SRR",
+            "code": "SRR",
+            "value": "Sérères",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196756",
+            "key": "L21SSA",
+            "code": "SSA",
+            "value": "Nilo-Saharaanse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196757",
+            "key": "L21SSW",
+            "code": "SSW",
+            "value": "Swazi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196758",
+            "key": "L21SUK",
+            "code": "SUK",
+            "value": "Sukuma",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196759",
+            "key": "L21SUM",
+            "code": "SUM",
+            "value": "Sumatraanse talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196760",
+            "key": "L21SUN",
+            "code": "SUN",
+            "value": "Sundanees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196761",
+            "key": "L21SUS",
+            "code": "SUS",
+            "value": "Susu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196762",
+            "key": "L21SUX",
+            "code": "SUX",
+            "value": "Soemerisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196763",
+            "key": "L21SWA",
+            "code": "SWA",
+            "value": "Swahili",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196764",
+            "key": "L21SWE",
+            "code": "SWE",
+            "value": "Zweeds",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196765",
+            "key": "L21SYC",
+            "code": "SYC",
+            "value": "Klassiek Syrisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196766",
+            "key": "L21SYR",
+            "code": "SYR",
+            "value": "Syrisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196768",
+            "key": "L21TAH",
+            "code": "TAH",
+            "value": "Tahitiaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196769",
+            "key": "L21TAI",
+            "code": "TAI",
+            "value": "Taitalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196770",
+            "key": "L21TAM",
+            "code": "TAM",
+            "value": "Tamil",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196771",
+            "key": "L21TAT",
+            "code": "TAT",
+            "value": "Tataars",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196772",
+            "key": "L21TEL",
+            "code": "TEL",
+            "value": "Telugu, Teloegoe",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196773",
+            "key": "L21TEM",
+            "code": "TEM",
+            "value": "Timne",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196774",
+            "key": "L21TER",
+            "code": "TER",
+            "value": "Terêna",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196775",
+            "key": "L21TET",
+            "code": "TET",
+            "value": "Tetun",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196776",
+            "key": "L21TGK",
+            "code": "TGK",
+            "value": "Tadzjieks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196777",
+            "key": "L21TGL",
+            "code": "TGL",
+            "value": "Tagalog",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196778",
+            "key": "L21THA",
+            "code": "THA",
+            "value": "Thai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196779",
+            "key": "L21TIB",
+            "code": "TIB",
+            "value": "Tibetaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196780",
+            "key": "L21TIG",
+            "code": "TIG",
+            "value": "Tigre",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196781",
+            "key": "L21TIR",
+            "code": "TIR",
+            "value": "Tigrinya",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196782",
+            "key": "L21TIV",
+            "code": "TIV",
+            "value": "Tiv",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196783",
+            "key": "L21TKL",
+            "code": "TKL",
+            "value": "Tokelaus",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196784",
+            "key": "L21TLH",
+            "code": "TLH",
+            "value": "Klingon",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196785",
+            "key": "L21TLI",
+            "code": "TLI",
+            "value": "Tlingit",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196786",
+            "key": "L21TMH",
+            "code": "TMH",
+            "value": "Tamashek",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196788",
+            "key": "L21TOG",
+            "code": "TOG",
+            "value": "Tonga (Nyasa)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196789",
+            "key": "L21TON",
+            "code": "TON",
+            "value": "Tongaans, Tonga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196790",
+            "key": "L21TPI",
+            "code": "TPI",
+            "value": "Tok Pisin",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196791",
+            "key": "L21TSI",
+            "code": "TSI",
+            "value": "Tsimshiantalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196792",
+            "key": "L21TSN",
+            "code": "TSN",
+            "value": "Tswana",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196793",
+            "key": "L21TSO",
+            "code": "TSO",
+            "value": "Tsonga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196794",
+            "key": "L21TUK",
+            "code": "TUK",
+            "value": "Turkmeens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196796",
+            "key": "L21TUM",
+            "code": "TUM",
+            "value": "ChiTumbuka",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196797",
+            "key": "L21TUP",
+            "code": "TUP",
+            "value": "Tupi-talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196798",
+            "key": "L21TUR",
+            "code": "TUR",
+            "value": "Turks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196799",
+            "key": "L21TUT",
+            "code": "TUT",
+            "value": "Turks-Tataars (ovr)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196800",
+            "key": "L21TVL",
+            "code": "TVL",
+            "value": "Tuvaluaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196801",
+            "key": "L21TWI",
+            "code": "TWI",
+            "value": "Twi",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196802",
+            "key": "L21TYV",
+            "code": "TYV",
+            "value": "Toevaans",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196803",
+            "key": "L21UDM",
+            "code": "UDM",
+            "value": "Oedmoerts",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196804",
+            "key": "L21UGA",
+            "code": "UGA",
+            "value": "Ugaritisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196805",
+            "key": "L21UIG",
+            "code": "UIG",
+            "value": "Oeigoers",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196806",
+            "key": "L21UKR",
+            "code": "UKR",
+            "value": "Oekraïens",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196807",
+            "key": "L21UMB",
+            "code": "UMB",
+            "value": "Umbundu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196808",
+            "key": "L21UND",
+            "code": "UND",
+            "value": "Onbepaald/onbekend",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196815",
+            "key": "L21URD",
+            "code": "URD",
+            "value": "Urdu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196816",
+            "key": "L21UZB",
+            "code": "UZB",
+            "value": "Oezbeeks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196818",
+            "key": "L21VAI",
+            "code": "VAI",
+            "value": "Vai",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196819",
+            "key": "L21VEN",
+            "code": "VEN",
+            "value": "Venda",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196820",
+            "key": "L21VIE",
+            "code": "VIE",
+            "value": "Vietnamees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196821",
+            "key": "L21VOL",
+            "code": "VOL",
+            "value": "Volapük, Volapuk",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196822",
+            "key": "L21VOT",
+            "code": "VOT",
+            "value": "Wotisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196823",
+            "key": "L21WAK",
+            "code": "WAK",
+            "value": "Wakashtalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196824",
+            "key": "L21WAL",
+            "code": "WAL",
+            "value": "Walamo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196825",
+            "key": "L21WAR",
+            "code": "WAR",
+            "value": "Waray-Waray",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196826",
+            "key": "L21WAS",
+            "code": "WAS",
+            "value": "Washo",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196827",
+            "key": "L21WEL",
+            "code": "WEL",
+            "value": "Welsh",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196828",
+            "key": "L21WEN",
+            "code": "WEN",
+            "value": "Sorbische talen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196829",
+            "key": "L21WLN",
+            "code": "WLN",
+            "value": "Waals",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196830",
+            "key": "L21WOL",
+            "code": "WOL",
+            "value": "Wolof",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196831",
+            "key": "L21XAL",
+            "code": "XAL",
+            "value": "Kalmuks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196832",
+            "key": "L21XHO",
+            "code": "XHO",
+            "value": "Xhosa",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196833",
+            "key": "L21YAO",
+            "code": "YAO",
+            "value": "Yao",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196834",
+            "key": "L21YAP",
+            "code": "YAP",
+            "value": "Yapees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196835",
+            "key": "L21YID",
+            "code": "YID",
+            "value": "Jiddisch",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196836",
+            "key": "L21YOR",
+            "code": "YOR",
+            "value": "Yoruba",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196837",
+            "key": "L21YPK",
+            "code": "YPK",
+            "value": "Yupiktalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_272406",
+            "key": "L21YUE",
+            "code": "YUE",
+            "value": "Standaardkantonees",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196838",
+            "key": "L21ZAP",
+            "code": "ZAP",
+            "value": "Zapoteeks",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196839",
+            "key": "L21ZEN",
+            "code": "ZEN",
+            "value": "Zenaga",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196840",
+            "key": "L21ZHA",
+            "code": "ZHA",
+            "value": "Zhuang, Tsjoeang",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196841",
+            "key": "L21ZND",
+            "code": "ZND",
+            "value": "Zande",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196842",
+            "key": "L21ZUL",
+            "code": "ZUL",
+            "value": "Zulu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196844",
+            "key": "L21ZUN",
+            "code": "ZUN",
+            "value": "Zuni",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196845",
+            "key": "L21ZXX",
+            "code": "ZXX",
+            "value": "geen taalkundige inhoud",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_196846",
+            "key": "L21ZZA",
+            "code": "ZZA",
+            "value": "Zazaki (Dimili; Dimli; Kirdki; Kirmanjki; Zaza)",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        }
+    ],
+    "uriTemplate": "/item/metadatafield/{fieldIds}/entry",
+    "links": [
+        {
+            "rel": "self",
+            "href": "/restapi/title/metadatafield/languageCode/entry"
+        }
+    ],
+    "validationErrors": [],
+    "fieldName": "languageCode",
+    "offset": 0,
+    "limit": 0,
+    "total": 498
+}

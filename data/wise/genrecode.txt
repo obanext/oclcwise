@@ -1,0 +1,557 @@
+{
+    "id": "",
+    "items": [
+        {
+            "id": "bctabel_43580",
+            "key": "GENACT",
+            "code": "ACT",
+            "value": "Actiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_506",
+            "key": "GENADV",
+            "code": "ADV",
+            "value": "Adventurespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_507",
+            "key": "GENARC",
+            "code": "ARC",
+            "value": "Arcadespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_508",
+            "key": "GENAV",
+            "code": "AV",
+            "value": "Spanning en avontuur",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_509",
+            "key": "GENBI",
+            "code": "BI",
+            "value": "Biografie",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_510",
+            "key": "GENBOR",
+            "code": "BOR",
+            "value": "Bordspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_38985",
+            "key": "GENBS",
+            "code": "BS",
+            "value": "Boekstart",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_511",
+            "key": "GENBY",
+            "code": "BY",
+            "value": "Bijbels verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_512",
+            "key": "GENCOM",
+            "code": "COM",
+            "value": "Computerspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_513",
+            "key": "GENDE",
+            "code": "DE",
+            "value": "Detective",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_514",
+            "key": "GENDI",
+            "code": "DI",
+            "value": "Dieren",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_515",
+            "key": "GENDNK",
+            "code": "DNK",
+            "value": "Denkspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_516",
+            "key": "GENDO",
+            "code": "DO",
+            "value": "Doktersverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_517",
+            "key": "GENER",
+            "code": "ER",
+            "value": "Erotiek",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_518",
+            "key": "GENFA",
+            "code": "FA",
+            "value": "Familie",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_519",
+            "key": "GENFE",
+            "code": "FE",
+            "value": "Feministisch verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_520",
+            "key": "GENGR",
+            "code": "GR",
+            "value": "Griezelverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_521",
+            "key": "GENHI",
+            "code": "HI",
+            "value": "Historisch verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_500813",
+            "key": "GENHO",
+            "code": "HO",
+            "value": "Homofiel thema",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_523",
+            "key": "GENHU",
+            "code": "HU",
+            "value": "Humor",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_500814",
+            "key": "GENIN",
+            "code": "IN",
+            "value": "Indisch milieu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_525",
+            "key": "GENIS",
+            "code": "IS",
+            "value": "Islamitisch milieu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_526",
+            "key": "GENKE",
+            "code": "KE",
+            "value": "Kerstmis",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_527",
+            "key": "GENKI",
+            "code": "KI",
+            "value": "Kinderleven",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_528",
+            "key": "GENKNS",
+            "code": "KNS",
+            "value": "Kansspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_529",
+            "key": "GENKRT",
+            "code": "KRT",
+            "value": "Kaartspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_530",
+            "key": "GENME",
+            "code": "ME",
+            "value": "Meisjesverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_30093",
+            "key": "GENMUZ",
+            "code": "MUZ",
+            "value": "Muzieksimulatiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_531",
+            "key": "GENOO",
+            "code": "OO",
+            "value": "Oorlog en verzet",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_532",
+            "key": "GENOOR",
+            "code": "OOR",
+            "value": "Oorlogsspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_533",
+            "key": "GENPA",
+            "code": "PA",
+            "value": "Pasen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_534",
+            "key": "GENPO",
+            "code": "PO",
+            "value": "Politiek",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_535",
+            "key": "GENPP",
+            "code": "PP",
+            "value": "Paarden/pony's",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_536",
+            "key": "GENPR",
+            "code": "PR",
+            "value": "Protestants milieu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_537",
+            "key": "GENPS",
+            "code": "PS",
+            "value": "Psychologisch verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_538",
+            "key": "GENRA",
+            "code": "RA",
+            "value": "Rassenvraagstuk",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_539",
+            "key": "GENRK",
+            "code": "RK",
+            "value": "Rooms-katholiek milieu",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_541",
+            "key": "GENRLS",
+            "code": "RLS",
+            "value": "Rollenspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_540",
+            "key": "GENRO",
+            "code": "RO",
+            "value": "Romantisch verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_542",
+            "key": "GENSB",
+            "code": "SB",
+            "value": "Streek- en boerenverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_543",
+            "key": "GENSC",
+            "code": "SC",
+            "value": "School",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_30094",
+            "key": "GENSCH",
+            "code": "SCH",
+            "value": "Schietspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_544",
+            "key": "GENSF",
+            "code": "SF",
+            "value": "Science fiction en fantasy",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_545",
+            "key": "GENSI",
+            "code": "SI",
+            "value": "Sinterklaas",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_546",
+            "key": "GENSIM",
+            "code": "SIM",
+            "value": "Simulatiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_547",
+            "key": "GENSK",
+            "code": "SK",
+            "value": "Sprookjes",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_548",
+            "key": "GENSO",
+            "code": "SO",
+            "value": "Sociaal verhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_549",
+            "key": "GENSP",
+            "code": "SP",
+            "value": "Spionage",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_550",
+            "key": "GENSPO",
+            "code": "SPO",
+            "value": "Sportsimulatiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_551",
+            "key": "GENSR",
+            "code": "SR",
+            "value": "Sport",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_552",
+            "key": "GENST",
+            "code": "ST",
+            "value": "Stripverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_553",
+            "key": "GENSTR",
+            "code": "STR",
+            "value": "Strategiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_554",
+            "key": "GENTH",
+            "code": "TH",
+            "value": "Thriller",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_30095",
+            "key": "GENVEC",
+            "code": "VEC",
+            "value": "Vechtspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_555",
+            "key": "GENVH",
+            "code": "VH",
+            "value": "Verhalen",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_556",
+            "key": "GENVLI",
+            "code": "VLI",
+            "value": "Vliegtuigsimulatiespel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_557",
+            "key": "GENVZ",
+            "code": "VZ",
+            "value": "Verzet",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_558",
+            "key": "GENWE",
+            "code": "WE",
+            "value": "Western",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_559",
+            "key": "GENZAK",
+            "code": "ZAK",
+            "value": "Zakenspel",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        },
+        {
+            "id": "bctabel_560",
+            "key": "GENZE",
+            "code": "ZE",
+            "value": "Zeeverhaal",
+            "libraryId": "",
+            "branchId": "",
+            "validationErrors": []
+        }
+    ],
+    "uriTemplate": "/title/metadatafield/{fieldId}/entry",
+    "links": [
+        {
+            "rel": "self",
+            "href": "/restapi/title/metadatafield/genreCode/entry"
+        }
+    ],
+    "validationErrors": [],
+    "fieldName": "genreCode",
+    "offset": 0,
+    "limit": 0,
+    "total": 60
+}

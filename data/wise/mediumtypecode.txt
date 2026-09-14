@@ -1,0 +1,701 @@
+{
+    "id": "",
+    "items": [
+        {
+            "id": "tabelitems_402120",
+            "key": "MDTAPP0000",
+            "code": "APP",
+            "value": "Apparaat",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402122",
+            "key": "MDTBLM0000",
+            "code": "BLM",
+            "value": "Bladmuziek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402123",
+            "key": "MDTBLR0000",
+            "code": "BLR",
+            "value": "Blu-ray",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402310",
+            "key": "MDTBL_0000",
+            "code": "BL_",
+            "value": "Bladmuziek-track",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402124",
+            "key": "MDTBMU0000",
+            "code": "BMU",
+            "value": "Blu-ray muziek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402125",
+            "key": "MDTBOE0000",
+            "code": "BOE",
+            "value": "Boek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402311",
+            "key": "MDTBRO0000",
+            "code": "BRO",
+            "value": "Brochure",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402127",
+            "key": "MDTCAS0000",
+            "code": "CAS",
+            "value": "Cassette",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402129",
+            "key": "MDTCDR0000",
+            "code": "CDR",
+            "value": "CD-rom",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402130",
+            "key": "MDTCDS0000",
+            "code": "CDS",
+            "value": "CD",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402312",
+            "key": "MDTCD_0000",
+            "code": "CD_",
+            "value": "CD track",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402131",
+            "key": "MDTCOR0000",
+            "code": "COR",
+            "value": "Brieven",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402132",
+            "key": "MDTDAI0000",
+            "code": "DAI",
+            "value": "Daisy-rom",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402133",
+            "key": "MDTDIA0000",
+            "code": "DIA",
+            "value": "Dia's",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402134",
+            "key": "MDTDOC0000",
+            "code": "DOC",
+            "value": "Documentatie",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402136",
+            "key": "MDTDVD0000",
+            "code": "DVD",
+            "value": "DVD-video",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402313",
+            "key": "MDTDVM0000",
+            "code": "DVM",
+            "value": "DVD muziek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402138",
+            "key": "MDTDVR0000",
+            "code": "DVR",
+            "value": "DVD-rom",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402135",
+            "key": "MDTDV_0000",
+            "code": "DV_",
+            "value": "DVD-track",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402314",
+            "key": "MDTDWL0000",
+            "code": "DWL",
+            "value": "Dwarsligger",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402140",
+            "key": "MDTGB0000",
+            "code": "GB",
+            "value": "Gameboy",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402317",
+            "key": "MDTGBA0000",
+            "code": "GBA",
+            "value": "Gameboy Advance",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402318",
+            "key": "MDTGCB0000",
+            "code": "GCB",
+            "value": "Gamecube",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402143",
+            "key": "MDTGLB0000",
+            "code": "GLB",
+            "value": "Grootletterboek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_806662",
+            "key": "MDTGRN0000",
+            "code": "GRN",
+            "value": "Graphic Novel",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402145",
+            "key": "MDTGRP0000",
+            "code": "GRP",
+            "value": "Grammofoonplaat",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402146",
+            "key": "MDTHAN0000",
+            "code": "HAN",
+            "value": "Handschriften",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402147",
+            "key": "MDTJAB0000",
+            "code": "JAB",
+            "value": "Betaalde App",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402148",
+            "key": "MDTJAG0000",
+            "code": "JAG",
+            "value": "Gratis App",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402149",
+            "key": "MDTJEU0000",
+            "code": "JEU",
+            "value": "Website",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402150",
+            "key": "MDTJFM0000",
+            "code": "JFM",
+            "value": "Film",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402151",
+            "key": "MDTJPC0000",
+            "code": "JPC",
+            "value": "Podcast",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402152",
+            "key": "MDTKRT0000",
+            "code": "KRT",
+            "value": "Kaarten, plattegronden",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402153",
+            "key": "MDTKUN0000",
+            "code": "KUN",
+            "value": "Kunst",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402154",
+            "key": "MDTLCE0000",
+            "code": "LCE",
+            "value": "Leesclubpakket ET",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402319",
+            "key": "MDTLCP0000",
+            "code": "LCP",
+            "value": "Leesclubpakket",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402156",
+            "key": "MDTLUI0000",
+            "code": "LUI",
+            "value": "Luisterboek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402158",
+            "key": "MDTMLB0000",
+            "code": "MLB",
+            "value": "Meeluisterboek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_806661",
+            "key": "MDTMNG0000",
+            "code": "MNG",
+            "value": "Manga",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402159",
+            "key": "MDTMP30000",
+            "code": "MP3",
+            "value": "MP3",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402160",
+            "key": "MDTMUL0000",
+            "code": "MUL",
+            "value": "Multimedia",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402161",
+            "key": "MDTN3D0000",
+            "code": "N3D",
+            "value": "Nintendo 3DS",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402320",
+            "key": "MDTNDS0000",
+            "code": "NDS",
+            "value": "Nintendo DS",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402321",
+            "key": "MDTNSW0000",
+            "code": "NSW",
+            "value": "Nintendo Switch",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402322",
+            "key": "MDTNWI0000",
+            "code": "NWI",
+            "value": "Nintendo WII",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402323",
+            "key": "MDTNWU0000",
+            "code": "NWU",
+            "value": "Nintendo WII-U",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402167",
+            "key": "MDTOBM0000",
+            "code": "OBM",
+            "value": "Orkest bladmuziek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402324",
+            "key": "MDTOB_0000",
+            "code": "OB_",
+            "value": "Orkest bladmuziek-track",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402168",
+            "key": "MDTORA0000",
+            "code": "ORA",
+            "value": "eAudio",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402169",
+            "key": "MDTORB0000",
+            "code": "ORB",
+            "value": "eBook",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402170",
+            "key": "MDTORS0000",
+            "code": "ORS",
+            "value": "Online resource",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402325",
+            "key": "MDTPAR0000",
+            "code": "PAR",
+            "value": "Partituur",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402173",
+            "key": "MDTPS10000",
+            "code": "PS1",
+            "value": "Playstation 1",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402326",
+            "key": "MDTPS20000",
+            "code": "PS2",
+            "value": "Playstation 2",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402327",
+            "key": "MDTPS30000",
+            "code": "PS3",
+            "value": "Playstation 3",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402328",
+            "key": "MDTPS40000",
+            "code": "PS4",
+            "value": "Playstation 4",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402329",
+            "key": "MDTPS50000",
+            "code": "PS5",
+            "value": "Playstation 5",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402330",
+            "key": "MDTPSP0000",
+            "code": "PSP",
+            "value": "Playstation Portable",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402331",
+            "key": "MDTPSV0000",
+            "code": "PSV",
+            "value": "Playstation Vita",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402332",
+            "key": "MDTSAC0000",
+            "code": "SAC",
+            "value": "Superaudio-cd",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402181",
+            "key": "MDTSOF0000",
+            "code": "SOF",
+            "value": "Software",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402182",
+            "key": "MDTSPE0000",
+            "code": "SPE",
+            "value": "Speelleermateriaal",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402183",
+            "key": "MDTSPG0000",
+            "code": "SPG",
+            "value": "Speelgoed",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402184",
+            "key": "MDTSTK0000",
+            "code": "STK",
+            "value": "St 't Oude Kinderboek",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402185",
+            "key": "MDTSTR0000",
+            "code": "STR",
+            "value": "Strip",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402186",
+            "key": "MDTTHK0000",
+            "code": "THK",
+            "value": "Themakist",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402187",
+            "key": "MDTTIJ0000",
+            "code": "TIJ",
+            "value": "Tijdschrift",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402333",
+            "key": "MDTTSA0000",
+            "code": "TSA",
+            "value": "Tijdschrift artikel",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_404414",
+            "key": "MDTTSM0000",
+            "code": "TSM",
+            "value": "Tijdschriftenmap",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402189",
+            "key": "MDTVID0000",
+            "code": "VID",
+            "value": "Video",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402190",
+            "key": "MDTVPL0000",
+            "code": "VPL",
+            "value": "Vertelplaten",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402191",
+            "key": "MDTX360000",
+            "code": "X36",
+            "value": "Xbox 360",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402334",
+            "key": "MDTXB10000",
+            "code": "XB1",
+            "value": "Xbox One",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402335",
+            "key": "MDTXB40000",
+            "code": "XB4",
+            "value": "Xbox Series X",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402194",
+            "key": "MDTXXA0000",
+            "code": "XXA",
+            "value": "Oude AVM ",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        },
+        {
+            "id": "tabelitems_402195",
+            "key": "MDTXXX0000",
+            "code": "XXX",
+            "value": "Onbekend",
+            "libraryId": "",
+            "branchId": "0000",
+            "validationErrors": []
+        }
+    ],
+    "uriTemplate": "/title/metadatafield/{fieldId}/entry",
+    "links": [
+        {
+            "rel": "self",
+            "href": "/restapi/title/metadatafield/mediumTypeCode/entry"
+        }
+    ],
+    "validationErrors": [],
+    "fieldName": "mediumTypeCode",
+    "offset": 0,
+    "limit": 0,
+    "total": 76
+}

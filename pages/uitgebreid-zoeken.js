@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import fs from "fs";
+import path from "path";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 const text = (value) => {
@@ -8,55 +10,7 @@ const text = (value) => {
   return String(value).trim();
 };
 
-const GENRES = [
-  ["", "Kies een waarde"],
-  ["DI", "Dieren"],
-  ["DE", "Detective"],
-  ["GR", "Griezelverhaal"],
-  ["AV", "Spanning en avontuur"],
-  ["SK", "Sprookjes"],
-  ["VH", "Verhalen"],
-  ["HU", "Humor"],
-  ["ST", "Stripverhaal"],
-];
-
-const FORMATS = [
-  ["", "Kies een waarde"],
-  ["BOE", "Boek"],
-  ["STR", "Strip"],
-  ["DVD", "DVD-video"],
-  ["BLR", "Blu-ray"],
-  ["MLB", "Meeluisterboek"],
-  ["LUI", "Luisterboek"],
-  ["SPG", "Speelgoed"],
-];
-
-const LANGUAGES = [
-  ["", "Kies een waarde"],
-  ["DUT", "Nederlands"],
-  ["ENG", "Engels"],
-  ["GER", "Duits"],
-  ["FRE", "Frans"],
-  ["ARA", "Arabisch"],
-  ["TUR", "Turks"],
-];
-
-const BRANCHES = [
-  ["", "Kies een waarde"],
-  ["1000", "A'veen Stadsplein"],
-  ["1001", "A'veen Westwijk"],
-  ["1002", "Aalsmeer"],
-  ["1003", "Uithoorn"],
-  ["1004", "Kudelstaart"],
-];
-
 const COLLECTIONS = [["", "Kies een waarde"]];
-
-const YOUTH = [
-  ["", "Kies een waarde"],
-  ["JN", "Jeugd"],
-  ["NJ", "Volwassen"],
-];
 
 const emptyForm = {
   q: "",
@@ -74,7 +28,7 @@ const emptyForm = {
   isbn: "",
   series: "",
   collection: "",
-  audienceCode: "",
+  targetAudienceCode: "",
   content: "",
   available: false,
 };
@@ -97,7 +51,7 @@ function buildQuery(form) {
   if (text(form.isbn)) parts.push(`isbn:"${text(form.isbn)}"`);
   if (text(form.series)) parts.push(`series:"${text(form.series)}"`);
   if (text(form.collection)) parts.push(`collection:"${text(form.collection)}"`);
-  if (text(form.audienceCode)) parts.push(`youth:"${text(form.audienceCode)}"`);
+  if (text(form.targetAudienceCode)) parts.push(`youth:"${text(form.targetAudienceCode)}"`);
   if (text(form.content)) parts.push(`content:"${text(form.content)}"`);
   if (form.available) parts.push("available:true");
 
@@ -144,7 +98,7 @@ function determinePrimarySearch(form) {
     form.mediumTypeCode,
     form.languageCode,
     form.branchId,
-    form.audienceCode,
+    form.targetAudienceCode,
   ].filter((value) => text(value));
 
   const termFilterFields = [
@@ -183,7 +137,9 @@ function buildOclcSearchUrl(form) {
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
     text(form.languageCode) ? `languageCode:${text(form.languageCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
-    text(form.audienceCode) ? `audienceCode:${text(form.audienceCode)}` : "",
+    text(form.targetAudienceCode)
+      ? `targetAudienceCode:${text(form.targetAudienceCode)}`
+      : "",
     text(form.subject) ? `subject:${text(form.subject)}` : "",
     text(form.series) ? `series:${text(form.series)}` : "",
   ].filter(Boolean);
@@ -212,10 +168,42 @@ function buildOclcSearchUrl(form) {
   return `/oclc-search?${params.toString()}`;
 }
 
-export default function AdvancedSearchPage() {
+export default function AdvancedSearchPage({ metadataOptions }) {
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
+  const [branches, setBranches] = useState([]);
+  const [branchesLoading, setBranchesLoading] = useState(true);
+  const [branchesError, setBranchesError] = useState("");
   const queryPreview = useMemo(() => buildQuery(form), [form]);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/wise-branches")
+      .then(async (response) => {
+        const json = await response.json().catch(() => null);
+        if (!response.ok) {
+          throw new Error(json?.error || `Request failed with status ${response.status}`);
+        }
+        return json;
+      })
+      .then((json) => {
+        if (!active) return;
+        setBranches(Array.isArray(json?.branches) ? json.branches : []);
+      })
+      .catch((error) => {
+        if (!active) return;
+        setBranches([]);
+        setBranchesError(error.message || "Bibliotheken laden mislukt");
+      })
+      .finally(() => {
+        if (active) setBranchesLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function setField(name, value) {
     setForm((current) => ({
@@ -303,9 +291,10 @@ export default function AdvancedSearchPage() {
                 value={form.mediumTypeCode}
                 onChange={(event) => setField("mediumTypeCode", event.target.value)}
               >
-                {FORMATS.map(([value, label]) => (
-                  <option key={value || "empty"} value={value}>
-                    {label}
+                <option value="">Kies een waarde</option>
+                {metadataOptions.formats.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
                   </option>
                 ))}
               </select>
@@ -314,11 +303,14 @@ export default function AdvancedSearchPage() {
             <label className="advanced-field">
               <span>Bibliotheek</span>
               <select value={form.branchId} onChange={(event) => setField("branchId", event.target.value)}>
-                {BRANCHES.map(([value, label]) => (
-                  <option key={value || "empty"} value={value}>
-                    {label}
+                <option value="">Kies een waarde</option>
+                {branches.map((option) => (
+                  <option key={option.branchId} value={option.branchId}>
+                    {option.name}
                   </option>
                 ))}
+                {branchesLoading ? <option disabled>Bibliotheken laden...</option> : null}
+                {branchesError ? <option disabled>{branchesError}</option> : null}
               </select>
             </label>
 
@@ -343,9 +335,10 @@ export default function AdvancedSearchPage() {
             <label className="advanced-field">
               <span>Genre</span>
               <select value={form.genreCode} onChange={(event) => setField("genreCode", event.target.value)}>
-                {GENRES.map(([value, label]) => (
-                  <option key={value || "empty"} value={value}>
-                    {label}
+                <option value="">Kies een waarde</option>
+                {metadataOptions.genres.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
                   </option>
                 ))}
               </select>
@@ -354,9 +347,10 @@ export default function AdvancedSearchPage() {
             <label className="advanced-field">
               <span>Taal</span>
               <select value={form.languageCode} onChange={(event) => setField("languageCode", event.target.value)}>
-                {LANGUAGES.map(([value, label]) => (
-                  <option key={value || "empty"} value={value}>
-                    {label}
+                <option value="">Kies een waarde</option>
+                {metadataOptions.languages.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
                   </option>
                 ))}
               </select>
@@ -400,10 +394,14 @@ export default function AdvancedSearchPage() {
 
             <label className="advanced-field">
               <span>Jeugd</span>
-              <select value={form.audienceCode} onChange={(event) => setField("audienceCode", event.target.value)}>
-                {YOUTH.map(([value, label]) => (
-                  <option key={value || "empty"} value={value}>
-                    {label}
+              <select
+                value={form.targetAudienceCode}
+                onChange={(event) => setField("targetAudienceCode", event.target.value)}
+              >
+                <option value="">Kies een waarde</option>
+                {metadataOptions.youth.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
                   </option>
                 ))}
               </select>
@@ -435,4 +433,29 @@ export default function AdvancedSearchPage() {
       </div>
     </main>
   );
+}
+
+function readMetadataOptions(filename) {
+  const filePath = path.join(process.cwd(), "data", "wise", filename);
+  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+  return (Array.isArray(data?.items) ? data.items : [])
+    .map((item) => ({
+      code: text(item?.code),
+      label: text(item?.value),
+    }))
+    .filter((item) => item.code && item.label);
+}
+
+export function getStaticProps() {
+  return {
+    props: {
+      metadataOptions: {
+        formats: readMetadataOptions("mediumtypecode.txt"),
+        genres: readMetadataOptions("genrecode.txt"),
+        languages: readMetadataOptions("languagecode.txt"),
+        youth: readMetadataOptions("targetaudiencecode.txt"),
+      },
+    },
+  };
 }
