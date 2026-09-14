@@ -199,7 +199,6 @@ export function buildOclcFilterRows(data = {}) {
               : "Niet zichtbaar in de interface omdat de ruwe OCLC-eigenschap label ontbreekt.",
       });
     });
-    });
   };
 
   asArray(data?.perspectives)
