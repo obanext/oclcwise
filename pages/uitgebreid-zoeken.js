@@ -1,7 +1,7 @@
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   ADVANCED_SEARCH_MAPPING_ROWS,
@@ -20,6 +20,7 @@ const emptyForm = {
   q: "",
   title: "",
   author: "",
+  authorFacetValue: "",
   mediumTypeCode: "",
   branchId: "",
   placementCode: "",
@@ -76,8 +77,8 @@ function buildSearchState(form) {
   const primary = determinePrimarySearch(form);
 
   const facetFilters = [
-    primary.source !== "author" && text(form.author)
-      ? `authorFacet:${text(form.author)}`
+    primary.source !== "author" && text(form.authorFacetValue)
+      ? `authorFacet:${text(form.authorFacetValue)}`
       : "",
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
@@ -102,6 +103,40 @@ function buildSearchState(form) {
     termFilters,
     filterAvailableTitles: Boolean(form.available),
   };
+}
+
+
+function getAuthorFacetOptions(data = {}) {
+  const facets = Array.isArray(data?.facets) ? data.facets : [];
+  const authorFacet = facets.find((facet) => text(facet?.name) === "authorFacet");
+  const values = Array.isArray(authorFacet?.values) ? authorFacet.values : [];
+  const seen = new Set();
+
+  return values
+    .map((option) => {
+      const value = text(option?.term || option?.label);
+      const label = text(option?.label || option?.term);
+      return { value, label: label || value };
+    })
+    .filter((option) => {
+      const key = option.value.toLocaleLowerCase("nl");
+      if (!option.value || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function findAuthorFacetValue(options, value) {
+  const needle = text(value).toLocaleLowerCase("nl");
+  if (!needle) return "";
+
+  const match = options.find(
+    (option) =>
+      text(option.value).toLocaleLowerCase("nl") === needle ||
+      text(option.label).toLocaleLowerCase("nl") === needle
+  );
+
+  return text(match?.value);
 }
 
 function appendSearchParams(params, state, { includePage = false } = {}) {
@@ -159,7 +194,60 @@ function downloadMappingCsv() {
 export default function AdvancedSearchPage({ metadataOptions, branches }) {
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
+  const [authorOptions, setAuthorOptions] = useState([]);
+  const [authorLoading, setAuthorLoading] = useState(false);
+  const [authorError, setAuthorError] = useState("");
   const queryPreview = useMemo(() => buildOclcRequestPreview(form), [form]);
+
+  useEffect(() => {
+    const author = text(form.author);
+
+    if (author.length < 2) {
+      setAuthorOptions([]);
+      setAuthorLoading(false);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(async () => {
+      setAuthorLoading(true);
+
+      try {
+        const params = new URLSearchParams();
+        params.set("term", author);
+        params.set("searchScope", "author");
+        params.set("limit", "20");
+
+        const response = await fetch(`/api/oclc-search?${params.toString()}`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        const options = getAuthorFacetOptions(data);
+        setAuthorOptions(options);
+
+        const exactValue = findAuthorFacetValue(options, author);
+        if (exactValue) {
+          setForm((current) =>
+            text(current.author) === author
+              ? { ...current, authorFacetValue: exactValue }
+              : current
+          );
+        }
+      } catch (error) {
+        if (error?.name !== "AbortError") setAuthorOptions([]);
+      } finally {
+        if (!controller.signal.aborted) setAuthorLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [form.author]);
 
   function setField(name, value) {
     setForm((current) => ({
@@ -168,13 +256,33 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
     }));
   }
 
+  function setAuthor(value) {
+    const authorFacetValue = findAuthorFacetValue(authorOptions, value);
+    setAuthorError("");
+    setForm((current) => ({
+      ...current,
+      author: value,
+      authorFacetValue,
+    }));
+  }
+
   function submit(event) {
     event.preventDefault();
+
+    const primary = determinePrimarySearch(form);
+    if (text(form.author) && primary.source !== "author" && !text(form.authorFacetValue)) {
+      setAuthorError("Kies de auteur uit de OCLC-suggesties.");
+      return;
+    }
+
+    setAuthorError("");
     router.push(buildOclcSearchUrl(form));
   }
 
   function reset() {
     setForm(emptyForm);
+    setAuthorOptions([]);
+    setAuthorError("");
   }
 
   return (
@@ -237,7 +345,21 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
 
             <label className="advanced-field">
               <span>Auteur</span>
-              <input value={form.author} onChange={(event) => setField("author", event.target.value)} />
+              <input
+                list="advanced-author-options"
+                value={form.author}
+                onChange={(event) => setAuthor(event.target.value)}
+                autoComplete="off"
+              />
+              <datalist id="advanced-author-options">
+                {authorOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </datalist>
+              {authorLoading ? <small>Auteurs ophalen…</small> : null}
+              {authorError ? <small>{authorError}</small> : null}
             </label>
 
             <label className="advanced-field">

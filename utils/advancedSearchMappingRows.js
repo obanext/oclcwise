@@ -26,13 +26,13 @@ const rows = [
   {
     order: 3,
     field: "Auteur",
-    inputType: "vrij veld",
+    inputType: "autocomplete",
     status: "JA",
     oclcParameter: "term + searchScope / facetFilter",
-    valuePattern: "term=<auteur>&searchScope=author | authorFacet:<auteur>",
-    source: "invoer",
-    example: "term=Linden, Martijn van der&searchScope=author | facetFilter=authorFacet:Linden, Martijn van der",
-    note: "Als Auteur de primaire zoeking is, wordt searchScope=author gebruikt. In combinatie met Titel of Vrij zoeken wordt Auteur als authorFacet-filter toegevoegd.",
+    valuePattern: "term=<auteur>&searchScope=author | authorFacet:<exacte OCLC-facetwaarde>",
+    source: "OCLC authorFacet",
+    example: "term=velthuijs&searchScope=author | facetFilter=authorFacet:Velthuijs, Max",
+    note: "Auteur alleen gebruikt vrije auteurzoeking. Als Titel of Vrij zoeken de primaire term is, wordt de gekozen exacte authorFacet-waarde uit de OCLC-suggesties gebruikt.",
   },
   {
     order: 4,
