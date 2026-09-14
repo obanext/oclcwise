@@ -62,6 +62,30 @@ function firstSource(candidates = []) {
   return candidates.find((candidate) => hasValue(candidate.value)) || candidates[0] || {};
 }
 
+function normalizedMetadataKey(value) {
+  return text(value).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function metadataField(item = {}, keys = [], includes = [], excludes = []) {
+  const metadata = item?.metadata && typeof item.metadata === "object" && !Array.isArray(item.metadata)
+    ? item.metadata
+    : {};
+  const entries = Object.keys(metadata);
+  const exact = entries.find((key) =>
+    keys.some((candidate) => normalizedMetadataKey(candidate) === normalizedMetadataKey(key))
+  );
+
+  if (exact) return `items[].metadata.${exact}`;
+
+  const patterned = entries.find((key) => {
+    const normalized = normalizedMetadataKey(key);
+    return includes.some((part) => normalized.includes(normalizedMetadataKey(part))) &&
+      !excludes.some((part) => normalized.includes(normalizedMetadataKey(part)));
+  });
+
+  return patterned ? `items[].metadata.${patterned}` : "items[].metadata";
+}
+
 export function buildOclcUsedFieldRows(data = {}) {
   const endpoint = searchEndpoint(data);
   const rows = [];
@@ -70,49 +94,49 @@ export function buildOclcUsedFieldRows(data = {}) {
     const resultIndex = item?.index || index + 1;
     const detailId = text(item?.detailId);
     const title = firstSource([
-      { field: "items[].title", value: item?.title },
-      { field: "items[].mainTitle", value: item?.mainTitle },
-      { field: "items[].childTitleList[0].childTitle", value: item?.childTitleList?.[0]?.childTitle },
+      { field: metadataField(item, ["title", "mainTitle", "displayTitle", "titleDisplay", "titel"], ["title", "titel"], ["id", "number", "no", "sort", "series", "child", "subtitle"]), value: item?.title },
+      { field: metadataField(item, ["mainTitle", "title", "titel"], ["maintitle"], ["id", "number"]), value: item?.mainTitle },
+      { field: metadataField(item, ["childTitle", "childTitleList"], ["childtitle"], ["id"]), value: item?.childTitleList?.[0]?.childTitle },
     ]);
     const cover = firstSource([
-      { field: "items[].imageUrls.medium", value: item?.imageUrls?.medium },
-      { field: "items[].imageUrls.small", value: item?.imageUrls?.small },
-      { field: "items[].imageUrls.large", value: item?.imageUrls?.large },
+      { field: metadataField(item, ["imageMedium", "mediumImageUrl", "imageUrl"], ["image"], ["small", "large"]), value: item?.imageUrls?.medium },
+      { field: metadataField(item, ["imageSmall", "smallImageUrl"], ["image", "small"], []), value: item?.imageUrls?.small },
+      { field: metadataField(item, ["imageLarge", "largeImageUrl"], ["image", "large"], []), value: item?.imageUrls?.large },
     ]);
     const media = firstSource([
-      { field: "items[].media.description", value: item?.media?.description },
-      { field: "items[].mediumGroup.description", value: item?.mediumGroup?.description },
+      { field: metadataField(item, ["media", "medium", "mediumType", "mediumTypeCode"], ["medium", "media"], ["facet"]), value: item?.media?.description },
+      { field: metadataField(item, ["mediumGroup", "mediumGroupCode"], ["mediumgroup"], ["facet"]), value: item?.mediumGroup?.description },
     ]);
     const summary = firstSource([
-      { field: "items[].contents", value: item?.contents },
-      { field: "items[].contentsSchoolWise", value: item?.contentsSchoolWise },
+      { field: metadataField(item, ["contents", "summary", "description"], ["contents", "summary"], ["facet"]), value: item?.contents },
+      { field: metadataField(item, ["contentsSchoolWise"], ["contentsschoolwise"], []), value: item?.contentsSchoolWise },
     ]);
     const visibleFields = [
       { section: "Resultaat", siteField: "Titel", oclcField: title.field, value: title.value },
       { section: "Resultaat", siteField: "Cover", oclcField: cover.field, value: cover.value },
-      { section: "Resultaat", siteField: "Auteur", oclcField: "items[].author.description", value: item?.author?.description },
+      { section: "Resultaat", siteField: "Auteur", oclcField: metadataField(item, ["author", "mainAuthor", "authorFacet", "auteur", "creator"], ["author", "auteur", "creator"], ["id", "number", "sort"]), value: item?.author?.description },
       { section: "Resultaat", siteField: "Type", oclcField: media.field, value: media.value },
       {
         section: "Resultaatmetadata",
         siteField: "Taal",
-        oclcField: "items[].language[].description",
+        oclcField: metadataField(item, ["language", "languages", "languageCode", "taal"], ["language", "taal"], ["facet"]),
         value: asArray(item?.language).map((entry) => text(entry?.description)).filter(Boolean).join(", "),
         note: "Meerdere zichtbare taalwaarden worden samengevoegd.",
       },
-      { section: "Resultaatmetadata", siteField: "Jaar van uitgave", oclcField: "items[].publicationYear", value: item?.publicationYear },
+      { section: "Resultaatmetadata", siteField: "Jaar van uitgave", oclcField: metadataField(item, ["publicationYear", "year", "publicationDate", "jaar"], ["publicationyear", "jaar"], ["facet"]), value: item?.publicationYear },
       {
         section: "Resultaatmetadata",
         siteField: "Genre",
-        oclcField: "items[].genre[].description",
+        oclcField: metadataField(item, ["genre", "genreCode"], ["genre"], ["facet"]),
         value: asArray(item?.genre).map((entry) => text(entry?.description)).filter(Boolean).join(", "),
         note: "Meerdere zichtbare genrewaarden worden samengevoegd.",
       },
-      { section: "Resultaatmetadata", siteField: "Onderwerp", oclcField: "items[].subjectPim.description", value: item?.subjectPim?.description },
+      { section: "Resultaatmetadata", siteField: "Onderwerp", oclcField: metadataField(item, ["subject", "subjectPim", "onderwerp"], ["subject", "onderwerp"], ["id", "facet"]), value: item?.subjectPim?.description },
       { section: "Resultaat", siteField: "Samenvatting", oclcField: summary.field, value: summary.value },
       {
         section: "Navigatie",
         siteField: "Detailpagina",
-        oclcField: "items[].detailId",
+        oclcField: metadataField(item, ["childTitleId", "titleId", "titleNumber", "titleNo", "titlenumber", "titelnummer", "cWiseId", "wiseId"], ["titleid", "titelnummer"], []),
         value: item?.detailHref,
         note: "Lokale detailroute opgebouwd met de numerieke OCLC-titleId.",
       },
@@ -126,7 +150,7 @@ export function buildOclcUsedFieldRows(data = {}) {
       obaIst: "WEL",
       endpoint,
       mockupRoute: MOCKUP_ROUTE,
-      note: row.note || "Ruwe waarde uit de OCLC-zoekresponse.",
+      note: row.note || "Ruwe waarde uit de OCLC /search-response; resultaatvelden komen uit items[].metadata.",
     }));
   });
 
