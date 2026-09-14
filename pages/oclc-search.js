@@ -97,27 +97,23 @@ function parseSearchStateFromPath(asPath = "") {
 }
 
 function itemTitle(item = {}) {
-  return text(item.title || item.mainTitle || item.childTitleList?.[0]?.childTitle);
-}
+  const mainTitle = text(
+    item.mainTitle ||
+    item.title ||
+    item.childTitleList?.[0]?.childTitle
+  );
 
-function itemCover(item = {}) {
-  return text(item.imageUrls?.medium || item.imageUrls?.small || item.imageUrls?.large);
-}
+  const volumeTitle = [
+    text(item.volume),
+    text(item.volumeTitle),
+  ].filter(Boolean).join(", ");
 
-function itemLanguage(item = {}) {
-  return asArray(item.language)
-    .map((entry) => text(entry?.description || entry?.code))
-    .filter(Boolean)
-    .join(", ");
+  return [
+    mainTitle,
+    text(item.subtitle),
+    volumeTitle,
+  ].filter(Boolean).join(" / ");
 }
-
-function itemGenre(item = {}) {
-  return asArray(item.genre)
-    .map((entry) => text(entry?.description))
-    .filter(Boolean)
-    .join(", ");
-}
-
 function selectedSet(filters = []) {
   return new Set(asArray(filters).map(text).filter(Boolean));
 }
