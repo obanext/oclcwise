@@ -44,19 +44,33 @@ function rawFacetTitle(facet = {}) {
 }
 
 function rawFacetValueLabel(option = {}) {
-  return text(option?.raw?.label);
+  return text(option?.raw?.label || option?.label || option?.term);
+}
+
+function yearOnly(value) {
+  const match = text(value).match(/(?:18|19|20|21)\d{2}/);
+  return match ? match[0] : "";
 }
 
 function displayedFacetValueLabel(definition = {}, option = {}) {
   if (definition.name === "availableNow") return "Nu aanwezig";
+  if (definition.name === "publicationYear") {
+    return yearOnly(option?.term || option?.label || option?.raw?.label);
+  }
   return rawFacetValueLabel(option);
 }
 
 function rawFacetFilterValue(facet = {}, option = {}) {
+  const facetName = text(facet.name || option.key);
+
+  if (facetName === "publicationYear") {
+    const year = yearOnly(option?.term || option?.label || option?.raw?.label || option?.facetFilter);
+    return year ? `customPublicationYear:${year}` : "";
+  }
+
   const existing = text(option.facetFilter);
   if (existing) return existing;
 
-  const facetName = text(facet.name || option.key);
   const term = text(option.term || option.value || option.id || option.label);
 
   if (facetName && term) return `${facetName}:${term}`;

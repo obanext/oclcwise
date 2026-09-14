@@ -1505,6 +1505,18 @@ textarea {
   border-color: #111;
 }
 
+.advanced-field-disabled {
+  color: #777;
+}
+
+.advanced-field-disabled input,
+.advanced-field-disabled select {
+  background: #ededed;
+  border-color: #d5d5d5;
+  color: #888;
+  cursor: not-allowed;
+}
+
 .advanced-actions {
   display: flex;
   justify-content: flex-end;

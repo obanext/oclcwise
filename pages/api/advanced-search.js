@@ -25,10 +25,15 @@ function appendRepeatedParam(url, key, values) {
   return asArray(values).reduce((nextUrl, value) => appendParam(nextUrl, key, value), url);
 }
 
-function yearFacet(value) {
-  const year = text(value);
-  if (!/^\d{4}$/.test(year)) return "";
-  return `publicationYear:${year}-01-01T00:00:00Z`;
+function yearFacet(fromValue, toValue) {
+  const from = text(fromValue);
+  const to = text(toValue);
+  const hasFrom = /^\d{4}$/.test(from);
+  const hasTo = /^\d{4}$/.test(to);
+  if (hasFrom && hasTo) return `customPublicationYear:${from}-${to}`;
+  if (hasFrom) return `customPublicationYear:${from}`;
+  if (hasTo) return `customPublicationYear:${to}`;
+  return "";
 }
 
 function facet(field, value) {
@@ -65,7 +70,7 @@ export default async function handler(req, res) {
 
   const filters = [
     ...asArray(req.query.facetFilter).map(text).filter(Boolean),
-    yearFacet(req.query.year),
+    yearFacet(req.query.year, req.query.yearTo),
     facet("genreCode", req.query.genreCode),
     facet("mediumTypeCode", req.query.mediumTypeCode),
     facet("languageCode", req.query.languageCode),

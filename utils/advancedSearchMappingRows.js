@@ -1,4 +1,4 @@
-const OCLC_SEARCH_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/search";
+const OCLC_SEARCH_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/titlesummary";
 
 const rows = [
   {
@@ -28,11 +28,11 @@ const rows = [
     field: "Auteur",
     inputType: "vrij veld",
     status: "JA",
-    oclcParameter: "facetFilter",
-    valuePattern: "authorFacet:<auteur>",
+    oclcParameter: "term + searchScope",
+    valuePattern: "term=<auteur>&searchScope=author",
     source: "invoer",
-    example: "facetFilter=authorFacet:Linden, Martijn van der",
-    note: "OCLC documenteert authorFacet expliciet als facetFilter. URL-encoding van komma en spaties gebeurt bij het opbouwen van de request.",
+    example: "term=Linden, Martijn van der&searchScope=author",
+    note: "Zelfde author-scope als in gewoon zoeken. Bij combinatie met een primaire zoekterm wordt auteur aanvullend als termFilter=author:<auteur> meegestuurd.",
   },
   {
     order: 4,
@@ -65,7 +65,7 @@ const rows = [
     valuePattern: "placementCode:<waarde>",
     source: "invoer",
     example: "termFilter=placementCode:<waarde>",
-    note: "Beschikbaar voor testdoeleinden, maar de exacte geïndexeerde OCLC-veldnaam moet nog worden bevestigd.",
+    note: "Uitgeschakeld in de mockup totdat de exacte geïndexeerde OCLC-veldnaam is bevestigd.",
   },
   {
     order: 7,
@@ -120,7 +120,7 @@ const rows = [
     valuePattern: "subject:<waarde>",
     source: "invoer",
     example: "facetFilter=subject:<waarde>",
-    note: "De mockup kan dit rechtstreeks testen; exacte matching/waardeconventie moet nog worden bevestigd.",
+    note: "Uitgeschakeld in de mockup totdat matching en waardeconventie zijn bevestigd.",
   },
   {
     order: 12,
@@ -131,7 +131,7 @@ const rows = [
     valuePattern: "issn:<waarde>",
     source: "invoer",
     example: "termFilter=issn:<waarde>",
-    note: "Beschikbaar voor testdoeleinden; veldnaam/normalisatie nog bevestigen.",
+    note: "Uitgeschakeld in de mockup totdat veldnaam en normalisatie zijn bevestigd.",
   },
   {
     order: 13,
@@ -142,7 +142,7 @@ const rows = [
     valuePattern: "publisher:<waarde>",
     source: "invoer",
     example: "termFilter=publisher:<waarde>",
-    note: "Beschikbaar voor testdoeleinden; geïndexeerde OCLC-veldnaam nog bevestigen.",
+    note: "Uitgeschakeld in de mockup totdat de geïndexeerde OCLC-veldnaam is bevestigd.",
   },
   {
     order: 14,
@@ -153,7 +153,7 @@ const rows = [
     valuePattern: "isbn:<waarde>",
     source: "invoer",
     example: "termFilter=isbn:<waarde>",
-    note: "Spaties en koppeltekens worden verwijderd; exacte OCLC-termFilterwerking nog bevestigen.",
+    note: "Uitgeschakeld in de mockup totdat de exacte OCLC-termFilterwerking is bevestigd.",
   },
   {
     order: 15,
@@ -197,7 +197,7 @@ const rows = [
     valuePattern: "content:<waarde>",
     source: "invoer",
     example: "termFilter=content:<waarde>",
-    note: "Beschikbaar voor testdoeleinden; geïndexeerde OCLC-veldnaam nog bevestigen.",
+    note: "Uitgeschakeld in de mockup totdat de geïndexeerde OCLC-veldnaam is bevestigd.",
   },
   {
     order: 19,

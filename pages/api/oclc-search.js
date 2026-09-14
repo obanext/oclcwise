@@ -80,112 +80,26 @@ function extractItems(body) {
 }
 
 function extractChildTitleId(item = {}) {
-  const metadata = metadataObject(item);
-  const candidates = [
-    item?.childTitleList?.[0]?.childTitleId,
-    item?.title?.childTitleList?.[0]?.childTitleId,
-    item?.childTitleIds?.[0],
-    item?.title?.childTitleIds?.[0],
-    item?.childTitleId,
-    item?.title?.childTitleId,
-    metadataScalar(metadata, [
-      "childTitleId",
-      "titleId",
-      "titleNumber",
-      "titleNo",
-      "titlenumber",
-      "titelnummer",
-      "cWiseId",
-      "wiseId",
-    ]),
-    item?.id,
-    item?.title?.id,
-  ];
+  const id =
+    item?.childTitleList?.[0]?.childTitleId ||
+    item?.title?.childTitleList?.[0]?.childTitleId ||
+    item?.childTitleIds?.[0] ||
+    item?.title?.childTitleIds?.[0] ||
+    item?.childTitleId ||
+    item?.title?.childTitleId ||
+    item?.id ||
+    item?.title?.id ||
+    "";
 
-  return candidates.map(text).find(isNumericId) || "";
+  return isNumericId(id) ? text(id) : "";
 }
 
 function extractSourceId(item = {}) {
-  const metadata = metadataObject(item);
-  return firstText(
-    item?.id,
-    item?.title?.id,
-    item?.frbrkey,
-    item?.title?.frbrkey,
-    metadataScalar(metadata, ["id", "frbrkey", "frbrId", "recordId"])
-  );
+  return text(item?.id || item?.title?.id || item?.frbrkey || item?.title?.frbrkey || "");
 }
 
 function firstText(...values) {
   return values.map(text).find(Boolean) || "";
-}
-
-function metadataObject(item = {}) {
-  const metadata = item?.metadata;
-  return metadata && typeof metadata === "object" && !Array.isArray(metadata) ? metadata : {};
-}
-
-function normalizedMetadataKey(value) {
-  return text(value).toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
-function metadataValue(metadata, keys = []) {
-  const entries = Object.entries(metadata || {});
-  const normalized = new Map(entries.map(([key, value]) => [normalizedMetadataKey(key), value]));
-
-  for (const key of keys) {
-    const value = normalized.get(normalizedMetadataKey(key));
-    if (value !== undefined && value !== null && value !== "") return value;
-  }
-
-  return undefined;
-}
-
-function metadataValueByPattern(metadata, includes = [], excludes = []) {
-  for (const [key, value] of Object.entries(metadata || {})) {
-    const normalized = normalizedMetadataKey(key);
-    if (!includes.some((part) => normalized.includes(normalizedMetadataKey(part)))) continue;
-    if (excludes.some((part) => normalized.includes(normalizedMetadataKey(part)))) continue;
-    if (value !== undefined && value !== null && value !== "") return value;
-  }
-
-  return undefined;
-}
-
-function scalarValue(value) {
-  if (Array.isArray(value)) {
-    for (const entry of value) {
-      const candidate = scalarValue(entry);
-      if (candidate) return candidate;
-    }
-    return "";
-  }
-
-  if (value && typeof value === "object") {
-    return firstText(
-      scalarValue(value.value),
-      scalarValue(value.text),
-      scalarValue(value.label),
-      scalarValue(value.labelText),
-      scalarValue(value.description),
-      scalarValue(value.name),
-      scalarValue(value.title)
-    );
-  }
-
-  return text(value);
-}
-
-function metadataScalar(metadata, keys = [], includes = [], excludes = []) {
-  return scalarValue(
-    metadataValue(metadata, keys) ?? metadataValueByPattern(metadata, includes, excludes)
-  );
-}
-
-function metadataArray(metadata, keys = [], includes = [], excludes = []) {
-  const value = metadataValue(metadata, keys) ?? metadataValueByPattern(metadata, includes, excludes);
-  if (value === undefined || value === null || value === "") return [];
-  return asArray(value).map(scalarValue).filter(Boolean);
 }
 
 function normalizePerspectives(perspectiveBody = {}) {
@@ -307,25 +221,18 @@ function normalizeFacets(searchBody = {}) {
 }
 
 function normalizeItem(item = {}, index = 0) {
-  const metadata = metadataObject(item);
   const detailId = extractChildTitleId(item);
   const sourceId = extractSourceId(item);
-  const authorSource = item?.author || metadataValue(metadata, ["author", "mainAuthor", "authorFacet", "auteur", "creator"]) || {};
-  const mediaSource = item?.media || metadataValue(metadata, ["media", "medium", "mediumType", "mediumTypeCode"]) || {};
-  const mediumGroupSource = item?.mediumGroup || metadataValue(metadata, ["mediumGroup", "mediumGroupCode"]) || {};
-  const languageSource = asArray(item?.language).length
-    ? asArray(item?.language)
-    : asArray(metadataValue(metadata, ["language", "languages", "languageCode", "taal"]));
-  const language = languageSource.map((entry) => ({
-    code: text(entry?.code || (typeof entry === "string" ? entry : "")),
-    description: scalarValue(entry?.description ?? entry),
+  const author = item?.author || {};
+  const media = item?.media || {};
+  const mediumGroup = item?.mediumGroup || {};
+  const language = asArray(item?.language).map((entry) => ({
+    code: text(entry?.code),
+    description: text(entry?.description || entry),
     raw: entry,
   }));
 
-  const childTitleSource = asArray(item?.childTitleList).length
-    ? asArray(item?.childTitleList)
-    : asArray(metadataValue(metadata, ["childTitleList"]));
-  const childTitleList = childTitleSource.map((child) => ({
+  const childTitleList = asArray(item?.childTitleList).map((child) => ({
     id: text(child?.id),
     childTitleId: text(child?.childTitleId),
     childOrigin: text(child?.childOrigin),
@@ -338,61 +245,31 @@ function normalizeItem(item = {}, index = 0) {
     raw: child,
   }));
 
-  const title = firstText(
-    item?.title,
-    metadataScalar(
-      metadata,
-      ["title", "mainTitle", "displayTitle", "titleDisplay", "titel"],
-      ["title", "titel"],
-      ["id", "number", "no", "sort", "series", "child", "subtitle"]
-    )
-  );
-  const mainTitle = firstText(
-    item?.mainTitle,
-    metadataScalar(metadata, ["mainTitle", "title", "titel"], ["maintitle"], ["id", "number"])
-  );
-  const subtitle = firstText(
-    item?.subtitle,
-    metadataScalar(metadata, ["subtitle", "subTitle", "ondertitel"], ["subtitle", "ondertitel"], ["id"])
-  );
-  const authorDescription = firstText(
-    authorSource?.description,
-    typeof authorSource === "string" ? authorSource : "",
-    metadataScalar(metadata, ["author", "mainAuthor", "authorFacet", "auteur", "creator"], ["author", "auteur", "creator"], ["id", "number", "sort"])
-  );
-  const publicationYear = firstText(
-    item?.publicationYear,
-    metadataScalar(metadata, ["publicationYear", "year", "publicationDate", "jaar"], ["publicationyear", "jaar"], ["facet"])
-  );
-  const isbnValues = asArray(item?.isbn).length
-    ? asArray(item?.isbn).map(text).filter(Boolean)
-    : metadataArray(metadata, ["isbn", "isbn13", "isbn10"], ["isbn"], ["facet"]);
-
   return {
     index,
     id: detailId || sourceId || text(item?.id),
     detailId,
     sourceId,
-    frbrId: firstText(item?.id, metadataScalar(metadata, ["frbrId", "frbrkey"])),
-    frbrkey: firstText(item?.frbrkey, metadataScalar(metadata, ["frbrkey"])),
-    cWiseId: firstText(item?.cWiseId, metadataScalar(metadata, ["cWiseId", "cwiseid", "wiseId"])),
-    origin: firstText(item?.origin, metadataScalar(metadata, ["origin"])),
+    frbrId: text(item?.id),
+    frbrkey: text(item?.frbrkey),
+    cWiseId: text(item?.cWiseId),
+    origin: text(item?.origin),
     detailHref: detailId ? `/oclc-detail/${encodeURIComponent(detailId)}` : "",
-    title,
-    mainTitle,
-    subtitle,
-    volume: firstText(item?.volume, metadataScalar(metadata, ["volume"])),
-    volumeTitle: firstText(item?.volumeTitle, metadataScalar(metadata, ["volumeTitle"])),
+    title: text(item?.title),
+    mainTitle: text(item?.mainTitle),
+    subtitle: text(item?.subtitle),
+    volume: text(item?.volume),
+    volumeTitle: text(item?.volumeTitle),
     author: {
-      description: authorDescription,
-      thesaurusNumber: text(authorSource?.thesaurusNumber),
-      searchable: Boolean(authorSource?.searchable),
-      type: text(authorSource?.type),
-      qualifier: text(authorSource?.qualifier),
-      addition: text(authorSource?.addition),
-      raw: authorSource,
+      description: text(author?.description || item?.author),
+      thesaurusNumber: text(author?.thesaurusNumber),
+      searchable: Boolean(author?.searchable),
+      type: text(author?.type),
+      qualifier: text(author?.qualifier),
+      addition: text(author?.addition),
+      raw: author,
     },
-    contents: firstText(item?.contents, metadataScalar(metadata, ["contents", "summary", "description"])),
+    contents: text(item?.contents),
     contentsSchoolWise: text(item?.contentsSchoolWise),
     classification: asArray(item?.classification).map((entry) => ({
       description: text(entry?.description || entry),
@@ -401,45 +278,38 @@ function normalizeItem(item = {}, index = 0) {
       classificationSystem: text(entry?.classificationSystem),
       raw: entry,
     })),
-    genre: asArray(item?.genre).length
-      ? asArray(item?.genre).map((entry) => ({
-          code: text(entry?.code),
-          description: scalarValue(entry?.description ?? entry),
-          imageCode: text(entry?.imageCode),
-          raw: entry,
-        }))
-      : metadataArray(metadata, ["genre", "genreCode"], ["genre"], ["facet"]).map((entry) => ({
-          code: "",
-          description: entry,
-          imageCode: "",
-          raw: entry,
-        })),
+    genre: asArray(item?.genre).map((entry) => ({
+      code: text(entry?.code),
+      description: text(entry?.description || entry),
+      imageCode: text(entry?.imageCode),
+      raw: entry,
+    })),
     media: {
-      code: text(mediaSource?.code || (typeof mediaSource === "string" ? mediaSource : "")),
-      icon: text(mediaSource?.icon),
-      description: scalarValue(mediaSource?.description ?? mediaSource),
-      raw: mediaSource,
+      code: text(media?.code),
+      icon: text(media?.icon),
+      description: text(media?.description),
+      raw: media,
     },
     mediumGroup: {
-      code: text(mediumGroupSource?.code || (typeof mediumGroupSource === "string" ? mediumGroupSource : "")),
-      description: scalarValue(mediumGroupSource?.description ?? mediumGroupSource),
-      raw: mediumGroupSource,
+      code: text(mediumGroup?.code),
+      description: text(mediumGroup?.description),
+      raw: mediumGroup,
     },
-    isbn: isbnValues,
+    isbn: asArray(item?.isbn).map(text).filter(Boolean),
     imageUrls: {
-      small: firstText(item?.imageUrls?.small, metadataScalar(metadata, ["imageSmall", "smallImageUrl"])),
-      medium: firstText(item?.imageUrls?.medium, metadataScalar(metadata, ["imageMedium", "mediumImageUrl", "imageUrl"])),
-      large: firstText(item?.imageUrls?.large, metadataScalar(metadata, ["imageLarge", "largeImageUrl"])),
+      small: text(item?.imageUrls?.small),
+      medium: text(item?.imageUrls?.medium),
+      large: text(item?.imageUrls?.large),
       raw: item?.imageUrls || {},
     },
     language,
-    publicationYear,
-    edition: firstText(item?.edition, metadataScalar(metadata, ["edition"])),
+    publicationYear: text(item?.publicationYear),
+    edition: text(item?.edition),
     informative: Boolean(item?.informative),
     narrative: Boolean(item?.narrative),
     youth: Boolean(item?.youth),
     adult: Boolean(item?.adult),
-    frbrDocumentType: firstText(item?.frbrDocumentType, metadataScalar(metadata, ["frbrDocumentType", "documentType"])),
+    frbrDocumentType: text(item?.frbrDocumentType),
     childTitleList,
     subjectPim: item?.subjectPim
       ? {
@@ -450,17 +320,7 @@ function normalizeItem(item = {}, index = 0) {
           code: text(item?.subjectPim?.code),
           raw: item?.subjectPim,
         }
-      : metadataScalar(metadata, ["subject", "subjectPim", "onderwerp"], ["subject", "onderwerp"], ["id", "facet"])
-        ? {
-            description: metadataScalar(metadata, ["subject", "subjectPim", "onderwerp"], ["subject", "onderwerp"], ["id", "facet"]),
-            thesaurusNumber: "",
-            searchable: false,
-            qualifier: "",
-            code: "",
-            raw: metadataValue(metadata, ["subject", "subjectPim", "onderwerp"]),
-          }
-        : null,
-    metadata,
+      : null,
     raw: item,
   };
 }
@@ -547,6 +407,7 @@ export default async function handler(req, res) {
   }
 
   const pageNumber = Math.max(Number(page) || 1, 1);
+  // ALL has no per-result discovery enrichment and intentionally allows up to 100 records.
   const limitNumber = Math.max(Math.min(Number(limit) || 20, 100), 1);
   const offset = (pageNumber - 1) * limitNumber;
   const rawFacetFilters = asArray(facetFilter).map(text).filter(Boolean);
@@ -618,7 +479,7 @@ export default async function handler(req, res) {
   }
 
   let searchUrl =
-    `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}/perspective/${encodeURIComponent(selectedPerspectiveId)}/search` +
+    `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}/perspective/${encodeURIComponent(selectedPerspectiveId)}/titlesummary` +
     `?returnType=default` +
     `&offset=${offset}` +
     `&limit=${limitNumber}` +
@@ -630,7 +491,7 @@ export default async function handler(req, res) {
     searchUrl = appendParam(searchUrl, "sort", selectedSort);
   }
 
-  if (query && query !== "*.*") {
+  if (query) {
     searchUrl = appendParam(searchUrl, "term", query);
   }
 

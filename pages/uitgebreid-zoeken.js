@@ -38,14 +38,6 @@ const emptyForm = {
   available: false,
 };
 
-function normalizeIsbn(value) {
-  return text(value).replace(/[\s-]/g, "");
-}
-
-function normalizeIdentifier(value) {
-  return text(value).replace(/[\s-]/g, "");
-}
-
 function termFilter(field, value) {
   const clean = text(value);
   if (!field || !clean) return "";
@@ -66,21 +58,24 @@ function yearFacet(yearValue, yearToValue) {
 
 function determinePrimarySearch(form) {
   if (text(form.q)) {
-    return { term: text(form.q), searchScope: "anything" };
+    return { term: text(form.q), searchScope: "anything", source: "q" };
   }
 
   if (text(form.title)) {
-    return { term: text(form.title), searchScope: "title" };
+    return { term: text(form.title), searchScope: "title", source: "title" };
   }
 
-  return { term: "", searchScope: "anything" };
+  if (text(form.author)) {
+    return { term: text(form.author), searchScope: "author", source: "author" };
+  }
+
+  return { term: "", searchScope: "anything", source: "" };
 }
 
 function buildSearchState(form) {
   const primary = determinePrimarySearch(form);
 
   const facetFilters = [
-    text(form.author) ? `authorFacet:${text(form.author)}` : "",
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
     yearFacet(form.year, form.yearTo),
@@ -94,12 +89,8 @@ function buildSearchState(form) {
   ].filter(Boolean);
 
   const termFilters = [
-    text(form.q) && text(form.title) ? termFilter("title", form.title) : "",
-    normalizeIsbn(form.isbn) ? `isbn:${normalizeIsbn(form.isbn)}` : "",
-    normalizeIdentifier(form.issn) ? `issn:${normalizeIdentifier(form.issn)}` : "",
-    termFilter("publisher", form.publisher),
-    termFilter("placementCode", form.placementCode),
-    termFilter("content", form.content),
+    primary.source !== "title" && text(form.title) ? termFilter("title", form.title) : "",
+    primary.source !== "author" && text(form.author) ? termFilter("author", form.author) : "",
   ].filter(Boolean);
 
   return {
@@ -140,7 +131,7 @@ function buildOclcSearchUrl(form) {
 function buildOclcRequestPreview(form) {
   const params = appendSearchParams(new URLSearchParams(), buildSearchState(form));
   const queryString = params.toString();
-  const endpoint = "/branch/{branchId}/perspective/{perspectiveId}/search";
+  const endpoint = "/branch/{branchId}/perspective/{perspectiveId}/titlesummary";
   return queryString ? `${endpoint}?${queryString}` : endpoint;
 }
 
@@ -278,12 +269,9 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>Plaatsingscode</span>
-              <input
-                value={form.placementCode}
-                onChange={(event) => setField("placementCode", event.target.value)}
-              />
+              <input value={form.placementCode} disabled />
             </label>
 
             <label className="advanced-field">
@@ -334,24 +322,24 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>Onderwerp</span>
-              <input value={form.subject} onChange={(event) => setField("subject", event.target.value)} />
+              <input value={form.subject} disabled />
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>ISSN</span>
-              <input value={form.issn} onChange={(event) => setField("issn", event.target.value)} />
+              <input value={form.issn} disabled />
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>Uitgever</span>
-              <input value={form.publisher} onChange={(event) => setField("publisher", event.target.value)} />
+              <input value={form.publisher} disabled />
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>ISBN</span>
-              <input value={form.isbn} onChange={(event) => setField("isbn", event.target.value)} />
+              <input value={form.isbn} disabled />
             </label>
 
             <label className="advanced-field">
@@ -359,9 +347,9 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               <input value={form.series} onChange={(event) => setField("series", event.target.value)} />
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>Collectie</span>
-              <select value={form.collection} onChange={(event) => setField("collection", event.target.value)}>
+              <select value={form.collection} disabled>
                 {COLLECTIONS.map(([value, label]) => (
                   <option key={value || "empty"} value={value}>
                     {label}
@@ -385,9 +373,9 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field">
+            <label className="advanced-field advanced-field-disabled">
               <span>Inhoud</span>
-              <input value={form.content} onChange={(event) => setField("content", event.target.value)} />
+              <input value={form.content} disabled />
             </label>
 
             <div className="advanced-actions">
