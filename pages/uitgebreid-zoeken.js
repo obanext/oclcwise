@@ -76,6 +76,9 @@ function buildSearchState(form) {
   const primary = determinePrimarySearch(form);
 
   const facetFilters = [
+    primary.source !== "author" && text(form.author)
+      ? `authorFacet:${text(form.author)}`
+      : "",
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
     yearFacet(form.year, form.yearTo),
@@ -90,7 +93,6 @@ function buildSearchState(form) {
 
   const termFilters = [
     primary.source !== "title" && text(form.title) ? termFilter("title", form.title) : "",
-    primary.source !== "author" && text(form.author) ? termFilter("author", form.author) : "",
   ].filter(Boolean);
 
   return {
@@ -227,10 +229,6 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
             <span>OCLC request</span>
             <textarea className="advanced-query-preview" value={queryPreview} readOnly />
           </label>
-          <p className="advanced-request-note">
-            De testhost en concrete branch/perspective-testwaarden zijn bewust niet in dit overzicht opgenomen.
-          </p>
-
           <form className="advanced-filter-list" onSubmit={submit}>
             <label className="advanced-field">
               <span>Titel</span>
@@ -392,9 +390,6 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
           </form>
         </section>
 
-        <p className="old-school-debug-line">
-          Resultaten openen in <code>/oclc-search</code>; queryparameters blijven zo dicht mogelijk bij OCLC Discovery.
-        </p>
 
         <p className="preselect-contact">
           <Link href="/">Terug naar overzicht</Link>
