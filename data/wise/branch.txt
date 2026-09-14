@@ -1,0 +1,3186 @@
+{
+    "offset": 0,
+    "limit": 50,
+    "total": 912,
+    "items": [
+        {
+            "id": "2300",
+            "code": "'s-Gr",
+            "description": "'s-Gravendeel",
+            "instance": "I230",
+            "libraryName": "Bibliotheek Hoeksche Waard",
+            "libraryNameShort": "Hoeksche Waard",
+            "name": "Gravendeel",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Weegje",
+                "houseNumber": "1 G",
+                "zipCode": "3295 CT",
+                "city": "'S-GRAVENDEEL",
+                "region": ""
+            },
+            "telephoneNumber": "078-6733511",
+            "emailAddress": "Sgravendeel@debhw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2607",
+            "code": "GRAVE",
+            "description": "'s-Gravenzande",
+            "instance": "I260",
+            "libraryName": "Bibliotheek Westland",
+            "libraryNameShort": "Westland",
+            "name": "Westland 's-Gravenzande",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Zandeveltplein",
+                "houseNumber": "26",
+                "zipCode": "2692 AG",
+                "city": "'S-GRAVENZANDE",
+                "region": ""
+            },
+            "telephoneNumber": "0174-415276",
+            "emailAddress": "sgravenzande@bibliotheekwestland.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1564",
+            "code": "'t Za",
+            "description": "'t Zand",
+            "instance": "I155",
+            "libraryName": "KopGroep Bibliotheken",
+            "libraryNameShort": "KopGroep Bibliot.",
+            "name": "KopGroep Bibliotheken 't Zand",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Kemphaanweg",
+                "houseNumber": "3",
+                "zipCode": "1756 BB",
+                "city": "'T ZAND",
+                "region": ""
+            },
+            "telephoneNumber": "0224-591862",
+            "emailAddress": "info@kopgroepbibliotheken.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "0084",
+            "code": "",
+            "description": "6297 LongTail-C",
+            "instance": "I001",
+            "libraryName": "Probiblio",
+            "libraryNameShort": "Probiblio",
+            "name": "Probiblio LongTail-Collectie",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": true
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Lireweg",
+                "houseNumber": "17",
+                "zipCode": "2153 PH",
+                "city": "NIEUW-VENNEP",
+                "region": ""
+            },
+            "telephoneNumber": "",
+            "emailAddress": "info@probiblio.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1000",
+            "code": "",
+            "description": "A'veen Stadsplein",
+            "instance": "I100",
+            "libraryName": "de Bibliotheek Amstelland",
+            "libraryNameShort": "Amstelland",
+            "name": "Amstelland Amstelveen Stadsplein",
+            "sector": "BIEB",
+            "latitude": 4.858698,
+            "longitude": 52.303179,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Stadsplein",
+                "houseNumber": "102",
+                "zipCode": "1181 ZM",
+                "city": "AMSTELVEEN",
+                "region": ""
+            },
+            "telephoneNumber": "020-6414126",
+            "emailAddress": "info@debibliotheekamstelland.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1001",
+            "code": "",
+            "description": "A'veen Westwijk",
+            "instance": "I100",
+            "libraryName": "de Bibliotheek Amstelland",
+            "libraryNameShort": "Amstelland",
+            "name": "Amstelland Amstelveen Westwijk",
+            "sector": "BIEB",
+            "latitude": 52.281157,
+            "longitude": 4.826565,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Westwijkplein",
+                "houseNumber": "1",
+                "zipCode": "1187 LS",
+                "city": "AMSTELVEEN",
+                "region": ""
+            },
+            "telephoneNumber": "020-6475960",
+            "emailAddress": "info@debibliotheekamstelland.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1002",
+            "code": "",
+            "description": "Aalsmeer",
+            "instance": "I100",
+            "libraryName": "de Bibliotheek Amstelland",
+            "libraryNameShort": "Amstelland",
+            "name": "Amstelland Aalsmeer",
+            "sector": "BIEB",
+            "latitude": 52.267759,
+            "longitude": 4.74966,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Marktstraat",
+                "houseNumber": "19",
+                "zipCode": "1431 BD",
+                "city": "AALSMEER",
+                "region": ""
+            },
+            "telephoneNumber": "0297-325905",
+            "emailAddress": "info@debibliotheekamstelland.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2700",
+            "code": "ALBLA",
+            "description": "AanZet Alblasserdam",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Alblasserdam",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Cortgene",
+                "houseNumber": "2",
+                "zipCode": "2951 ED",
+                "city": "ALBLASSERDAM",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425070",
+            "emailAddress": "alblasserdam@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2701",
+            "code": "ARKEL",
+            "description": "AanZet Arkel",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Arkel",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Harpstraat",
+                "houseNumber": "13",
+                "zipCode": "4241 CA",
+                "city": "ARKEL",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2705",
+            "code": "BOVEN",
+            "description": "AanZet B-Hardinxveld",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Boven-Hardinxveld",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Rembrandthof",
+                "houseNumber": "85",
+                "zipCode": "3372 XV",
+                "city": "HARDINXVELD-GIESSENDAM",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425075",
+            "emailAddress": "hardinxveldgiessendam@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2732",
+            "code": "",
+            "description": "AanZet Bibnetwerk",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet BibliotheekNetwerk AanZet",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Groenmarkt",
+                "houseNumber": "153",
+                "zipCode": "3311 BD",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "078-6205500",
+            "emailAddress": "service@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2704",
+            "code": "BLESK",
+            "description": "AanZet Bleskensgraaf",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Bleskensgraaf",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Burg Dekkingstraat",
+                "houseNumber": "1",
+                "zipCode": "2971 AC",
+                "city": "BLESKENSGRAAF CA",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2724",
+            "code": "BOLN",
+            "description": "AanZet Bolnes",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Ridderkerk Bolnes",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Noordstraat",
+                "houseNumber": "255a",
+                "zipCode": "2987 CR",
+                "city": "RIDDERKERK",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425079",
+            "emailAddress": "ridderkerk@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2702",
+            "code": "CARNI",
+            "description": "AanZet Carnisselande",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Barendrecht Carnisselande",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Middeldijkerplein",
+                "houseNumber": "248",
+                "zipCode": "2993 DL",
+                "city": "BARENDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425072",
+            "emailAddress": "barendrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2706",
+            "code": "DCRB",
+            "description": "AanZet Crabbehof",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Dordrecht Crabbehof",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "De Savornin Lohmanweg",
+                "houseNumber": "110",
+                "zipCode": "3317 LA",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425073",
+            "emailAddress": "dordrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2708",
+            "code": "DORD",
+            "description": "AanZet Dordrecht C",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Dordrecht Stadsbibliotheek",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Groenmarkt",
+                "houseNumber": "153",
+                "zipCode": "3311 BD",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425073",
+            "emailAddress": "dordrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2707",
+            "code": "DDUB",
+            "description": "AanZet Dubbeldam",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Dordrecht Dubbeldam",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Vijverlaan",
+                "houseNumber": "1004",
+                "zipCode": "3319 PK",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425073",
+            "emailAddress": "dordrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2711",
+            "code": "GIESS",
+            "description": "AanZet Giessenburg",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Giessenburg",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Breestraat",
+                "houseNumber": "2",
+                "zipCode": "3381 BS",
+                "city": "GIESSENBURG",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2712",
+            "code": "GORIN",
+            "description": "AanZet Gorinchem",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Gorinchem",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [
+                {
+                    "dayOfWeek": "MONDAY",
+                    "date": "2024-11-25",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                },
+                {
+                    "dayOfWeek": "TUESDAY",
+                    "date": "2024-11-26",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                },
+                {
+                    "dayOfWeek": "WEDNESDAY",
+                    "date": "2024-11-27",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                },
+                {
+                    "dayOfWeek": "THURSDAY",
+                    "date": "2024-11-28",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                },
+                {
+                    "dayOfWeek": "FRIDAY",
+                    "date": "2024-11-29",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                },
+                {
+                    "dayOfWeek": "SATURDAY",
+                    "date": "2024-11-30",
+                    "type": "S",
+                    "description": "Wegens interne verbouwing zijn wij deze week gesloten"
+                }
+            ],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Groenmarkt",
+                "houseNumber": "1",
+                "zipCode": "4201 EE",
+                "city": "GORINCHEM",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425074",
+            "emailAddress": "gorinchem@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2714",
+            "code": "GROOT",
+            "description": "AanZet Groot-Ammers",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Groot-Ammers",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Margrietstraat",
+                "houseNumber": "12",
+                "zipCode": "2964 CE",
+                "city": "GROOT-AMMERS",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2715",
+            "code": "HARDI",
+            "description": "AanZet H'veld-G'dam",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Hardinxveld-Giessendam",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Pietersweer",
+                "houseNumber": "34",
+                "zipCode": "3371 PN",
+                "city": "HARDINXVELD-GIESSENDAM",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425075",
+            "emailAddress": "hardinxveldgiessendam@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2716",
+            "code": "HENDR",
+            "description": "AanZet H-I-Ambacht",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet H-I-Ambacht",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "P.C. Hoofdsingel",
+                "houseNumber": "7",
+                "zipCode": "3341 TC",
+                "city": "HENDRIK-IDO-AMBACHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425076",
+            "emailAddress": "hendrikidoambacht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2717",
+            "code": "HJDM",
+            "description": "AanZet Heerjansdam",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Heerjansdam",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Sportlaan",
+                "houseNumber": "6c",
+                "zipCode": "2995 VN",
+                "city": "HEERJANSDAM",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425081",
+            "emailAddress": "zwijndrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2703",
+            "code": "BAREN",
+            "description": "AanZet Het Kruispunt",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Barendrecht Het Kruispunt",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Middenbaan",
+                "houseNumber": "111",
+                "zipCode": "2991 CS",
+                "city": "BARENDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425072",
+            "emailAddress": "barendrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2728",
+            "code": "SPLH",
+            "description": "AanZet Kubiek",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Zwijndrecht Kubiek",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Zwaluwstraat",
+                "houseNumber": "1",
+                "zipCode": "3334 XN",
+                "city": "ZWIJNDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425081",
+            "emailAddress": "zwijndrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2718",
+            "code": "NIEUW",
+            "description": "AanZet N.-Lekkerland",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Nieuw-Lekkerland",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Raadhuisplein",
+                "houseNumber": "1",
+                "zipCode": "2957 RK",
+                "city": "NIEUW-LEKKERLAND",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2719",
+            "code": "NIEUW",
+            "description": "AanZet Nieuwpoort",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Nieuwpoort",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Waterlinie",
+                "houseNumber": "6",
+                "zipCode": "2965 CC",
+                "city": "NIEUWPOORT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2720",
+            "code": "NOORD",
+            "description": "AanZet Noordeloos",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Noordeloos",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Noorderplein",
+                "houseNumber": "1,2,3",
+                "zipCode": "4225 RT",
+                "city": "NOORDELOOS",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425077",
+            "emailAddress": "molenlanden@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2721",
+            "code": "PAPEN",
+            "description": "AanZet Papendrecht",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Papendrecht",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Markt",
+                "houseNumber": "22",
+                "zipCode": "3351 PB",
+                "city": "PAPENDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425078",
+            "emailAddress": "papendrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2722",
+            "code": "POORT",
+            "description": "AanZet Poortugaal",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Poortugaal",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Dorpsstraat",
+                "houseNumber": "34",
+                "zipCode": "3171 EH",
+                "city": "POORTUGAAL",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425071",
+            "emailAddress": "albrandswaard@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2723",
+            "code": "PORT",
+            "description": "AanZet Portland",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Portland",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Hof van Portland ",
+                "houseNumber": "41",
+                "zipCode": "3162 WK",
+                "city": "RHOON",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425071",
+            "emailAddress": "albrandswaard@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2725",
+            "code": "RIDD",
+            "description": "AanZet Ridderkerk C",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Ridderkerk Centrum",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Koningsplein",
+                "houseNumber": "1",
+                "zipCode": "2981 EA",
+                "city": "RIDDERKERK",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425079",
+            "emailAddress": "ridderkerk@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2727",
+            "code": "SLIED",
+            "description": "AanZet Sliedrecht",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Sliedrecht",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Scheldelaan",
+                "houseNumber": "1",
+                "zipCode": "3363 CK",
+                "city": "SLIEDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425080",
+            "emailAddress": "sliedrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2726",
+            "code": "SLIK",
+            "description": "AanZet Slikkerveer",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Ridderkerk Slikkerveer",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Reijerweg",
+                "houseNumber": "62",
+                "zipCode": "2983 AT",
+                "city": "RIDDERKERK",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425079",
+            "emailAddress": "ridderkerk@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2709",
+            "code": "DSTA",
+            "description": "AanZet Stadspolders",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Dordrecht Stadspolders",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Dudok-Erf",
+                "houseNumber": "58",
+                "zipCode": "3315 KA",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425073",
+            "emailAddress": "dordrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2710",
+            "code": "DSTR",
+            "description": "AanZet Sterrenburg",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Dordrecht Sterrenburg",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Dalmeyerplein",
+                "houseNumber": "10",
+                "zipCode": "3318 CB",
+                "city": "DORDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425073",
+            "emailAddress": "dordrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2729",
+            "code": "ZWAL",
+            "description": "AanZet Walburg",
+            "instance": "I270",
+            "libraryName": "Bibliotheek AanZet",
+            "libraryNameShort": "AanZet",
+            "name": "AanZet Zwijndrecht Walburg",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Norderstedtplein",
+                "houseNumber": "8",
+                "zipCode": "3332 GK",
+                "city": "ZWIJNDRECHT",
+                "region": ""
+            },
+            "telephoneNumber": "088-2425081",
+            "emailAddress": "zwijndrecht@bibliotheekaanzet.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "7150",
+            "code": "AARL",
+            "description": "Aarle-Rixtel",
+            "instance": "I715",
+            "libraryName": "Bibliotheek De Lage Beemden",
+            "libraryNameShort": "De Lage Beemden",
+            "name": "Lage Beemden - Aarle-Rixtel",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "telephoneNumber": "0492323245",
+            "emailAddress": "contact@bibliotheekdlb.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1262",
+            "code": "Akers",
+            "description": "Akersloot",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "Kennemerwaard Akersloot",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Rembrandtsingel",
+                "houseNumber": "1",
+                "zipCode": "1921 EK",
+                "city": "AKERSLOOT",
+                "region": ""
+            },
+            "telephoneNumber": "072-515 66 44 ",
+            "emailAddress": "klantenservice@bknw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1250",
+            "code": "Alkm-",
+            "description": "Alkmaar Centrum",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "Kennemerwaard Alkmaar Centrum",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": true
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Gasthuisstraat",
+                "houseNumber": "2",
+                "zipCode": "1811 KC",
+                "city": "ALKMAAR",
+                "region": ""
+            },
+            "telephoneNumber": "072-515 66 44",
+            "emailAddress": "klantenservice@bknw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1251",
+            "code": "Mare",
+            "description": "Alkmaar Mare",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "Kennemerwaard Alkmaar De Mare",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Laan van Straatsburg",
+                "houseNumber": "2",
+                "zipCode": "1826 BZ",
+                "city": "ALKMAAR",
+                "region": ""
+            },
+            "telephoneNumber": " 072-515 66 44",
+            "emailAddress": "klantenservice@bknw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1252",
+            "code": "Oudor",
+            "description": "Alkmaar Oudorp",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "Kennemerwaard Alkmaar Oudorp",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Oudorperplein",
+                "houseNumber": "23",
+                "zipCode": "1823 HA",
+                "city": "ALKMAAR",
+                "region": ""
+            },
+            "telephoneNumber": "072-515 66 44",
+            "emailAddress": "klantenservice@bknw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1253",
+            "code": "Overd",
+            "description": "Alkmaar Overdie",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "Kennemerwaard Alkmaar Overdie",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Van Maerlantstraat",
+                "houseNumber": "8",
+                "zipCode": "1813 BH",
+                "city": "ALKMAAR",
+                "region": ""
+            },
+            "telephoneNumber": "072-515 66 44",
+            "emailAddress": "klantenservice@bknw.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1267",
+            "code": "AlkZu",
+            "description": "Alkmaar Zuid",
+            "instance": "I125",
+            "libraryName": "Bibliotheek Kennemerwaard",
+            "libraryNameShort": "Kennemerwaard",
+            "name": "ABC Atelier Alkmaar Zuid",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Anna Paulownastraat",
+                "houseNumber": "4",
+                "zipCode": "1814 XB",
+                "city": "ALKMAAR",
+                "region": ""
+            },
+            "telephoneNumber": "072-515 66 44",
+            "emailAddress": "abc.atelier@abchuis.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2855",
+            "code": "Dum",
+            "description": "Alle vestigingen",
+            "instance": "I285",
+            "libraryName": "DOK Delft",
+            "libraryNameShort": "Delft",
+            "name": "Alle vestigingen",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": true
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "DUMMY_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "telephoneNumber": "015-25 62 104",
+            "emailAddress": "",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2500",
+            "code": "AlphC",
+            "description": "Alphen-Centrum",
+            "instance": "I250",
+            "libraryName": "Bibliotheek Rijn en Venen",
+            "libraryNameShort": "Rijn en Venen",
+            "name": "Rijn en Venen Alphen Centrum",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": true
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Aarkade",
+                "houseNumber": "10",
+                "zipCode": "2406 BV",
+                "city": "ALPHEN AAN DEN RIJN",
+                "region": ""
+            },
+            "telephoneNumber": "0172-475771",
+            "emailAddress": "info@bibliotheekrijnenvenen.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "2400",
+            "code": "",
+            "description": "Ammerstol",
+            "instance": "I240",
+            "libraryName": "de Bibliotheek Krimpenerwaard",
+            "libraryNameShort": "Krimpenerwaard",
+            "name": "Krimpenerwaard Ammerstol",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Den Hoeff",
+                "houseNumber": "49",
+                "zipCode": "2865 XR",
+                "city": "AMMERSTOL",
+                "region": ""
+            },
+            "telephoneNumber": "0182-354196",
+            "emailAddress": "info@debibliotheekkrimpenerwaard.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1605",
+            "code": "Andij",
+            "description": "Andijk",
+            "instance": "I160",
+            "libraryName": "Westfriese Bibliotheken",
+            "libraryNameShort": "Westfriese Bibliot.",
+            "name": "Andijk",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "Sportlaan",
+                "houseNumber": "1",
+                "zipCode": "1619 XE",
+                "city": "ANDIJK",
+                "region": ""
+            },
+            "telephoneNumber": "0228-743943",
+            "emailAddress": "klantenservice@westfriesebibliotheken.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "1556",
+            "code": "Anna ",
+            "description": "Anna Paulowna",
+            "instance": "I155",
+            "libraryName": "KopGroep Bibliotheken",
+            "libraryNameShort": "KopGroep Bibliot.",
+            "name": "KopGroep Bibliotheken Anna Paulowna",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [
+                {
+                    "date": "2026-09-14",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-15",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-16",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-17",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-18",
+                    "open": true
+                },
+                {
+                    "date": "2026-09-19",
+                    "open": false
+                },
+                {
+                    "date": "2026-09-20",
+                    "open": false
+                }
+            ],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "De Verwachting",
+                "houseNumber": "13",
+                "zipCode": "1761 VM",
+                "city": "ANNA PAULOWNA",
+                "region": ""
+            },
+            "telephoneNumber": "0223-533140",
+            "emailAddress": "info@kopgroepbibliotheken.nl",
+            "storageBranchId": ""
+        },
+        {
+            "id": "7254",
+            "code": "WOENS",
+            "description": "B-toop Woensel Noord",
+            "instance": "I725",
+            "libraryName": "Bibliotheek Eindhoven",
+            "libraryNameShort": "Eindhoven",
+            "name": "B-toop Woensel Noord",
+            "sector": "BIEB",
+            "latitude": 0,
+            "longitude": 0,
+            "mainLibrary": "",
+            "openingHours": [],
+            "closingHours": [],
+            "upcomingCalendarDays": [],
+            "biosCode": "",
+            "branchCategory": "CHECKOUT_BRANCH",
+            "postalAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "visitingAddress": {
+                "street": "",
+                "houseNumber": "",
+                "zipCode": "",
+                "city": "",
+                "region": ""
+            },
+            "telephoneNumber": "040-2604260",
+            "emailAddress": "klantenservice@bibliotheekeindhoven.nl",
+            "storageBranchId": ""
+        }
+    ]
+}

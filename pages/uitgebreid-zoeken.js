@@ -1,8 +1,12 @@
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import {
+  ADVANCED_SEARCH_MAPPING_ROWS,
+  toAdvancedSearchMappingCsv,
+} from "../utils/advancedSearchMappingRows";
 
 const text = (value) => {
   if (typeof value === "string") return value.trim();
@@ -20,6 +24,7 @@ const emptyForm = {
   branchId: "",
   placementCode: "",
   year: "",
+  yearTo: "",
   genreCode: "",
   languageCode: "",
   subject: "",
@@ -32,37 +37,6 @@ const emptyForm = {
   content: "",
   available: false,
 };
-
-function buildQuery(form) {
-  const parts = [];
-
-  if (text(form.q)) parts.push(text(form.q));
-  if (text(form.title)) parts.push(`title:"${text(form.title)}"`);
-  if (text(form.author)) parts.push(`author:"${text(form.author)}"`);
-  if (text(form.mediumTypeCode)) parts.push(`format:"${text(form.mediumTypeCode)}"`);
-  if (text(form.branchId)) parts.push(`library:"${text(form.branchId)}"`);
-  if (text(form.placementCode)) parts.push(`placementCode:"${text(form.placementCode)}"`);
-  if (text(form.year)) parts.push(`year:"${text(form.year)}"`);
-  if (text(form.genreCode)) parts.push(`genre:"${text(form.genreCode)}"`);
-  if (text(form.languageCode)) parts.push(`language:"${text(form.languageCode)}"`);
-  if (text(form.subject)) parts.push(`subject:"${text(form.subject)}"`);
-  if (text(form.issn)) parts.push(`issn:"${text(form.issn)}"`);
-  if (text(form.publisher)) parts.push(`publisher:"${text(form.publisher)}"`);
-  if (text(form.isbn)) parts.push(`isbn:"${text(form.isbn)}"`);
-  if (text(form.series)) parts.push(`series:"${text(form.series)}"`);
-  if (text(form.collection)) parts.push(`collection:"${text(form.collection)}"`);
-  if (text(form.targetAudienceCode)) parts.push(`youth:"${text(form.targetAudienceCode)}"`);
-  if (text(form.content)) parts.push(`content:"${text(form.content)}"`);
-  if (form.available) parts.push("available:true");
-
-  return parts.join(" ");
-}
-
-function yearFacet(value) {
-  const year = text(value);
-  if (!/^\d{4}$/.test(year)) return "";
-  return `publicationYear:${year}-01-01T00:00:00Z`;
-}
 
 function normalizeIsbn(value) {
   return text(value).replace(/[\s-]/g, "");
@@ -78,73 +52,49 @@ function termFilter(field, value) {
   return `${field}:${clean}`;
 }
 
-function determinePrimarySearch(form) {
-  const free = text(form.q);
+function yearFacet(yearValue, yearToValue) {
+  const year = text(yearValue);
+  const yearTo = text(yearToValue);
+  const hasYear = /^\d{4}$/.test(year);
+  const hasYearTo = /^\d{4}$/.test(yearTo);
 
-  if (free) {
-    return { q: free, searchScope: "anything" };
-  }
-
-  const scopedFields = [
-    { value: form.title, searchScope: "title" },
-    { value: form.author, searchScope: "author" },
-  ].filter((field) => text(field.value));
-
-  const directFacetFields = [
-    form.subject,
-    form.series,
-    form.year,
-    form.genreCode,
-    form.mediumTypeCode,
-    form.languageCode,
-    form.branchId,
-    form.targetAudienceCode,
-  ].filter((value) => text(value));
-
-  const termFilterFields = [
-    form.isbn,
-    form.issn,
-    form.publisher,
-    form.placementCode,
-    form.content,
-  ].filter((value) => text(value));
-
-  const unsupportedTextFields = [form.collection].filter((value) => text(value));
-
-  if (
-    scopedFields.length === 1 &&
-    directFacetFields.length === 0 &&
-    termFilterFields.length === 0 &&
-    unsupportedTextFields.length === 0
-  ) {
-    return { q: text(scopedFields[0].value), searchScope: scopedFields[0].searchScope };
-  }
-
-  if (unsupportedTextFields.length > 0 || scopedFields.length > 1) {
-    return { q: buildQuery(form), searchScope: "anything" };
-  }
-
-  return { q: "*.*", searchScope: "anything" };
+  if (hasYear && hasYearTo) return `customPublicationYear:${year}-${yearTo}`;
+  if (hasYear) return `customPublicationYear:${year}`;
+  if (hasYearTo) return `customPublicationYear:${yearTo}`;
+  return "";
 }
 
-function buildOclcSearchUrl(form) {
-  const params = new URLSearchParams();
+function determinePrimarySearch(form) {
+  if (text(form.q)) {
+    return { term: text(form.q), searchScope: "anything" };
+  }
+
+  if (text(form.title)) {
+    return { term: text(form.title), searchScope: "title" };
+  }
+
+  return { term: "", searchScope: "anything" };
+}
+
+function buildSearchState(form) {
   const primary = determinePrimarySearch(form);
 
-  const filters = [
-    yearFacet(form.year),
-    text(form.genreCode) ? `genreCode:${text(form.genreCode)}` : "",
+  const facetFilters = [
+    text(form.author) ? `authorFacet:${text(form.author)}` : "",
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
-    text(form.languageCode) ? `languageCode:${text(form.languageCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
+    yearFacet(form.year, form.yearTo),
+    text(form.genreCode) ? `genreCode:${text(form.genreCode)}` : "",
+    text(form.languageCode) ? `languageCode:${text(form.languageCode)}` : "",
+    text(form.subject) ? `subject:${text(form.subject)}` : "",
+    text(form.series) ? `series:${text(form.series)}` : "",
     text(form.targetAudienceCode)
       ? `targetAudienceCode:${text(form.targetAudienceCode)}`
       : "",
-    text(form.subject) ? `subject:${text(form.subject)}` : "",
-    text(form.series) ? `series:${text(form.series)}` : "",
   ].filter(Boolean);
 
   const termFilters = [
+    text(form.q) && text(form.title) ? termFilter("title", form.title) : "",
     normalizeIsbn(form.isbn) ? `isbn:${normalizeIsbn(form.isbn)}` : "",
     normalizeIdentifier(form.issn) ? `issn:${normalizeIdentifier(form.issn)}` : "",
     termFilter("publisher", form.publisher),
@@ -152,58 +102,71 @@ function buildOclcSearchUrl(form) {
     termFilter("content", form.content),
   ].filter(Boolean);
 
-  params.set("q", primary.q);
-  params.set("page", "1");
-  params.set("searchScope", primary.searchScope);
-  params.set("sort", "2910");
-  params.set("perspectiveId", "3682");
+  return {
+    term: primary.term,
+    searchScope: primary.searchScope,
+    facetFilters,
+    termFilters,
+    filterAvailableTitles: Boolean(form.available),
+  };
+}
 
-  filters.forEach((filter) => params.append("facetFilter", filter));
-  termFilters.forEach((filter) => params.append("termFilter", filter));
+function appendSearchParams(params, state, { includePage = false } = {}) {
+  if (text(state.term)) params.set("term", text(state.term));
 
-  if (form.available) {
+  if (text(state.term) || state.termFilters.length) {
+    params.set("searchScope", state.searchScope || "anything");
+  }
+
+  state.facetFilters.forEach((filter) => params.append("facetFilter", filter));
+  state.termFilters.forEach((filter) => params.append("termFilter", filter));
+
+  if (state.filterAvailableTitles) {
     params.set("filterAvailableTitles", "true");
   }
 
+  if (includePage) params.set("page", "1");
+
+  return params;
+}
+
+function buildOclcSearchUrl(form) {
+  const params = appendSearchParams(new URLSearchParams(), buildSearchState(form), {
+    includePage: true,
+  });
   return `/oclc-search?${params.toString()}`;
 }
 
-export default function AdvancedSearchPage({ metadataOptions }) {
+function buildOclcRequestPreview(form) {
+  const params = appendSearchParams(new URLSearchParams(), buildSearchState(form));
+  const queryString = params.toString();
+  const endpoint = "/branch/{branchId}/perspective/{perspectiveId}/search";
+  return queryString ? `${endpoint}?${queryString}` : endpoint;
+}
+
+function downloadMappingCsv() {
+  try {
+    const csv = toAdvancedSearchMappingCsv(ADVANCED_SEARCH_MAPPING_ROWS);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+
+    anchor.href = url;
+    anchor.setAttribute("download", "uitgebreid-zoeken-oclc-mapping.csv");
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("CSV download mislukt", error);
+    window.alert("CSV download mislukt. Controleer de console.");
+  }
+}
+
+export default function AdvancedSearchPage({ metadataOptions, branches }) {
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
-  const [branches, setBranches] = useState([]);
-  const [branchesLoading, setBranchesLoading] = useState(true);
-  const [branchesError, setBranchesError] = useState("");
-  const queryPreview = useMemo(() => buildQuery(form), [form]);
-
-  useEffect(() => {
-    let active = true;
-
-    fetch("/api/wise-branches")
-      .then(async (response) => {
-        const json = await response.json().catch(() => null);
-        if (!response.ok) {
-          throw new Error(json?.error || `Request failed with status ${response.status}`);
-        }
-        return json;
-      })
-      .then((json) => {
-        if (!active) return;
-        setBranches(Array.isArray(json?.branches) ? json.branches : []);
-      })
-      .catch((error) => {
-        if (!active) return;
-        setBranches([]);
-        setBranchesError(error.message || "Bibliotheken laden mislukt");
-      })
-      .finally(() => {
-        if (active) setBranchesLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
+  const queryPreview = useMemo(() => buildOclcRequestPreview(form), [form]);
 
   function setField(name, value) {
     setForm((current) => ({
@@ -270,9 +233,12 @@ export default function AdvancedSearchPage({ metadataOptions }) {
 
         <section className="advanced-search-card">
           <label className="advanced-field advanced-query-field">
-            <span>Samenvatting zoekcriteria</span>
+            <span>OCLC request</span>
             <textarea className="advanced-query-preview" value={queryPreview} readOnly />
           </label>
+          <p className="advanced-request-note">
+            De testhost en concrete branch/perspective-testwaarden zijn bewust niet in dit overzicht opgenomen.
+          </p>
 
           <form className="advanced-filter-list" onSubmit={submit}>
             <label className="advanced-field">
@@ -305,12 +271,10 @@ export default function AdvancedSearchPage({ metadataOptions }) {
               <select value={form.branchId} onChange={(event) => setField("branchId", event.target.value)}>
                 <option value="">Kies een waarde</option>
                 {branches.map((option) => (
-                  <option key={option.branchId} value={option.branchId}>
+                  <option key={option.id} value={option.id}>
                     {option.name}
                   </option>
                 ))}
-                {branchesLoading ? <option disabled>Bibliotheken laden...</option> : null}
-                {branchesError ? <option disabled>{branchesError}</option> : null}
               </select>
             </label>
 
@@ -325,10 +289,24 @@ export default function AdvancedSearchPage({ metadataOptions }) {
             <label className="advanced-field">
               <span>Jaar</span>
               <input
+                inputMode="numeric"
                 value={form.year}
                 onChange={(event) =>
                   setField("year", event.target.value.replace(/[^\d]/g, "").slice(0, 4))
                 }
+                placeholder="bijv. 2022"
+              />
+            </label>
+
+            <label className="advanced-field">
+              <span>Jaar tot</span>
+              <input
+                inputMode="numeric"
+                value={form.yearTo}
+                onChange={(event) =>
+                  setField("yearTo", event.target.value.replace(/[^\d]/g, "").slice(0, 4))
+                }
+                placeholder="bijv. 2023"
               />
             </label>
 
@@ -413,6 +391,9 @@ export default function AdvancedSearchPage({ metadataOptions }) {
             </label>
 
             <div className="advanced-actions">
+              <button type="button" className="advanced-clear" onClick={downloadMappingCsv}>
+                Download mapping CSV
+              </button>
               <button type="button" className="advanced-clear" onClick={reset}>
                 Wis
               </button>
@@ -424,7 +405,7 @@ export default function AdvancedSearchPage({ metadataOptions }) {
         </section>
 
         <p className="old-school-debug-line">
-          Resultaten openen in <code>/oclc-search</code>.
+          Resultaten openen in <code>/oclc-search</code>; queryparameters blijven zo dicht mogelijk bij OCLC Discovery.
         </p>
 
         <p className="preselect-contact">
@@ -447,6 +428,19 @@ function readMetadataOptions(filename) {
     .filter((item) => item.code && item.label);
 }
 
+function readBranchOptions() {
+  const filePath = path.join(process.cwd(), "data", "wise", "branch.txt");
+  const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+  return (Array.isArray(data?.items) ? data.items : [])
+    .map((item) => ({
+      id: text(item?.id),
+      name: text(item?.name || item?.description),
+    }))
+    .filter((item) => item.id && item.name)
+    .sort((a, b) => a.name.localeCompare(b.name, "nl"));
+}
+
 export function getStaticProps() {
   return {
     props: {
@@ -456,6 +450,7 @@ export function getStaticProps() {
         languages: readMetadataOptions("languagecode.txt"),
         youth: readMetadataOptions("targetaudiencecode.txt"),
       },
+      branches: readBranchOptions(),
     },
   };
 }

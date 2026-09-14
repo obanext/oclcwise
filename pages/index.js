@@ -2,13 +2,6 @@ import Link from "next/link";
 
 const detailOptions = [
   {
-    label: "IST oba.nl detailpagina",
-    description:
-      "OCLC Wise data wordt geladen in een mock-up oba.nl detailpagina gebaseerd op GB 'bonbon met knoflooksmaak' model.",
-    href: "/oba-detail/842851",
-    status: "Beschikbaar",
-  },
-  {
     label: "ALL oba.nl detailpagina",
     description:
       "OCLC Wise brondata wordt rechtstreeks geladen in een detailweergave.",
@@ -24,13 +17,6 @@ const detailOptions = [
 ];
 
 const searchOptions = [
-  {
-    label: "IST oba.nl zoekpagina",
-    description:
-      "OCLC Wise data wordt geladen in een mock-up oba.nl zoekpagina met de filters en facetten gebaseerd op GB 'bonbon met knoflooksmaak' model.",
-    href: "/oba-search",
-    status: "Beschikbaar",
-  },
   {
     label: "ALL oba.nl zoekpagina",
     description:

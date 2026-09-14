@@ -1560,3 +1560,15 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.advanced-request-note {
+  margin: -12px 0 22px 186px;
+  font-size: 12px;
+  color: #666;
+}
+
+@media (max-width: 760px) {
+  .advanced-request-note {
+    margin-left: 0;
+  }
+}

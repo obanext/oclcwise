@@ -23,7 +23,7 @@ const text = (value) => {
 };
 
 const DEFAULT_PERSPECTIVE_ID = "3682";
-const DEFAULT_SCOPE = "title";
+const DEFAULT_SCOPE = "anything";
 const DEFAULT_SORT = "2910";
 const DEFAULT_LIMIT = 20;
 const DEFAULT_VISIBLE_FACET_VALUES = 100;
@@ -85,7 +85,7 @@ function parseSearchStateFromPath(asPath = "") {
   const availableFromQuery = readBooleanQuery(params.get("filterAvailableTitles"));
 
   return {
-    q: params.get("q") || "",
+    q: params.get("term") || params.get("q") || "",
     nextPage: Math.max(Number(params.get("page") || 1) || 1, 1),
     nextPerspectiveId: params.get("perspectiveId") || DEFAULT_PERSPECTIVE_ID,
     nextSearchScope: params.get("searchScope") || DEFAULT_SCOPE,
@@ -162,10 +162,6 @@ function downloadCsv(filename, csv) {
   downloadFile(filename, csv, "text/csv;charset=utf-8;");
 }
 
-/**
- * ALL search page.
- * Presents OCLC search data directly as a visual result list, source JSON, API calls and downloads.
- */
 export default function OclcSearchPage() {
   const router = useRouter();
 
@@ -212,7 +208,7 @@ export default function OclcSearchPage() {
     }
 
     const timer = setTimeout(() => {
-      fetch(`/api/oclc-search?q=${encodeURIComponent(q)}&suggest=1&searchScope=${encodeURIComponent(searchScope)}`)
+      fetch(`/api/oclc-search?term=${encodeURIComponent(q)}&suggest=1&searchScope=${encodeURIComponent(searchScope)}`)
         .then((response) => response.json())
         .then((json) => {
           const values = asArray(json?.suggestions)
@@ -258,7 +254,7 @@ export default function OclcSearchPage() {
   }) {
     const params = new URLSearchParams();
 
-    if (text(q)) params.set("q", text(q));
+    if (text(q)) params.set("term", text(q));
     params.set("page", String(nextPage || 1));
     params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
     params.set("searchScope", String(nextSearchScope || DEFAULT_SCOPE));
@@ -291,7 +287,7 @@ export default function OclcSearchPage() {
   }) {
     const params = new URLSearchParams();
 
-    if (text(q)) params.set("q", text(q));
+    if (text(q)) params.set("term", text(q));
     params.set("page", String(nextPage || 1));
     params.set("limit", String(DEFAULT_LIMIT));
     params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
@@ -457,15 +453,22 @@ export default function OclcSearchPage() {
   const allOclc = useMemo(
     () => ({
       perspectiveResponse: data?.raw?.perspectiveResponse || null,
-      titlesummaryResponse: data?.raw?.searchResponse || null,
+      searchResponse: data?.raw?.searchResponse || null,
     }),
     [data]
   );
 
   const resultCount = Number(data?.pagination?.total || 0).toLocaleString("nl-NL");
   const currentPage = Number(data?.pagination?.page || page || 1);
-  const hasQuery = Boolean(text(query));
-  const hasCompletedSearch = Boolean(text(data?.query));
+  const hasSearchCriteria = Boolean(
+    text(query) || facetFilters.length || termFilters.length || filterAvailableTitles
+  );
+  const hasCompletedSearch = Boolean(
+    text(data?.query) ||
+    asArray(data?.selectedFacetFilters).length ||
+    asArray(data?.selectedTermFilters).length ||
+    data?.selectedFilterAvailableTitles
+  );
   const hasNextPage = Number(data?.pagination?.offset || 0) + Number(data?.pagination?.limit || DEFAULT_LIMIT) < Number(data?.pagination?.total || 0);
 
   function renderFacetCard({ facet, definition }) {
@@ -682,11 +685,11 @@ export default function OclcSearchPage() {
           </aside>
 
           <main className="oba-results-panel">
-            {hasQuery ? (
+            {hasSearchCriteria ? (
               <div className="oba-results-heading">
                 <div>
                   <h1>
-                    '{text(data?.query) || query}' in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
+                    '{text(data?.query) || query || 'filters'}' in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
                   </h1>
                   <div className="oba-result-count">{resultCount} resultaten</div>
                 </div>
@@ -711,7 +714,7 @@ export default function OclcSearchPage() {
               </div>
             ) : null}
 
-            {hasQuery ? (
+            {hasSearchCriteria ? (
               <section className="oba-result-list">
                 {items.length ? (
                   items.map((item, index) => {
@@ -767,7 +770,7 @@ export default function OclcSearchPage() {
               </section>
             ) : null}
 
-            {hasQuery ? (
+            {hasSearchCriteria ? (
               <section className="pagination-row">
                 <button
                   type="button"

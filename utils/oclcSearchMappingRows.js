@@ -15,7 +15,6 @@ const rawText = (value) => {
 };
 
 const PERSPECTIVE_ENDPOINT = "/branch/{branchId}/clienttype/{clientType}/perspective";
-const TITLESUMMARY_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/titlesummary";
 const SEARCH_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/search";
 const MOCKUP_ROUTE = "/api/oclc-search";
 
@@ -42,8 +41,8 @@ export function findOclcSearchFacetDefinition(facet = {}) {
   ));
 }
 
-function searchEndpoint(data = {}) {
-  return asArray(data?.selectedTermFilters).length ? SEARCH_ENDPOINT : TITLESUMMARY_ENDPOINT;
+function searchEndpoint() {
+  return SEARCH_ENDPOINT;
 }
 
 function escapeCsv(value) {

@@ -382,6 +382,7 @@ export default async function handler(req, res) {
   if (!requireGet(req, res)) return;
 
   const {
+    term = "",
     q = "",
     page = "1",
     limit = "20",
@@ -394,7 +395,7 @@ export default async function handler(req, res) {
     filterAvailableTitles = "false",
   } = req.query;
 
-  const query = text(q);
+  const query = text(term || q);
 
   if (suggest === "1") {
     const suggestionResult = await fetchWiseSuggestions(query, searchScope);
@@ -406,7 +407,6 @@ export default async function handler(req, res) {
   }
 
   const pageNumber = Math.max(Number(page) || 1, 1);
-  // ALL has no per-result discovery enrichment and intentionally allows up to 100 records.
   const limitNumber = Math.max(Math.min(Number(limit) || 20, 100), 1);
   const offset = (pageNumber - 1) * limitNumber;
   const rawFacetFilters = asArray(facetFilter).map(text).filter(Boolean);
@@ -453,7 +453,12 @@ export default async function handler(req, res) {
     selectedSort,
   } = configuration;
 
-  if (!query && !selectedTermFilters.length) {
+  if (
+    !query &&
+    !selectedFacetFilters.length &&
+    !selectedTermFilters.length &&
+    !selectedFilterAvailableTitles
+  ) {
     return res.status(200).json(
       normalizeSearchResponse({
         query,
@@ -472,11 +477,8 @@ export default async function handler(req, res) {
     );
   }
 
-  const useSearchEndpoint = selectedTermFilters.length > 0;
   let searchUrl =
-    `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}/perspective/${encodeURIComponent(selectedPerspectiveId)}/${
-      useSearchEndpoint ? "search" : "titlesummary"
-    }` +
+    `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}/perspective/${encodeURIComponent(selectedPerspectiveId)}/search` +
     `?returnType=default` +
     `&offset=${offset}` +
     `&limit=${limitNumber}` +
@@ -488,7 +490,7 @@ export default async function handler(req, res) {
     searchUrl = appendParam(searchUrl, "sort", selectedSort);
   }
 
-  if (query && !(useSearchEndpoint && query === "*.*")) {
+  if (query && query !== "*.*") {
     searchUrl = appendParam(searchUrl, "term", query);
   }
 
