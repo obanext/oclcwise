@@ -118,6 +118,28 @@ function selectedSet(filters = []) {
   return new Set(asArray(filters).map(text).filter(Boolean));
 }
 
+function itemCover(item = {}) {
+  return text(
+    item.imageUrls?.medium ||
+    item.imageUrls?.small ||
+    item.imageUrls?.large
+  );
+}
+
+function itemLanguage(item = {}) {
+  return asArray(item.language)
+    .map((entry) => text(entry?.description || entry?.code))
+    .filter(Boolean)
+    .join(", ");
+}
+
+function itemGenre(item = {}) {
+  return asArray(item.genre)
+    .map((entry) => text(entry?.description))
+    .filter(Boolean)
+    .join(", ");
+}
+
 function downloadFile(filename, contents, mimeType) {
   try {
     const blob = new Blob([contents], { type: mimeType });
