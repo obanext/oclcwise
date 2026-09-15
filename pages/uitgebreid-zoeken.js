@@ -59,6 +59,10 @@ function yearFacet(yearValue, yearFromValue, yearToValue) {
 }
 
 function determinePrimarySearch(form) {
+  if (text(form.subject)) {
+    return { term: text(form.subject), searchScope: "subject", source: "subject" };
+  }
+
   if (text(form.term)) {
     return { term: text(form.term), searchScope: "anything", source: "term" };
   }
@@ -90,7 +94,6 @@ function buildSearchState(form) {
     yearFacet(form.year, form.yearFrom, form.yearTo),
     text(form.genreCode) ? `genreCode:${text(form.genreCode)}` : "",
     text(form.languageCode) ? `languageCode:${text(form.languageCode)}` : "",
-    text(form.subject) ? `subject:${text(form.subject)}` : "",
     primary.source !== "series" && text(form.series) ? `series:${text(form.series)}` : "",
     text(form.targetAudienceCode)
       ? `targetAudienceCode:${text(form.targetAudienceCode)}`
@@ -113,6 +116,31 @@ function buildSearchState(form) {
     termFilters,
     filterAvailableTitles: Boolean(form.available),
   };
+}
+
+function subjectHasOtherCriteria(form) {
+  if (!text(form.subject)) return false;
+
+  return [
+    form.term,
+    form.title,
+    form.author,
+    form.mediumTypeCode,
+    form.branchId,
+    form.placementCode,
+    form.year,
+    form.yearFrom,
+    form.yearTo,
+    form.genreCode,
+    form.languageCode,
+    form.issn,
+    form.publisher,
+    form.isbn,
+    form.series,
+    form.collection,
+    form.targetAudienceCode,
+    form.content,
+  ].some((value) => text(value)) || Boolean(form.available);
 }
 
 
@@ -207,6 +235,7 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
   const [authorOptions, setAuthorOptions] = useState([]);
   const [authorLoading, setAuthorLoading] = useState(false);
   const [authorError, setAuthorError] = useState("");
+  const [subjectError, setSubjectError] = useState("");
   const queryPreview = useMemo(() => buildOclcRequestPreview(form), [form]);
 
   useEffect(() => {
@@ -260,6 +289,7 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
   }, [form.author]);
 
   function setField(name, value) {
+    if (name === "subject") setSubjectError("");
     setForm((current) => ({
       ...current,
       [name]: value,
@@ -309,6 +339,11 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
   function submit(event) {
     event.preventDefault();
 
+    if (subjectHasOtherCriteria(form)) {
+      setSubjectError("Onderwerp kan niet met andere zoekcriteria worden gecombineerd.");
+      return;
+    }
+
     const primary = determinePrimarySearch(form);
     if (text(form.author) && primary.source !== "author" && !text(form.authorFacetValue)) {
       setAuthorError("Kies de auteur uit de OCLC-suggesties.");
@@ -316,6 +351,7 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
     }
 
     setAuthorError("");
+    setSubjectError("");
     router.push(buildOclcSearchUrl(form));
   }
 
@@ -323,6 +359,7 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
     setForm(emptyForm);
     setAuthorOptions([]);
     setAuthorError("");
+    setSubjectError("");
   }
 
   return (
@@ -494,8 +531,9 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
             </label>
 
             <label className="advanced-field">
-              <span>Onderwerp (check)</span>
+              <span>Onderwerp</span>
               <input value={form.subject} onChange={(event) => setField("subject", event.target.value)} />
+              {subjectError ? <small>{subjectError}</small> : null}
             </label>
 
             <label className="advanced-field">
