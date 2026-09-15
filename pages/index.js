@@ -5,7 +5,7 @@ const detailOptions = [
     label: "ALL oba.nl detailpagina",
     description:
       "OCLC Wise brondata wordt rechtstreeks geladen in een detailweergave.",
-    href: "/oclc-detail/842851",
+    href: "/oclc-detail/1716321",
     status: "Beschikbaar",
   },
   {

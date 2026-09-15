@@ -487,9 +487,10 @@ export default async function handler(req, res) {
     `&filterAvailableTitles=${encodeURIComponent(selectedFilterAvailableTitles ? "true" : "false")}` +
     `&enableMultiSelectFaceting=true`;
 
-  if (sortWasProvided) {
-    searchUrl = appendParam(searchUrl, "sort", selectedSort);
-  }
+  // Keep the perspective's sort ID for the UI; send relevance descending to WISE,
+  // including when the frontend omits its default sort parameter.
+  const wiseSort = selectedSort === "2910" ? "2910 desc" : selectedSort;
+  searchUrl = appendParam(searchUrl, "sort", wiseSort);
 
   if (query) {
     searchUrl = appendParam(searchUrl, "term", query);
