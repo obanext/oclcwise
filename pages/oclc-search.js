@@ -99,7 +99,7 @@ function parseSearchStateFromPath(asPath = "") {
   const availableFromQuery = readBooleanQuery(params.get("filterAvailableTitles"));
 
   return {
-    q: params.get("term") || params.get("q") || "",
+    q: params.get("term") || "",
     nextPage: Math.max(Number(params.get("page") || 1) || 1, 1),
     nextPerspectiveId: params.get("perspectiveId") || DEFAULT_PERSPECTIVE_ID,
     nextSearchScope: params.get("searchScope") || DEFAULT_SCOPE,

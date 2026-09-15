@@ -105,7 +105,7 @@ export default function OldSchoolSearchPage() {
     const params = new URLSearchParams();
     const selected = parsePreselect(preselect);
 
-    if (query.trim()) params.set("q", query.trim());
+    if (query.trim()) params.set("term", query.trim());
 
     params.set("page", "1");
     params.set("searchScope", DEFAULT_SEARCH_SCOPE);

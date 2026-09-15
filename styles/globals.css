@@ -1505,6 +1505,17 @@ textarea {
   border-color: #111;
 }
 
+.advanced-year-range {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.advanced-year-range span {
+  white-space: nowrap;
+}
+
 .advanced-field-disabled {
   color: #777;
 }

@@ -2,6 +2,12 @@ import Link from "next/link";
 
 const detailOptions = [
   {
+    label: "IST oba.nl detailpagina",
+    description:
+      "OCLC Wise data wordt geladen in een mock-up oba.nl detailpagina gebaseerd op het bestaande IST-model.",
+    status: "Niet toegankelijk",
+  },
+  {
     label: "ALL oba.nl detailpagina",
     description:
       "OCLC Wise brondata wordt rechtstreeks geladen in een detailweergave.",
@@ -17,6 +23,12 @@ const detailOptions = [
 ];
 
 const searchOptions = [
+  {
+    label: "IST oba.nl zoekpagina",
+    description:
+      "OCLC Wise data wordt geladen in een mock-up oba.nl zoekpagina gebaseerd op het bestaande IST-model.",
+    status: "Niet toegankelijk",
+  },
   {
     label: "ALL oba.nl zoekpagina",
     description:

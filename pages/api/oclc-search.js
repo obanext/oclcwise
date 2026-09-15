@@ -383,7 +383,6 @@ export default async function handler(req, res) {
 
   const {
     term = "",
-    q = "",
     page = "1",
     limit = "20",
     suggest = "",
@@ -395,7 +394,7 @@ export default async function handler(req, res) {
     filterAvailableTitles = "false",
   } = req.query;
 
-  const query = text(term || q);
+  const query = text(term);
 
   if (suggest === "1") {
     const suggestionResult = await fetchWiseSuggestions(query, searchScope);

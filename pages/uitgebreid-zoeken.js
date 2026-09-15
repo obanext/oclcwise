@@ -17,7 +17,7 @@ const text = (value) => {
 const COLLECTIONS = [["", "Kies een waarde"]];
 
 const emptyForm = {
-  q: "",
+  term: "",
   title: "",
   author: "",
   authorFacetValue: "",
@@ -25,6 +25,7 @@ const emptyForm = {
   branchId: "",
   placementCode: "",
   year: "",
+  yearFrom: "",
   yearTo: "",
   genreCode: "",
   languageCode: "",
@@ -45,21 +46,21 @@ function termFilter(field, value) {
   return `${field}:${clean}`;
 }
 
-function yearFacet(yearValue, yearToValue) {
+function yearFacet(yearValue, yearFromValue, yearToValue) {
   const year = text(yearValue);
+  const yearFrom = text(yearFromValue);
   const yearTo = text(yearToValue);
-  const hasYear = /^\d{4}$/.test(year);
-  const hasYearTo = /^\d{4}$/.test(yearTo);
 
-  if (hasYear && hasYearTo) return `customPublicationYear:${year}-${yearTo}`;
-  if (hasYear) return `customPublicationYear:${year}`;
-  if (hasYearTo) return `customPublicationYear:${yearTo}`;
+  if (/^\d+$/.test(year)) return `customPublicationYear:${year}`;
+  if (/^\d+$/.test(yearFrom) && /^\d+$/.test(yearTo)) {
+    return `customPublicationYear:${yearFrom}-${yearTo}`;
+  }
   return "";
 }
 
 function determinePrimarySearch(form) {
-  if (text(form.q)) {
-    return { term: text(form.q), searchScope: "anything", source: "q" };
+  if (text(form.term)) {
+    return { term: text(form.term), searchScope: "anything", source: "term" };
   }
 
   if (text(form.title)) {
@@ -68,6 +69,10 @@ function determinePrimarySearch(form) {
 
   if (text(form.author)) {
     return { term: text(form.author), searchScope: "author", source: "author" };
+  }
+
+  if (text(form.series)) {
+    return { term: text(form.series), searchScope: "series", source: "series" };
   }
 
   return { term: "", searchScope: "anything", source: "" };
@@ -82,11 +87,11 @@ function buildSearchState(form) {
       : "",
     text(form.mediumTypeCode) ? `mediumTypeCode:${text(form.mediumTypeCode)}` : "",
     text(form.branchId) ? `branchId:${text(form.branchId)}` : "",
-    yearFacet(form.year, form.yearTo),
+    yearFacet(form.year, form.yearFrom, form.yearTo),
     text(form.genreCode) ? `genreCode:${text(form.genreCode)}` : "",
     text(form.languageCode) ? `languageCode:${text(form.languageCode)}` : "",
     text(form.subject) ? `subject:${text(form.subject)}` : "",
-    text(form.series) ? `series:${text(form.series)}` : "",
+    primary.source !== "series" && text(form.series) ? `series:${text(form.series)}` : "",
     text(form.targetAudienceCode)
       ? `targetAudienceCode:${text(form.targetAudienceCode)}`
       : "",
@@ -94,6 +99,11 @@ function buildSearchState(form) {
 
   const termFilters = [
     primary.source !== "title" && text(form.title) ? termFilter("title", form.title) : "",
+    termFilter("placementCode", form.placementCode),
+    termFilter("issn", form.issn),
+    termFilter("publisher", form.publisher),
+    termFilter("isbn", form.isbn),
+    termFilter("content", form.content),
   ].filter(Boolean);
 
   return {
@@ -256,6 +266,36 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
     }));
   }
 
+  function setSingleYear(value) {
+    const year = value.replace(/[^\d]/g, "");
+    setForm((current) => ({
+      ...current,
+      year,
+      yearFrom: "",
+      yearTo: "",
+    }));
+  }
+
+  function setYearFrom(value) {
+    const yearFrom = value.replace(/[^\d]/g, "");
+    setForm((current) => ({
+      ...current,
+      year: "",
+      yearFrom,
+      yearTo: yearFrom ? String(Number(yearFrom) + 1) : "",
+    }));
+  }
+
+  function setYearTo(value) {
+    const yearTo = value.replace(/[^\d]/g, "");
+    setForm((current) => ({
+      ...current,
+      year: "",
+      yearFrom: yearTo ? String(Math.max(0, Number(yearTo) - 1)) : "",
+      yearTo,
+    }));
+  }
+
   function setAuthor(value) {
     const authorFacetValue = findAuthorFacetValue(authorOptions, value);
     setAuthorError("");
@@ -311,8 +351,8 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               <span className="old-school-search-icon">⌕</span>
               <input
                 className="old-school-search-input"
-                value={form.q}
-                onChange={(event) => setField("q", event.target.value)}
+                value={form.term}
+                onChange={(event) => setField("term", event.target.value)}
                 placeholder="Waar ben je naar op zoek?"
               />
             </div>
@@ -389,9 +429,12 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>Plaatsingscode</span>
-              <input value={form.placementCode} disabled />
+            <label className="advanced-field">
+              <span>Plaatsingscode (check)</span>
+              <input
+                value={form.placementCode}
+                onChange={(event) => setField("placementCode", event.target.value)}
+              />
             </label>
 
             <label className="advanced-field">
@@ -399,23 +442,31 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               <input
                 inputMode="numeric"
                 value={form.year}
-                onChange={(event) =>
-                  setField("year", event.target.value.replace(/[^\d]/g, "").slice(0, 4))
-                }
+                min="0"
+                onChange={(event) => setSingleYear(event.target.value)}
                 placeholder="bijv. 2022"
               />
             </label>
 
             <label className="advanced-field">
-              <span>Jaar tot</span>
-              <input
-                inputMode="numeric"
-                value={form.yearTo}
-                onChange={(event) =>
-                  setField("yearTo", event.target.value.replace(/[^\d]/g, "").slice(0, 4))
-                }
-                placeholder="bijv. 2023"
-              />
+              <span>Jaar</span>
+              <div className="advanced-year-range">
+                <input
+                  inputMode="numeric"
+                  value={form.yearFrom}
+                  min="0"
+                  onChange={(event) => setYearFrom(event.target.value)}
+                  aria-label="Jaar vanaf"
+                />
+                <span>tot</span>
+                <input
+                  inputMode="numeric"
+                  value={form.yearTo}
+                  min="0"
+                  onChange={(event) => setYearTo(event.target.value)}
+                  aria-label="Jaar tot"
+                />
+              </div>
             </label>
 
             <label className="advanced-field">
@@ -442,24 +493,24 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>Onderwerp</span>
-              <input value={form.subject} disabled />
+            <label className="advanced-field">
+              <span>Onderwerp (check)</span>
+              <input value={form.subject} onChange={(event) => setField("subject", event.target.value)} />
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>ISSN</span>
-              <input value={form.issn} disabled />
+            <label className="advanced-field">
+              <span>ISSN (check)</span>
+              <input value={form.issn} onChange={(event) => setField("issn", event.target.value)} />
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>Uitgever</span>
-              <input value={form.publisher} disabled />
+            <label className="advanced-field">
+              <span>Uitgever (check)</span>
+              <input value={form.publisher} onChange={(event) => setField("publisher", event.target.value)} />
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>ISBN</span>
-              <input value={form.isbn} disabled />
+            <label className="advanced-field">
+              <span>ISBN (check)</span>
+              <input value={form.isbn} onChange={(event) => setField("isbn", event.target.value)} />
             </label>
 
             <label className="advanced-field">
@@ -467,9 +518,12 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               <input value={form.series} onChange={(event) => setField("series", event.target.value)} />
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>Collectie</span>
-              <select value={form.collection} disabled>
+            <label className="advanced-field">
+              <span>Collectie (check)</span>
+              <select
+                value={form.collection}
+                onChange={(event) => setField("collection", event.target.value)}
+              >
                 {COLLECTIONS.map(([value, label]) => (
                   <option key={value || "empty"} value={value}>
                     {label}
@@ -493,9 +547,9 @@ export default function AdvancedSearchPage({ metadataOptions, branches }) {
               </select>
             </label>
 
-            <label className="advanced-field advanced-field-disabled">
-              <span>Inhoud</span>
-              <input value={form.content} disabled />
+            <label className="advanced-field">
+              <span>Inhoud (check)</span>
+              <input value={form.content} onChange={(event) => setField("content", event.target.value)} />
             </label>
 
             <div className="advanced-actions">
