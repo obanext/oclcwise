@@ -306,6 +306,10 @@ export default function OclcDetailPage() {
     { value: titleData?.isbn, field: "isbn", endpoint: ENDPOINTS.discovery },
     { value: titleRecord?.isbn, field: "[0].isbn", endpoint: ENDPOINTS.title },
   ]);
+  const ppnSource = firstSource([
+    { value: titleData?.ppn, field: "ppn", endpoint: ENDPOINTS.discovery },
+    { value: titleRecord?.ppn, field: "[0].ppn", endpoint: ENDPOINTS.title },
+  ]);
   const publicationYearSource = firstSource([
     { value: titleData?.publicationYear, field: "publicationYear", endpoint: ENDPOINTS.discovery },
     { value: titleRecord?.publicationYear, field: "[0].publicationYear", endpoint: ENDPOINTS.title },
@@ -348,6 +352,8 @@ export default function OclcDetailPage() {
     .filter((entry) => hasValue(entry?.description))
     .map((entry) => facetSearchHref("series", entry.description));
   const isbnValues = readableValues(isbnSource.value);
+  const ppnValues = [...new Set(readableValues(ppnSource.value))];
+  const placeValues = [...new Set(itemInformation.map((item) => item?.callNumber).filter(hasValue))];
   const collaboratorValues = collaborators.map(personLabel).filter(hasValue);
   const languageValues = readableValues(titleData?.language, ["description", "code"]);
   const genreValues = readableValues(titleData?.genre, ["description", "code"]);
@@ -478,6 +484,20 @@ export default function OclcDetailPage() {
       note: "Alle ISBN-waarden worden afzonderlijk getoond; in de CSV zijn ze gescheiden met |.",
     },
     {
+      label: "PPN",
+      value: ppnValues,
+      field: Array.isArray(ppnSource.value) ? `${ppnSource.field}[]` : ppnSource.field,
+      endpoint: ppnSource.endpoint,
+      note: "De ruwe PPN-waarden worden afzonderlijk getoond; de CSV gebruikt | bij meerdere waarden.",
+    },
+    {
+      label: "Plaats",
+      value: placeValues,
+      field: "[].callNumber",
+      endpoint: ENDPOINTS.items,
+      note: "Unieke plaatsingscodes van de exemplaren uit iteminformation; geen plaats van uitgave. De CSV gebruikt | bij meerdere waarden.",
+    },
+    {
       label: "Auteur",
       value: personLabel(titleData?.author) || authorSource.value,
       href: authorSearchHref,
@@ -535,7 +555,7 @@ export default function OclcDetailPage() {
     },
     { label: "Aanschafinfo", value: titleData?.acquisitionInformation, field: "acquisitionInformation", endpoint: ENDPOINTS.discovery },
     { label: "Titelnummer", value: titleData?.id, field: "id", endpoint: ENDPOINTS.discovery },
-  ].filter((row) => hasValue(row.value)), [ageCategorySource, authorSearchHref, authorSource.value, classificationValues, collaboratorValues, genreSearchLinks, genreValues, isbnSource.endpoint, isbnSource.field, isbnValues, languageValues, materialSource, publicationYearSource, publisher, seriesSearchLinks, seriesValues, subjectSearchLinks, subjectValues, summarySource, titleBlockValue, titleData, titleSource]);
+  ].filter((row) => hasValue(row.value)), [ageCategorySource, authorSearchHref, authorSource.value, classificationValues, collaboratorValues, genreSearchLinks, genreValues, isbnSource.endpoint, isbnSource.field, isbnValues, languageValues, materialSource, placeValues, ppnSource.endpoint, ppnSource.field, ppnSource.value, ppnValues, publicationYearSource, publisher, seriesSearchLinks, seriesValues, subjectSearchLinks, subjectValues, summarySource, titleBlockValue, titleData, titleSource]);
 
   const itemRows = useMemo(() => itemInformation.map((item, index) => ({
     key: `${item?.id ?? item?.barcode ?? "item"}-${index}`,
