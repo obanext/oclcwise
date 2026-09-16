@@ -259,15 +259,10 @@ function availabilityCountUrl(searchUrl) {
 
 function perspectiveCountUrl(searchUrl, perspective = {}) {
   const sourceUrl = new URL(searchUrl);
-  const countHref = asArray(perspective?.links)
-    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
-  const baseUrl = new URL(WISE_BASE_URL);
-  const fallback =
+  const url = new URL(
     `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
-    `/perspective/${encodeURIComponent(text(perspective?.id))}/search`;
-  const url = countHref
-    ? new URL(countHref, `${baseUrl.origin}/`)
-    : new URL(fallback);
+    `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
+  );
 
   url.searchParams.set("returnType", "count");
   url.searchParams.set("searchScope", sourceUrl.searchParams.get("searchScope") || "anything");

@@ -69,9 +69,7 @@ function toCsv(rows = [], columns = []) {
 
 function perspectiveCountEndpoint(perspective = {}) {
   const perspectiveId = text(perspective?.id) || "{perspectiveId}";
-  const oclcCountLink = asArray(perspective?.links)
-    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
-  return text(oclcCountLink) || `/branch/{branchId}/perspective/${perspectiveId}/search?searchScope=anything&returnType=count`;
+  return `/branch/{branchId}/perspective/${perspectiveId}/titlesummary?returnType=count&searchScope=anything`;
 }
 
 function firstSource(candidates = []) {
@@ -304,9 +302,9 @@ export function buildOclcFilterRows(data = {}) {
     obaIst: "WEL",
     technicalValue: "perspectiveId=<bron>; geen term-parameter",
     endpoint,
-    countEndpoint: "/branch/{branchId}/perspective/{perspectiveId}/search?searchScope=anything&returnType=count",
+    countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
     mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. Voor de aantallen wordt per perspective de door OCLC geleverde rel=count-link gebruikt. Detailpaginafilters gebruiken searchScope met term voor auteur, onderwerp en reeks; alleen echte codefacetten gebruiken facetFilter.",
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count, omdat deze route in de gebruikte acceptatieomgeving ook voor NBC+-perspectives een bruikbare teller retourneert. Detailpaginafilters gebruiken searchScope met term voor auteur, onderwerp en reeks; alleen echte codefacetten gebruiken facetFilter.",
   });
 
   rows.push({
