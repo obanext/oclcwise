@@ -707,7 +707,7 @@ button.filter-card-title {
 }
 
 .filter-radio {
-  grid-template-columns: 13px minmax(0, 1fr);
+  grid-template-columns: 13px minmax(0, 1fr) auto;
 }
 
 .radio-dot,

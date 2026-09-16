@@ -686,7 +686,12 @@ export default function OclcSearchPage() {
                         onClick={() => changePerspective(String(perspective.id))}
                       >
                         <span className="radio-dot" />
-                        <span>{perspective.label}</span>
+                        <span className="filter-label">{perspective.label}</span>
+                        {perspective.count !== null && perspective.count !== undefined ? (
+                          <span className="filter-count">
+                            {Number(perspective.count).toLocaleString("nl-NL")}
+                          </span>
+                        ) : null}
                       </button>
                     ))}
                   </div>

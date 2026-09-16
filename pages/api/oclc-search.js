@@ -257,6 +257,18 @@ function availabilityCountUrl(searchUrl) {
   return url.toString();
 }
 
+function perspectiveCountUrl(searchUrl, perspectiveId) {
+  const url = new URL(searchUrl);
+  const perspectivePath = `/perspective/${encodeURIComponent(perspectiveId)}/titlesummary`;
+  url.pathname = url.pathname.replace(/\/perspective\/[^/]+\/titlesummary$/, perspectivePath);
+  url.searchParams.set("returnType", "count");
+  url.searchParams.delete("offset");
+  url.searchParams.delete("limit");
+  url.searchParams.delete("sort");
+  url.searchParams.delete("enableMultiSelectFaceting");
+  return url.toString();
+}
+
 function normalizeItem(item = {}, index = 0) {
   const detailId = extractChildTitleId(item);
   const sourceId = extractSourceId(item);
@@ -376,12 +388,23 @@ function normalizeSearchResponse({
   perspectiveCall,
   searchCall,
   availabilityCountCall = null,
+  perspectiveCountCalls = [],
 }) {
-  const perspectives = normalizePerspectives(perspectiveCall?.body);
-  const selectedPerspective =
-    perspectives.find((entry) => String(entry.id) === String(selectedPerspectiveId)) || perspectives[0] || null;
   const searchBody = searchCall?.body && typeof searchCall.body === "object" ? searchCall.body : {};
   const rawItems = extractItems(searchBody);
+  const selectedPerspectiveCount = responseTotal(searchBody);
+  const countByPerspective = new Map([[text(selectedPerspectiveId), selectedPerspectiveCount]]);
+
+  asArray(perspectiveCountCalls).forEach(({ perspectiveId, call }) => {
+    if (call?.ok) countByPerspective.set(text(perspectiveId), responseTotal(call.body));
+  });
+
+  const perspectives = normalizePerspectives(perspectiveCall?.body).map((perspective) => ({
+    ...perspective,
+    count: countByPerspective.get(text(perspective.id)) ?? null,
+  }));
+  const selectedPerspective =
+    perspectives.find((entry) => String(entry.id) === String(selectedPerspectiveId)) || perspectives[0] || null;
   const availabilityCount = selectedFilterAvailableTitles
     ? responseTotal(searchBody)
     : availabilityCountCall?.ok
@@ -413,12 +436,23 @@ function normalizeSearchResponse({
     items: rawItems.map((item, index) => normalizeItem(item, offset + index + 1)),
     spellcheck: searchBody?.spellcheck || null,
     debug: {
-      calls: [perspectiveCall, searchCall, availabilityCountCall].filter(Boolean),
+      calls: [
+        perspectiveCall,
+        searchCall,
+        availabilityCountCall,
+        ...asArray(perspectiveCountCalls).map(({ call }) => call),
+      ].filter(Boolean),
     },
     raw: {
       perspectiveResponse: perspectiveCall?.body || null,
       searchResponse: searchCall?.body || null,
       availabilityCountResponse: availabilityCountCall?.body || null,
+      perspectiveCountResponses: Object.fromEntries(
+        asArray(perspectiveCountCalls).map(({ perspectiveId, call }) => [
+          text(perspectiveId),
+          call?.body || null,
+        ])
+      ),
     },
   };
 }
@@ -543,17 +577,32 @@ export default async function handler(req, res) {
   searchUrl = appendRepeatedParam(searchUrl, "facetFilter", combineFacetFilters(selectedFacetFilters));
   searchUrl = appendRepeatedParam(searchUrl, "termFilter", selectedTermFilters);
 
-  const [searchCall, availabilityCountCall] = await Promise.all([
+  const perspectiveCountTargets = extractPerspectives(perspectiveCall.body)
+    .map((perspective) => text(perspective?.id))
+    .filter((id) => id && id !== text(selectedPerspectiveId));
+
+  const [searchCall, availabilityCountCall, perspectiveCountCalls] = await Promise.all([
     fetchWiseResponse(searchUrl),
     selectedFilterAvailableTitles
       ? Promise.resolve(null)
       : fetchWiseResponse(availabilityCountUrl(searchUrl)),
+    Promise.all(perspectiveCountTargets.map(async (countPerspectiveId) => ({
+      perspectiveId: countPerspectiveId,
+      call: await fetchWiseResponse(perspectiveCountUrl(searchUrl, countPerspectiveId)),
+    }))),
   ]);
 
   if (!searchCall.ok) {
     return res.status(searchCall.status || 500).json({
       error: "Zoekopdracht ophalen mislukt",
-      debug: { calls: [perspectiveCall, searchCall, availabilityCountCall].filter(Boolean) },
+      debug: {
+        calls: [
+          perspectiveCall,
+          searchCall,
+          availabilityCountCall,
+          ...perspectiveCountCalls.map(({ call }) => call),
+        ].filter(Boolean),
+      },
     });
   }
 
@@ -572,6 +621,7 @@ export default async function handler(req, res) {
       perspectiveCall,
       searchCall,
       availabilityCountCall,
+      perspectiveCountCalls,
     })
   );
 }
