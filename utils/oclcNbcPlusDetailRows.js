@@ -1,4 +1,4 @@
-export const NBCPLUS_AUDIOBOOK_ENDPOINT = "/discovery/origin/nbcplus/branch/{branchId}/title/{ppn}";
+export const NBCPLUS_DETAIL_ENDPOINT = "/discovery/origin/nbcplus/branch/{branchId}/title/{ppn}";
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 const hasValue = (value) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length > 0);
@@ -12,6 +12,40 @@ const rawText = (value) => {
 
 const text = (value) => value === null || value === undefined ? "" : String(value).trim();
 const firstText = (...values) => values.map(text).find(Boolean) || "";
+
+const PERSPECTIVE_IDS = {
+  ebook: "3684",
+  luisterboek: "3685",
+  landelijk: "3687",
+};
+
+function facetSearchHref(detailType, facetName, facetValue) {
+  if (!hasValue(facetName) || !hasValue(facetValue)) return "";
+
+  const params = new URLSearchParams({
+    term: "*.*",
+    page: "1",
+    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
+    searchScope: "title",
+    sort: "2910",
+  });
+  params.append("facetFilter", `${facetName}:${facetValue}`);
+  return `/oclc-search?${params.toString()}`;
+}
+
+function termFilterSearchHref(detailType, fieldName, fieldValue) {
+  if (!hasValue(fieldName) || !hasValue(fieldValue)) return "";
+
+  const params = new URLSearchParams({
+    term: "*.*",
+    page: "1",
+    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
+    searchScope: "title",
+    sort: "2910",
+  });
+  params.append("termFilter", `${fieldName}:${fieldValue}`);
+  return `/oclc-search?${params.toString()}`;
+}
 
 const readableValues = (value, keys = ["description", "code"]) => asArray(value)
   .map((entry) => {
@@ -66,6 +100,16 @@ function targetAudience(record = {}) {
   return "";
 }
 
+function publisherName(record = {}) {
+  const publicationDetails = text(record?.publicationDetails);
+  if (publicationDetails) return publicationDetails.split(",")[0].trim();
+
+  const imprint = text(record?.imprint);
+  if (!imprint) return "";
+  const publisherPart = imprint.includes(":") ? imprint.split(":").slice(1).join(":") : imprint;
+  return publisherPart.split(",")[0].trim();
+}
+
 export function buildOclcNbcPlusViewModel(record = {}) {
   const collaborators = asArray(record?.collaborators);
   const primaryAuthor = personLabel(record?.author);
@@ -85,7 +129,7 @@ export function buildOclcNbcPlusViewModel(record = {}) {
   const loanLink = asArray(record?.externalLinks).find((link) => (
     rawText(link?.id).includes("digitalloan") || rawText(link?.name).toLowerCase().includes("online bibliotheek")
   )) || asArray(record?.externalLinks)[0] || null;
-  const publisher = firstText(record?.publicationDetails, record?.imprint);
+  const publisher = publisherName(record);
   const cover = firstText(record?.imageUrls?.large, record?.imageUrls?.medium, record?.imageUrls?.small);
   const audience = targetAudience(record);
 
@@ -126,44 +170,75 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
       ? "landelijk"
       : "luisterboek";
   const authorField = "author.description | author.qualifier | collaborators[].description | collaborators[].qualifier";
-  const authorValue = view.authors.join(", ");
   const audienceField = "audience.description | targetAudience.description | targetGroup | ageRange.from | ageRange.to | youth | adult";
+  const authorHref = facetSearchHref(detailType, "authorFacet", record?.author?.description);
+  const authorSources = [record?.author, ...asArray(record?.collaborators)]
+    .filter((entry) => hasValue(entry?.description));
+  const authorHrefs = authorSources.map((entry) => facetSearchHref(detailType, "authorFacet", entry.description));
+  const formatHref = facetSearchHref(detailType, "mediumTypeCode", firstText(record?.media?.code, record?.media?.icon));
+  const languageHrefs = asArray(record?.language)
+    .filter((entry) => hasValue(entry?.description || entry?.code))
+    .map((entry) => facetSearchHref(detailType, "languageCode", entry?.code || entry?.description));
+  const audienceCode = firstText(
+    record?.audience?.code,
+    record?.targetAudience?.code,
+    record?.youth === true && record?.adult !== true ? "JN" : "",
+    record?.adult === true && record?.youth !== true ? "NJ" : ""
+  );
+  const audienceHref = facetSearchHref(detailType, "audienceCode", audienceCode);
+  const publisherHref = termFilterSearchHref(detailType, "publisher", view.publisher);
+  const seriesSource = (asArray(record?.titleSeries).length ? asArray(record.titleSeries) : asArray(record?.titleSeriesSchoolWise))
+    .filter((entry) => hasValue(entry?.description));
+  const seriesHrefs = seriesSource.map((entry) => facetSearchHref(detailType, "series", entry.description));
+  const subjectSource = (asArray(record?.subjects).length ? asArray(record.subjects) : asArray(record?.subjectSchoolWise))
+    .filter((entry) => hasValue(entry?.description || entry?.code));
+  const subjectHrefs = subjectSource.map((entry) => facetSearchHref(detailType, "subject", entry?.description || entry?.code));
+  const genreSource = asArray(record?.genre).filter((entry) => hasValue(entry?.description || entry?.code));
+  const genreHrefs = genreSource.map((entry) => facetSearchHref(detailType, "genreCode", entry?.code || entry?.description));
+  const titleField = hasValue(record?.mainTitle) ? "mainTitle" : "title";
+  const formatField = hasValue(record?.media?.description) ? "media.description" : "media.icon";
+  const publisherField = hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint";
+  const seriesField = asArray(record?.titleSeries).length ? "titleSeries[].description" : "titleSeriesSchoolWise[].description";
+  const topSpecificationRows = [
+    ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+    ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
+    ["Uitgever", publisherField, view.publisher, "Uit publicationDetails wordt de uitgeversnaam vóór de eerste komma getoond; bij imprint wordt de uitgeversnaam na de dubbele punt gebruikt."],
+    ...(detailType === "landelijk"
+      ? [["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond."]]
+      : []),
+    ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
+  ];
   const practicalRows = detailType === "landelijk"
     ? [
-        ["Titel", "title", view.title, "Ruwe NBC+-titel."],
-        ["Auteur", authorField, authorValue, "Eerste verantwoordelijke en eventuele medewerkers worden in de geleverde volgorde gecombineerd."],
-        ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-        ["Editie", "annotationEdition", view.edition, "Ruwe editie."],
-        ["Uitgave", hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint", view.publisher, "publicationDetails heeft voorrang; de ruwe waarde wordt niet opgesplitst."],
-        ["Collatie", "annotationCollation", view.collation, "De volledige ruwe collatiewaarde wordt getoond."],
-        ["Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
-        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden alleen expliciete jeugd-/volwassenenindicatoren gebruikt."],
-        ["Serie", asArray(record?.titleSeries).length ? "titleSeries[].description" : "titleSeriesSchoolWise[].description", view.series, "Alle geleverde seriewaarden worden getoond."],
+        ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
+        ["Auteurs", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk en in de geleverde volgorde getoond."],
+        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
-        ["Publicatiejaar", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
-        ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
+        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
+        ["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
+        ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
+        ["Jaar van uitgave", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
       ]
     : detailType === "ebook"
     ? [
-        ["Titel", "title", view.title, "Ruwe NBC+-titel."],
-        ["Auteur", authorField, authorValue, "Eerste verantwoordelijke en eventuele medewerkers worden in de geleverde volgorde gecombineerd."],
+        ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
+        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk en in de geleverde volgorde getoond."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-        ["Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
-        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden alleen expliciete jeugd-/volwassenenindicatoren gebruikt."],
+        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
       ]
     : [
-        ["Titel", "title", view.title, "Ruwe NBC+-titel."],
-        ["Auteur", authorField, authorValue, "Eerste verantwoordelijke en eventuele medewerkers worden in de geleverde volgorde gecombineerd."],
+        ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
+        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk en in de geleverde volgorde getoond."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-        ["Editie", "annotationEdition", view.edition, "Ruwe editie."],
-        ["Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
-        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden alleen expliciete jeugd-/volwassenenindicatoren gebruikt."],
+        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Speelduur", "annotationCollation", view.duration, "Voor de zichtbare speelduur wordt de eerste waarde vóór de komma gebruikt; de volledige bronwaarde blijft in Alle velden OCLC beschikbaar."],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
@@ -176,34 +251,61 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     ["Cover", "Cover", "imageUrls.large | imageUrls.medium | imageUrls.small", view.cover, "Het grootste beschikbare coverformaat wordt gebruikt."],
     ["Beschikbaarheid", "Beschikbaarheid", "available", detailType === "landelijk" && view.available === true ? "Beschikbaar" : view.availabilityLabel, detailType === "landelijk" ? "De ruwe NBC+-beschikbaarheidswaarde wordt leesbaar getoond." : "true wordt visueel Digitaal beschikbaar; false wordt Niet beschikbaar."],
     ["Actie", detailType === "landelijk" ? (view.loanName || "Externe link") : "Digitaal te lenen", "externalLinks[].url", view.loanUrl, "De relevante link uit externalLinks wordt gebruikt."],
-    ["Specificaties", "Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
-    ["Specificaties", "Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-    ["Specificaties", "Uitgave", hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint", view.publisher, "publicationDetails heeft voorrang; de ruwe waarde wordt niet opgesplitst."],
-    ["Specificaties", "Serie", asArray(record?.titleSeries).length ? "titleSeries[].description" : "titleSeriesSchoolWise[].description", view.series, "Alle geleverde seriewaarden worden getoond."],
-    ["Specificaties", "Doelgroep", "youth | adult", view.audience, "Alleen expliciete NBC+-indicatoren worden gebruikt; een ontbrekende doelgroep wordt niet afgeleid."],
+    ...topSpecificationRows.map(([label, field, value, note]) => ["Specificaties", label, field, value, note]),
     ["Onderwerpen", "Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
     ...practicalRows.map(([label, field, value, note]) => ["Praktische informatie", label, field, value, note]),
   ];
 
   return rows
     .filter(([, , , value]) => hasValue(value))
-    .map(([section, label, field, value, note], index) => ({
-      order: index + 1,
-      section,
-      label,
-      field,
-      value,
-      endpoint: NBCPLUS_AUDIOBOOK_ENDPOINT,
-      note,
-    }));
+    .map(([section, label, field, value, note], index) => {
+      const href = label === "Eerste verantwoordelijke"
+        ? authorHref
+        : label === "Formaat"
+          ? formatHref
+          : label === "Uitgever"
+            ? publisherHref
+        : label === "Doelgroep"
+          ? audienceHref
+          : "";
+      const hrefs = label === "Auteur" || label === "Auteurs"
+        ? authorHrefs
+        : label === "Taal"
+          ? languageHrefs
+        : label === "Serie" || label === "Reeks"
+        ? seriesHrefs
+        : label === "Onderwerpen"
+          ? subjectHrefs
+          : label === "Genres"
+            ? genreHrefs
+            : [];
+
+      return {
+        order: index + 1,
+        section,
+        label,
+        field,
+        value,
+        endpoint: NBCPLUS_DETAIL_ENDPOINT,
+        href,
+        hrefs,
+        searchLink: href || hrefs.filter(Boolean).join(" | "),
+        note: (href || hrefs.some(Boolean))
+          ? `${note} De zichtbare waarde linkt naar OCLC zoeken binnen perspective ${PERSPECTIVE_IDS[detailType]}.`
+          : note,
+      };
+    });
 }
 
 const siteNames = {
   id: "NBC+-titel-ID",
   title: "Titel",
+  mainTitle: "Titel",
   "author.description": "Eerste verantwoordelijke",
+  "author.qualifier": "Eerste verantwoordelijke – toevoeging",
   contents: "Samenvatting",
   "media.description": "Formaat",
+  "media.icon": "Formaat",
   "isbn[]": "ISBN",
   "imageUrls.small": "Cover-URL klein",
   "imageUrls.medium": "Cover-URL middel",
@@ -211,20 +313,27 @@ const siteNames = {
   "language[].description": "Taal",
   publicationYear: "Publicatiejaar",
   "collaborators[].description": "Medewerker",
+  "collaborators[].qualifier": "Medewerker – toevoeging",
   "titleSeries[].description": "Serie",
   "titleSeriesSchoolWise[].description": "Serie SchoolWise",
   "subjectSchoolWise[].description": "Onderwerpen",
   "subjects[].description": "Onderwerpen",
   "genre[].description": "Genres",
+  "genre[].code": "Genres – zoekcode",
   "audience.description": "Doelgroep",
+  "audience.code": "Doelgroep – zoekcode",
   "targetAudience.description": "Doelgroep",
+  "targetAudience.code": "Doelgroep – zoekcode",
   targetGroup: "Doelgroep",
   "ageRange.from": "Doelgroep – vanaf leeftijd",
   "ageRange.to": "Doelgroep – tot leeftijd",
+  youth: "Doelgroep jeugd",
+  adult: "Doelgroep volwassenen",
   "ppn[]": "PPN",
   available: "Beschikbaarheid",
   annotationEdition: "Editie",
-  publicationDetails: "Uitgave",
+  publicationDetails: "Uitgever",
+  imprint: "Uitgever",
   annotationGeneral: "Noot",
   annotationCollation: "Speelduur / collatie",
   "externalLinks[].url": "Digitaal lenen",
@@ -260,7 +369,7 @@ export function buildOclcNbcPlusAllRows(record = {}) {
       veldnaamOclc: row.path,
       veldnaamSite: siteNames[normalized] || "",
       obaIst: isOba ? "WEL" : "NIET",
-      endpoint: NBCPLUS_AUDIOBOOK_ENDPOINT,
+      endpoint: NBCPLUS_DETAIL_ENDPOINT,
       waarde: row.value,
       opmerkingen: isOba
         ? "Conceptuele tegenhanger op de detailpagina; de ruwe NBC+-waarde blijft beschikbaar."
@@ -273,7 +382,7 @@ export function toOclcNbcPlusUsedCsv(rows = []) {
   return toCsv(rows, [
     ["order", "Volgorde"], ["section", "Onderdeel"], ["label", "Getoonde veldnaam"],
     ["field", "OCLC-veldnaam"], ["value", "Waarde"], ["endpoint", "Endpoint path"],
-    ["note", "Opmerking"],
+    ["searchLink", "Zoeklink"], ["note", "Opmerking"],
   ]);
 }
 
