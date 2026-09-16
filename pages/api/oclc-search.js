@@ -258,17 +258,14 @@ function availabilityCountUrl(searchUrl) {
 }
 
 function perspectiveCountUrl(searchUrl, perspective = {}) {
-  const countHref = asArray(perspective?.links)
-    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
   const sourceUrl = new URL(searchUrl);
-  const url = countHref
-    ? new URL(countHref, `${new URL(WISE_BASE_URL).origin}/`)
-    : new URL(
-        `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
-        `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
-      );
+  const url = new URL(
+    `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
+    `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
+  );
 
   url.searchParams.set("returnType", "count");
+  url.searchParams.set("searchScope", sourceUrl.searchParams.get("searchScope") || "anything");
   const query = sourceUrl.searchParams.get("term");
   if (query) url.searchParams.set("term", query);
   else url.searchParams.delete("term");

@@ -16,8 +16,16 @@ const rawText = (value) => {
 
 const PERSPECTIVE_ENDPOINT = "/branch/{branchId}/clienttype/{clientType}/perspective";
 const TITLESUMMARY_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/titlesummary";
-const SEARCH_ENDPOINT = "/branch/{branchId}/perspective/{perspectiveId}/search";
 const MOCKUP_ROUTE = "/api/oclc-search";
+const AVAILABILITY_COUNT_ENDPOINT = `${TITLESUMMARY_ENDPOINT}?returnType=count&filterAvailableTitles=true`;
+
+const SORT_PRESENTATION = {
+  "2910": { label: "Relevantie", direction: "desc" },
+  "2911": { label: "Populariteit", direction: "desc" },
+  "2912": { label: "Datum", direction: "desc" },
+  "2913": { label: "Auteur", direction: "asc" },
+  "2914": { label: "Titel", direction: "asc" },
+};
 
 export const OCLC_SEARCH_FACET_DEFINITIONS = [
   { order: 1, name: "mediumTypeCode", labelKey: "LABELKEY-MEDIUM-TYPE-CODE", siteLabel: "Type", group: "Bestaande OBA.nl-filters", obaIst: "WEL" },
@@ -48,15 +56,20 @@ function searchEndpoint() {
 
 function escapeCsv(value) {
   const stringValue = rawText(value);
-  if (/[",\n\r;]/.test(stringValue)) return `"${stringValue.replace(/"/g, '""')}"`;
-  return stringValue;
+  return `"${stringValue.replace(/"/g, '""')}"`;
 }
 
 function toCsv(rows = [], columns = []) {
-  return [
+  const csv = [
     columns.map(([, label]) => escapeCsv(label)).join(";"),
     ...asArray(rows).map((row) => columns.map(([key]) => escapeCsv(row?.[key])).join(";")),
-  ].join("\n");
+  ].join("\r\n");
+  return `\uFEFF${csv}`;
+}
+
+function perspectiveCountEndpoint(perspective = {}) {
+  const perspectiveId = text(perspective?.id) || "{perspectiveId}";
+  return `/branch/{branchId}/perspective/${perspectiveId}/titlesummary?returnType=count&searchScope=anything`;
 }
 
 function firstSource(candidates = []) {
@@ -188,10 +201,12 @@ export function buildOclcFilterRows(data = {}) {
         valueLabel,
         siteValueLabel,
         technicalValue,
+        count: value?.count,
         endpoint,
+        countEndpoint: definition.name === "availableNow" ? AVAILABILITY_COUNT_ENDPOINT : "",
         mockupRoute: MOCKUP_ROUTE,
         note: definition.name === "availableNow"
-          ? "De OCLC-filterwaarde wordt op de site vertaald naar Nu aanwezig."
+          ? "De OCLC-filterwaarde wordt op de site vertaald naar Nu aanwezig. De teller komt uit een aanvullende titlesummary-call met returnType=count en filterAvailableTitles=true; selectie van het filter stuurt filterAvailableTitles=true."
           : yearMatch
             ? "Publicatiejaar wordt als viercijferig jaar getoond en als customPublicationYear:<jaar> verstuurd."
             : valueLabel
@@ -215,8 +230,10 @@ export function buildOclcFilterRows(data = {}) {
       siteValueLabel: text(perspective?.label),
       technicalValue: text(perspective?.id),
       endpoint: PERSPECTIVE_ENDPOINT,
+      count: perspective?.count,
+      countEndpoint: perspectiveCountEndpoint(perspective),
       mockupRoute: MOCKUP_ROUTE,
-      note: "Zichtbare waarde uitsluitend uit perspective.label.",
+      note: "Zichtbare waarde uit perspective.label. Na een zoekopdracht wordt per perspective een kleine titlesummary-call met returnType=count uitgevoerd. Dit geeft ook direct tellers voor NBC+-perspectives zoals e-books, luisterboeken en heel Nederland, zonder dat deze eerst geselecteerd hoeven te worden.",
     }));
 
   OCLC_SEARCH_FACET_DEFINITIONS
@@ -246,21 +263,52 @@ export function buildOclcFilterRows(data = {}) {
 
   const sortingsFromSearch = asArray(data?.raw?.searchResponse?.sortkeys).length > 0;
   const sortings = asArray(data?.sortkeys?.length ? data.sortkeys : selectedPerspective?.sortings);
-  sortings.filter((sorting) => text(sorting?.label)).forEach((sorting) => rows.push({
+  sortings.filter((sorting) => text(sorting?.label)).forEach((sorting) => {
+    const presentation = SORT_PRESENTATION[text(sorting?.id)] || {
+      label: text(sorting?.label),
+      direction: sorting?.desc ? "desc" : sorting?.asc ? "asc" : "",
+    };
+
+    rows.push({
+      order: rows.length + 1,
+      group: "Sorteren",
+      oclcField: sortingsFromSearch ? "sortkeys[].label" : "perspective[].sortings[].label",
+      oclcLabelKey: text(sorting?.labelKey),
+      oclcLabel: text(sorting?.label),
+      siteField: "Sorteren op",
+      obaIst: "WEL",
+      valueLabel: text(sorting?.label),
+      siteValueLabel: presentation.label,
+      technicalValue: [text(sorting?.id), presentation.direction].filter(Boolean).join(" "),
+      endpoint: sortingsFromSearch ? endpoint : PERSPECTIVE_ENDPOINT,
+      mockupRoute: MOCKUP_ROUTE,
+      note: `Het ruwe OCLC-label wordt vertaald naar ${presentation.label}; de WISE-call ontvangt sorteercode plus richting.`,
+    });
+  });
+
+  rows.push({
     order: rows.length + 1,
-    group: "Sorteren",
-    oclcField: sortingsFromSearch ? "sortkeys[].label" : "perspective[].sortings[].label",
-    oclcLabelKey: text(sorting?.labelKey),
-    oclcLabel: text(sorting?.label),
-    siteField: "Sorteren op",
+    group: "Technische conventies",
+    oclcField: "facetFilter",
+    siteField: "Combinatie facetfilters",
     obaIst: "WEL",
-    valueLabel: text(sorting?.label),
-    siteValueLabel: text(sorting?.label),
-    technicalValue: text(sorting?.id),
-    endpoint: sortingsFromSearch ? endpoint : PERSPECTIVE_ENDPOINT,
+    technicalValue: "zelfde facet: waarde1|waarde2; verschillende facetten: herhaalde facetFilter-parameters",
+    endpoint,
     mockupRoute: MOCKUP_ROUTE,
-    note: "Zichtbare waarde uitsluitend uit sorting.label.",
-  }));
+    note: "Meerdere waarden binnen hetzelfde facet worden met | gecombineerd (OR). Verschillende facetvelden blijven afzonderlijke facetFilter-parameters en werken samen als AND.",
+  });
+
+  rows.push({
+    order: rows.length + 1,
+    group: "Technische conventies",
+    oclcField: "termFilter",
+    siteField: "Combinatie termfilters",
+    obaIst: "WEL",
+    technicalValue: "herhaalde termFilter-parameters",
+    endpoint,
+    mockupRoute: MOCKUP_ROUTE,
+    note: "Termfilters worden afzonderlijk en herhaald naar WISE gestuurd; ze worden gecombineerd met de hoofdterm en de facetfilters.",
+  });
 
   return rows;
 }
@@ -294,6 +342,18 @@ export function buildOclcAllFieldRows(data = {}) {
   const flattened = [];
   flatten(data?.raw?.perspectiveResponse ?? null, "perspectiveResponse", PERSPECTIVE_ENDPOINT, flattened);
   flatten(data?.raw?.searchResponse ?? null, "searchResponse", searchEndpoint(data), flattened);
+  flatten(data?.raw?.availabilityCountResponse ?? null, "availabilityCountResponse", AVAILABILITY_COUNT_ENDPOINT, flattened);
+
+  Object.entries(data?.raw?.perspectiveCountResponses || {}).forEach(([perspectiveId, response]) => {
+    const perspective = asArray(data?.perspectives)
+      .find((entry) => text(entry?.id) === text(perspectiveId));
+    flatten(
+      response,
+      `perspectiveCountResponses.${perspectiveId}`,
+      perspectiveCountEndpoint(perspective),
+      flattened
+    );
+  });
 
   return flattened.map((row, index) => {
     const definition = matchingFieldDefinition(row.path, row.value);
@@ -325,7 +385,8 @@ export function toOclcFilterCsv(rows = []) {
     ["oclcLabelKey", "OCLC-labelKey"], ["oclcLabel", "OCLC-label"], ["siteField", "Veldnaam site"],
     ["obaIst", "OBA.nl IST"], ["valueLabel", "OCLC-waardelabel"],
     ["siteValueLabel", "Waarde site"],
-    ["technicalValue", "Technische filterwaarde"], ["endpoint", "OCLC endpoint path"],
+    ["technicalValue", "Technische filterwaarde"], ["count", "Aantal"],
+    ["endpoint", "OCLC endpoint path"], ["countEndpoint", "OCLC count endpoint"],
     ["mockupRoute", "Mockup-route"], ["note", "Opmerking"],
   ]);
 }
