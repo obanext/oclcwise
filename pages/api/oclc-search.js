@@ -17,6 +17,14 @@ import { fetchWiseSuggestions } from "../../utils/wiseSuggestions.js";
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
+const WISE_SORT_DIRECTIONS = {
+  "2910": "desc",
+  "2911": "desc",
+  "2912": "desc",
+  "2913": "asc",
+  "2914": "asc",
+};
+
 const text = (value) => {
   if (typeof value === "string") return value.trim();
   if (value === null || value === undefined) return "";
@@ -167,7 +175,7 @@ function normalizeSortkeys(searchBody = {}, selectedPerspective = {}) {
   }));
 }
 
-function normalizeFacets(searchBody = {}) {
+function normalizeFacets(searchBody = {}, availabilityCount = null) {
   return asArray(
     searchBody?.facets ||
       searchBody?.facet ||
@@ -196,12 +204,17 @@ function normalizeFacets(searchBody = {}) {
           const label = firstText(value?.label, value?.labelText, value?.name, value?.value, value?.term, value?.id);
           const facetFilter = firstText(value?.facetFilter, value?.filter, value?.query) || (key && term ? `${key}:${term}` : "");
 
+          const normalizedCount = Number(value?.count ?? value?.total ?? value?.numberOfResults ?? value?.hits ?? 0);
+          const count = name === "availableNow" && term === "AT_THE_LIBRARY" && Number.isFinite(availabilityCount)
+            ? availabilityCount
+            : normalizedCount;
+
           return {
             id: text(value?.id),
             key,
             term,
             label,
-            count: Number(value?.count ?? value?.total ?? value?.numberOfResults ?? value?.hits ?? 0),
+            count,
             facetFilter,
             raw: value,
           };
@@ -218,6 +231,30 @@ function normalizeFacets(searchBody = {}) {
       };
     })
     .filter((facet) => facet.name || facet.label || facet.values.length);
+}
+
+function responseTotal(body) {
+  if (typeof body === "number" && Number.isFinite(body)) return body;
+
+  const value =
+    body?.total ??
+    body?.totalElements ??
+    body?.count ??
+    body?.numberOfResults ??
+    body?.pagination?.total;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function availabilityCountUrl(searchUrl) {
+  const url = new URL(searchUrl);
+  url.searchParams.set("returnType", "count");
+  url.searchParams.set("filterAvailableTitles", "true");
+  url.searchParams.delete("offset");
+  url.searchParams.delete("limit");
+  url.searchParams.delete("sort");
+  url.searchParams.delete("enableMultiSelectFaceting");
+  return url.toString();
 }
 
 function normalizeItem(item = {}, index = 0) {
@@ -338,12 +375,18 @@ function normalizeSearchResponse({
   selectedFilterAvailableTitles,
   perspectiveCall,
   searchCall,
+  availabilityCountCall = null,
 }) {
   const perspectives = normalizePerspectives(perspectiveCall?.body);
   const selectedPerspective =
     perspectives.find((entry) => String(entry.id) === String(selectedPerspectiveId)) || perspectives[0] || null;
   const searchBody = searchCall?.body && typeof searchCall.body === "object" ? searchCall.body : {};
   const rawItems = extractItems(searchBody);
+  const availabilityCount = selectedFilterAvailableTitles
+    ? responseTotal(searchBody)
+    : availabilityCountCall?.ok
+      ? responseTotal(availabilityCountCall.body)
+      : null;
 
   return {
     query,
@@ -365,15 +408,17 @@ function normalizeSearchResponse({
     selectedPerspective,
     searchScopes: asArray(selectedPerspective?.searchScopes),
     sortkeys: normalizeSortkeys(searchBody, selectedPerspective),
-    facets: normalizeFacets(searchBody),
+    facets: normalizeFacets(searchBody, availabilityCount),
+    availabilityCount,
     items: rawItems.map((item, index) => normalizeItem(item, offset + index + 1)),
     spellcheck: searchBody?.spellcheck || null,
     debug: {
-      calls: [perspectiveCall, searchCall].filter(Boolean),
+      calls: [perspectiveCall, searchCall, availabilityCountCall].filter(Boolean),
     },
     raw: {
       perspectiveResponse: perspectiveCall?.body || null,
       searchResponse: searchCall?.body || null,
+      availabilityCountResponse: availabilityCountCall?.body || null,
     },
   };
 }
@@ -486,9 +531,9 @@ export default async function handler(req, res) {
     `&filterAvailableTitles=${encodeURIComponent(selectedFilterAvailableTitles ? "true" : "false")}` +
     `&enableMultiSelectFaceting=true`;
 
-  // Keep the perspective's sort ID for the UI; send relevance descending to WISE,
-  // including when the frontend omits its default sort parameter.
-  const wiseSort = selectedSort === "2910" ? "2910 desc" : selectedSort;
+  // WISE verwacht naast de sorteercode ook de richting.
+  const wiseSortDirection = WISE_SORT_DIRECTIONS[selectedSort];
+  const wiseSort = wiseSortDirection ? `${selectedSort} ${wiseSortDirection}` : selectedSort;
   searchUrl = appendParam(searchUrl, "sort", wiseSort);
 
   if (query) {
@@ -498,12 +543,17 @@ export default async function handler(req, res) {
   searchUrl = appendRepeatedParam(searchUrl, "facetFilter", combineFacetFilters(selectedFacetFilters));
   searchUrl = appendRepeatedParam(searchUrl, "termFilter", selectedTermFilters);
 
-  const searchCall = await fetchWiseResponse(searchUrl);
+  const [searchCall, availabilityCountCall] = await Promise.all([
+    fetchWiseResponse(searchUrl),
+    selectedFilterAvailableTitles
+      ? Promise.resolve(null)
+      : fetchWiseResponse(availabilityCountUrl(searchUrl)),
+  ]);
 
   if (!searchCall.ok) {
     return res.status(searchCall.status || 500).json({
       error: "Zoekopdracht ophalen mislukt",
-      debug: { calls: [perspectiveCall, searchCall] },
+      debug: { calls: [perspectiveCall, searchCall, availabilityCountCall].filter(Boolean) },
     });
   }
 
@@ -521,6 +571,7 @@ export default async function handler(req, res) {
       selectedFilterAvailableTitles,
       perspectiveCall,
       searchCall,
+      availabilityCountCall,
     })
   );
 }

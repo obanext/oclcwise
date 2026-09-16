@@ -28,8 +28,17 @@ const DEFAULT_SORT = "2910";
 const DEFAULT_LIMIT = 20;
 const DEFAULT_VISIBLE_FACET_VALUES = 100;
 
+const SORT_LABELS = {
+  "SORTBY-RELEVANCE": "Relevantie",
+  "SORTBY-POPULARITY": "Populariteit",
+  "SORTBY-DATE": "Datum",
+  "SORTBY-AUTHOR": "Auteur",
+  "SORTBY-TITLE": "Titel",
+};
+
 function rawSortLabel(sort = {}) {
-  return text(sort.label);
+  const labelKey = text(sort.labelKey || sort.label);
+  return SORT_LABELS[labelKey] || text(sort.label) || text(sort.id);
 }
 
 function rawFacetTitle(facet = {}) {
