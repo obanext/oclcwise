@@ -195,7 +195,7 @@ export default function OclcSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [expandedFacets, setExpandedFacets] = useState({});
-  const [openFilterCards, setOpenFilterCards] = useState({});
+  const [openFilterCards, setOpenFilterCards] = useState({ perspective: true });
 
   const [perspectiveId, setPerspectiveId] = useState(DEFAULT_PERSPECTIVE_ID);
   const [searchScope, setSearchScope] = useState(DEFAULT_SCOPE);
@@ -665,6 +665,35 @@ export default function OclcSearchPage() {
 
         <section className="oba-search-layout">
           <aside className="oba-filter-panel">
+            {hasCompletedSearch && labeledPerspectives.length ? (
+              <div className={openFilterCards.perspective ? "filter-card filter-card-open" : "filter-card"}>
+                <button
+                  type="button"
+                  className="filter-card-title"
+                  aria-expanded={Boolean(openFilterCards.perspective)}
+                  onClick={() => toggleFilterCard("perspective")}
+                >
+                  Zoeken in
+                </button>
+
+                {openFilterCards.perspective ? (
+                  <div className="filter-options">
+                    {labeledPerspectives.map((perspective) => (
+                      <button
+                        key={perspective.id}
+                        type="button"
+                        className={String(perspective.id) === String(perspectiveId) ? "filter-radio active" : "filter-radio"}
+                        onClick={() => changePerspective(String(perspective.id))}
+                      >
+                        <span className="radio-dot" />
+                        <span>{perspective.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
             {implementedFacets.map(renderFacetCard)}
 
             {hasCompletedSearch ? (
