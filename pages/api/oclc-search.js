@@ -280,14 +280,20 @@ function normalizeItem(item = {}, index = 0) {
   const mediumGroup = item?.mediumGroup || {};
   const origin = text(item?.origin);
   const ppnMatch = sourceId.match(/^PPN:(\d+)$/i);
+  const mediaIcon = text(media?.icon).toUpperCase();
+  const mediaDescription = text(media?.description).toLowerCase();
   const isNbcPlusAudiobook = origin === "NBC_PLUS" && (
-    text(media?.icon).toUpperCase() === "AUDIOBOOK" ||
-    text(media?.description).toLowerCase().includes("luisterboek")
+    mediaIcon === "AUDIOBOOK" || mediaDescription.includes("luisterboek")
+  );
+  const isNbcPlusEbook = origin === "NBC_PLUS" && (
+    mediaIcon === "EBOOK" || mediaDescription.includes("e-book") || mediaDescription.includes("ebook")
   );
   const detailHref = detailId
     ? `/oclc-detail/${encodeURIComponent(detailId)}`
     : isNbcPlusAudiobook && ppnMatch
       ? `/oclc-luisterboek-detail/${encodeURIComponent(ppnMatch[1])}`
+      : isNbcPlusEbook && ppnMatch
+        ? `/oclc-ebook-detail/${encodeURIComponent(ppnMatch[1])}`
       : "";
   const language = asArray(item?.language).map((entry) => ({
     code: text(entry?.code),

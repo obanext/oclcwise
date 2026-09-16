@@ -49,7 +49,10 @@ function SpecificationRows({ rows }) {
   );
 }
 
-export default function OclcAudiobookDetailPage() {
+export function OclcNbcPlusDetailPage({
+  detailType = "luisterboek",
+  apiRoute = "/api/oclc-luisterboek-detail",
+}) {
   const router = useRouter();
   const { ppn } = router.query;
   const [data, setData] = useState(null);
@@ -63,7 +66,7 @@ export default function OclcAudiobookDetailPage() {
     setData(null);
     setError("");
 
-    fetch(`/api/oclc-luisterboek-detail?ppn=${encodeURIComponent(ppn)}`)
+    fetch(`${apiRoute}?ppn=${encodeURIComponent(ppn)}`)
       .then(async (response) => {
         const json = await response.json().catch(() => null);
         if (!response.ok) throw new Error(json?.error || `Request failed with status ${response.status}`);
@@ -79,15 +82,17 @@ export default function OclcAudiobookDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [router.isReady, ppn]);
+  }, [apiRoute, router.isReady, ppn]);
 
   const record = data?.title || {};
   const view = useMemo(() => buildOclcAudiobookViewModel(record), [record]);
-  const usedRows = useMemo(() => buildOclcAudiobookUsedRows(record), [record]);
+  const usedRows = useMemo(() => buildOclcAudiobookUsedRows(record, { detailType }), [detailType, record]);
   const allRows = useMemo(() => buildOclcAudiobookAllRows(record), [record]);
   const calls = asArray(data?.debug?.calls);
   const topRows = usedRows.filter((row) => row.section === "Specificaties");
   const practicalRows = usedRows.filter((row) => row.section === "Praktische informatie");
+  const detailLabel = detailType === "ebook" ? "e-book" : "luisterboek";
+  const filePrefix = detailType === "ebook" ? "oclc-ebook" : "oclc-luisterboek";
 
   if (error) return <div className="container">Fout: {error}</div>;
   if (!data) return <div className="container">Loading...</div>;
@@ -100,7 +105,7 @@ export default function OclcAudiobookDetailPage() {
         <nav className="oba-breadcrumbs" aria-label="Broodkruimelpad">
           <button type="button" className="oba-chip" onClick={() => router.back()}>← Terug</button>
           <span className="oba-chip oba-chip-dark">⌂</span>
-          <span className="oba-chip">OCLC luisterboek</span>
+          <span className="oba-chip">OCLC {detailLabel}</span>
         </nav>
 
         <section className="hero">
@@ -179,13 +184,13 @@ export default function OclcAudiobookDetailPage() {
           <section className="table-card displayed-fields-table-card">
             <div className="all-oclc-summary">
               <strong>{usedRows.length} getoonde velden</strong>
-              <span>In dezelfde conceptuele volgorde als op deze luisterboekdetailpagina.</span>
+              <span>In dezelfde conceptuele volgorde als op deze {detailLabel}detailpagina.</span>
             </div>
             <button
               type="button"
               className="tab-button"
               onClick={() => downloadFile(
-                `oclc-luisterboek-${ppn}-gebruikte-velden.csv`,
+                `${filePrefix}-${ppn}-gebruikte-velden.csv`,
                 toOclcAudiobookUsedCsv(usedRows),
                 "text/csv;charset=utf-8;"
               )}
@@ -220,7 +225,7 @@ export default function OclcAudiobookDetailPage() {
               type="button"
               className="tab-button"
               onClick={() => downloadFile(
-                `oclc-luisterboek-${ppn}-alle-velden-oclc.csv`,
+                `${filePrefix}-${ppn}-alle-velden-oclc.csv`,
                 toOclcAudiobookAllCsv(allRows),
                 "text/csv;charset=utf-8;"
               )}
@@ -245,9 +250,9 @@ export default function OclcAudiobookDetailPage() {
 
         <section className="debug-section">
           <div className="download-buttons-row">
-            <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-luisterboek-${ppn}.json`, pretty(record), "application/json;charset=utf-8;")}>Download OCLC JSON</button>
-            <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-luisterboek-${ppn}-gebruikte-velden.csv`, toOclcAudiobookUsedCsv(usedRows), "text/csv;charset=utf-8;")}>Gebruikte velden OCLC CSV</button>
-            <button type="button" className="tab-button" onClick={() => downloadFile(`oclc-luisterboek-${ppn}-alle-velden-oclc.csv`, toOclcAudiobookAllCsv(allRows), "text/csv;charset=utf-8;")}>Alle velden OCLC CSV</button>
+            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}.json`, pretty(record), "application/json;charset=utf-8;")}>Download OCLC JSON</button>
+            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-gebruikte-velden.csv`, toOclcAudiobookUsedCsv(usedRows), "text/csv;charset=utf-8;")}>Gebruikte velden OCLC CSV</button>
+            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-alle-velden-oclc.csv`, toOclcAudiobookAllCsv(allRows), "text/csv;charset=utf-8;")}>Alle velden OCLC CSV</button>
           </div>
 
           <details className="debug-block">
@@ -265,4 +270,8 @@ export default function OclcAudiobookDetailPage() {
       </div>
     </div>
   );
+}
+
+export default function OclcAudiobookDetailPage() {
+  return <OclcNbcPlusDetailPage />;
 }

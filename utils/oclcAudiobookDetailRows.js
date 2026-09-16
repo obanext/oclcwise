@@ -98,8 +98,14 @@ export function buildOclcAudiobookViewModel(record = {}) {
   };
 }
 
-export function buildOclcAudiobookUsedRows(record = {}) {
+export function buildOclcAudiobookUsedRows(record = {}, options = {}) {
   const view = buildOclcAudiobookViewModel(record);
+  const detailType = options.detailType === "ebook" ? "ebook" : "luisterboek";
+  const collationLabel = detailType === "ebook" ? "Collatie" : "Speelduur";
+  const collationValue = detailType === "ebook" ? view.collation : view.duration;
+  const collationNote = detailType === "ebook"
+    ? "De volledige ruwe annotationCollation-waarde wordt voor het e-book als Collatie getoond."
+    : "Voor de zichtbare speelduur wordt de eerste waarde vóór de komma gebruikt; de volledige bronwaarde blijft in Alle velden OCLC beschikbaar.";
   const rows = [
     ["Titel", "Titel", "title", view.title, "Ruwe NBC+-titel."],
     ["Auteur", "Eerste verantwoordelijke", "author.description | author.qualifier", view.author, "De auteursnaam blijft in de door NBC+ geleverde volgorde."],
@@ -115,7 +121,7 @@ export function buildOclcAudiobookUsedRows(record = {}) {
     ["Onderwerpen", "Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
     ["Praktische informatie", "Editie", "annotationEdition", view.edition, "Ruwe editie."],
     ["Praktische informatie", "Noot", "annotationGeneral", view.generalNote, "Ruwe algemene noot."],
-    ["Praktische informatie", "Speelduur", "annotationCollation", view.duration, "Voor de zichtbare speelduur wordt de eerste waarde vóór de komma gebruikt; de volledige bronwaarde blijft in Alle velden OCLC beschikbaar."],
+    ["Praktische informatie", collationLabel, "annotationCollation", collationValue, collationNote],
     ["Praktische informatie", "Publicatiejaar", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
     ["Praktische informatie", "PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
     ["Praktische informatie", "ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
