@@ -278,6 +278,17 @@ function normalizeItem(item = {}, index = 0) {
   const author = item?.author || {};
   const media = item?.media || {};
   const mediumGroup = item?.mediumGroup || {};
+  const origin = text(item?.origin);
+  const ppnMatch = sourceId.match(/^PPN:(\d+)$/i);
+  const isNbcPlusAudiobook = origin === "NBC_PLUS" && (
+    text(media?.icon).toUpperCase() === "AUDIOBOOK" ||
+    text(media?.description).toLowerCase().includes("luisterboek")
+  );
+  const detailHref = detailId
+    ? `/oclc-detail/${encodeURIComponent(detailId)}`
+    : isNbcPlusAudiobook && ppnMatch
+      ? `/oclc-luisterboek-detail/${encodeURIComponent(ppnMatch[1])}`
+      : "";
   const language = asArray(item?.language).map((entry) => ({
     code: text(entry?.code),
     description: text(entry?.description || entry),
@@ -305,8 +316,8 @@ function normalizeItem(item = {}, index = 0) {
     frbrId: text(item?.id),
     frbrkey: text(item?.frbrkey),
     cWiseId: text(item?.cWiseId),
-    origin: text(item?.origin),
-    detailHref: detailId ? `/oclc-detail/${encodeURIComponent(detailId)}` : "",
+    origin,
+    detailHref,
     title: text(item?.title),
     mainTitle: text(item?.mainTitle),
     subtitle: text(item?.subtitle),
