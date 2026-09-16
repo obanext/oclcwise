@@ -1,4 +1,4 @@
-import { OclcNbcPlusDetailPage } from "../oclc-luisterboek-detail/[ppn].js";
+import { OclcNbcPlusDetailPage } from "../../components/OclcNbcPlusDetailPage.js";
 
 export default function OclcLandelijkDetailPage() {
   return (
