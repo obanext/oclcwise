@@ -99,7 +99,7 @@ export function buildOclcNbcPlusViewModel(record = {}) {
     available: record?.available,
     availabilityLabel: record?.available === true ? "Digitaal beschikbaar" : record?.available === false ? "Niet beschikbaar" : "",
     loanUrl: text(loanLink?.url),
-    loanName: firstText(loanLink?.name, "Digitaal te lenen"),
+    loanName: text(loanLink?.name),
     format: firstText(record?.media?.description, record?.media?.icon),
     languages,
     publisher,
@@ -120,11 +120,32 @@ export function buildOclcNbcPlusViewModel(record = {}) {
 
 export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const view = buildOclcNbcPlusViewModel(record);
-  const detailType = options.detailType === "ebook" ? "ebook" : "luisterboek";
+  const detailType = options.detailType === "ebook"
+    ? "ebook"
+    : options.detailType === "landelijk"
+      ? "landelijk"
+      : "luisterboek";
   const authorField = "author.description | author.qualifier | collaborators[].description | collaborators[].qualifier";
   const authorValue = view.authors.join(", ");
   const audienceField = "audience.description | targetAudience.description | targetGroup | ageRange.from | ageRange.to | youth | adult";
-  const practicalRows = detailType === "ebook"
+  const practicalRows = detailType === "landelijk"
+    ? [
+        ["Titel", "title", view.title, "Ruwe NBC+-titel."],
+        ["Auteur", authorField, authorValue, "Eerste verantwoordelijke en eventuele medewerkers worden in de geleverde volgorde gecombineerd."],
+        ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
+        ["Editie", "annotationEdition", view.edition, "Ruwe editie."],
+        ["Uitgave", hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint", view.publisher, "publicationDetails heeft voorrang; de ruwe waarde wordt niet opgesplitst."],
+        ["Collatie", "annotationCollation", view.collation, "De volledige ruwe collatiewaarde wordt getoond."],
+        ["Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
+        ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden alleen expliciete jeugd-/volwassenenindicatoren gebruikt."],
+        ["Serie", asArray(record?.titleSeries).length ? "titleSeries[].description" : "titleSeriesSchoolWise[].description", view.series, "Alle geleverde seriewaarden worden getoond."],
+        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond."],
+        ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
+        ["Publicatiejaar", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
+        ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
+        ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
+      ]
+    : detailType === "ebook"
     ? [
         ["Titel", "title", view.title, "Ruwe NBC+-titel."],
         ["Auteur", authorField, authorValue, "Eerste verantwoordelijke en eventuele medewerkers worden in de geleverde volgorde gecombineerd."],
@@ -153,8 +174,8 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     ["Auteur", "Eerste verantwoordelijke", "author.description | author.qualifier", view.author, "De auteursnaam blijft in de door NBC+ geleverde volgorde."],
     ["Samenvatting", "Samenvatting", hasValue(record?.contents) ? "contents" : "contentsSchoolWise", view.summary, "Ruwe samenvatting uit NBC+."],
     ["Cover", "Cover", "imageUrls.large | imageUrls.medium | imageUrls.small", view.cover, "Het grootste beschikbare coverformaat wordt gebruikt."],
-    ["Beschikbaarheid", "Beschikbaarheid", "available", view.availabilityLabel, "true wordt visueel Digitaal beschikbaar; false wordt Niet beschikbaar."],
-    ["Actie", "Digitaal te lenen", "externalLinks[].url", view.loanUrl, "De link met id availability~nbc~digitalloan heeft voorrang."],
+    ["Beschikbaarheid", "Beschikbaarheid", "available", detailType === "landelijk" && view.available === true ? "Beschikbaar" : view.availabilityLabel, detailType === "landelijk" ? "De ruwe NBC+-beschikbaarheidswaarde wordt leesbaar getoond." : "true wordt visueel Digitaal beschikbaar; false wordt Niet beschikbaar."],
+    ["Actie", detailType === "landelijk" ? (view.loanName || "Externe link") : "Digitaal te lenen", "externalLinks[].url", view.loanUrl, "De relevante link uit externalLinks wordt gebruikt."],
     ["Specificaties", "Formaat", "media.description", view.format, "Ruwe mediumomschrijving."],
     ["Specificaties", "Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
     ["Specificaties", "Uitgave", hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint", view.publisher, "publicationDetails heeft voorrang; de ruwe waarde wordt niet opgesplitst."],

@@ -91,8 +91,10 @@ export function OclcNbcPlusDetailPage({
   const calls = asArray(data?.debug?.calls);
   const topRows = usedRows.filter((row) => row.section === "Specificaties");
   const practicalRows = usedRows.filter((row) => row.section === "Praktische informatie");
-  const detailLabel = detailType === "ebook" ? "e-book" : "luisterboek";
-  const filePrefix = detailType === "ebook" ? "oclc-ebook" : "oclc-luisterboek";
+  const detailLabel = detailType === "ebook" ? "e-book" : detailType === "landelijk" ? "landelijk" : "luisterboek";
+  const filePrefix = detailType === "ebook" ? "oclc-ebook" : detailType === "landelijk" ? "oclc-landelijk" : "oclc-luisterboek";
+  const availabilityLabel = detailType === "landelijk" && view.available === true ? "Beschikbaar" : view.availabilityLabel;
+  const actionLabel = detailType === "landelijk" ? (view.loanName || "Bekijk bron") : "Digitaal te lenen";
 
   if (error) return <div className="container">Fout: {error}</div>;
   if (!data) return <div className="container">Loading...</div>;
@@ -114,7 +116,7 @@ export function OclcNbcPlusDetailPage({
             {view.authors.length ? <div className="author-line">{view.authors.join(", ")}</div> : null}
             {view.summary ? <div className="summary-text">{view.summary}</div> : null}
 
-            {view.availabilityLabel ? (
+            {availabilityLabel ? (
               <div style={{ alignItems: "center", display: "flex", gap: "8px", margin: "22px 0" }}>
                 <span
                   aria-hidden="true"
@@ -127,14 +129,14 @@ export function OclcNbcPlusDetailPage({
                     width: "13px",
                   }}
                 />
-                <span>{view.availabilityLabel}</span>
+                <span>{availabilityLabel}</span>
               </div>
             ) : null}
 
             {view.loanUrl ? (
               <p>
                 <a className="tab-button active" href={view.loanUrl} target="_blank" rel="noreferrer">
-                  Digitaal te lenen
+                  {actionLabel}
                 </a>
               </p>
             ) : null}

@@ -135,7 +135,7 @@ export function buildOclcUsedFieldRows(data = {}) {
         oclcField: item?.origin === "NBC_PLUS" ? "items[].id" : "items[].detailId",
         value: item?.detailHref,
         note: item?.origin === "NBC_PLUS"
-          ? "Voor een NBC+-luisterboek of e-book wordt de eigen detailroute opgebouwd met het PPN uit items[].id; beide detailpagina’s gebruiken de specifieke NBC+-discoveryendpoint."
+          ? "Voor een NBC+-luisterboek, e-book of landelijk resultaat wordt de eigen detailroute opgebouwd met het PPN uit items[].id; de detailpagina gebruikt de specifieke NBC+-discoveryendpoint."
           : "Lokale detailroute opgebouwd met de numerieke OCLC-titleId.",
       },
     ];

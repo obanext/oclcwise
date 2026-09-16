@@ -294,7 +294,9 @@ function normalizeItem(item = {}, index = 0) {
       ? `/oclc-luisterboek-detail/${encodeURIComponent(ppnMatch[1])}`
       : isNbcPlusEbook && ppnMatch
         ? `/oclc-ebook-detail/${encodeURIComponent(ppnMatch[1])}`
-      : "";
+        : origin === "NBC_PLUS" && ppnMatch
+          ? `/oclc-landelijk-detail/${encodeURIComponent(ppnMatch[1])}`
+          : "";
   const language = asArray(item?.language).map((entry) => ({
     code: text(entry?.code),
     description: text(entry?.description || entry),
