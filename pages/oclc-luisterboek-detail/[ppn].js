@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
-  buildOclcAudiobookAllRows,
-  buildOclcAudiobookUsedRows,
-  buildOclcAudiobookViewModel,
-  toOclcAudiobookAllCsv,
-  toOclcAudiobookUsedCsv,
-} from "../../utils/oclcAudiobookDetailRows.js";
+  buildOclcNbcPlusAllRows,
+  buildOclcNbcPlusUsedRows,
+  buildOclcNbcPlusViewModel,
+  toOclcNbcPlusAllCsv,
+  toOclcNbcPlusUsedCsv,
+} from "../../utils/oclcNbcPlusDetailRows.js";
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 const hasValue = (value) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length > 0);
@@ -85,9 +85,9 @@ export function OclcNbcPlusDetailPage({
   }, [apiRoute, router.isReady, ppn]);
 
   const record = data?.title || {};
-  const view = useMemo(() => buildOclcAudiobookViewModel(record), [record]);
-  const usedRows = useMemo(() => buildOclcAudiobookUsedRows(record, { detailType }), [detailType, record]);
-  const allRows = useMemo(() => buildOclcAudiobookAllRows(record), [record]);
+  const view = useMemo(() => buildOclcNbcPlusViewModel(record), [record]);
+  const usedRows = useMemo(() => buildOclcNbcPlusUsedRows(record, { detailType }), [detailType, record]);
+  const allRows = useMemo(() => buildOclcNbcPlusAllRows(record), [record]);
   const calls = asArray(data?.debug?.calls);
   const topRows = usedRows.filter((row) => row.section === "Specificaties");
   const practicalRows = usedRows.filter((row) => row.section === "Praktische informatie");
@@ -191,7 +191,7 @@ export function OclcNbcPlusDetailPage({
               className="tab-button"
               onClick={() => downloadFile(
                 `${filePrefix}-${ppn}-gebruikte-velden.csv`,
-                toOclcAudiobookUsedCsv(usedRows),
+                toOclcNbcPlusUsedCsv(usedRows),
                 "text/csv;charset=utf-8;"
               )}
             >
@@ -226,7 +226,7 @@ export function OclcNbcPlusDetailPage({
               className="tab-button"
               onClick={() => downloadFile(
                 `${filePrefix}-${ppn}-alle-velden-oclc.csv`,
-                toOclcAudiobookAllCsv(allRows),
+                toOclcNbcPlusAllCsv(allRows),
                 "text/csv;charset=utf-8;"
               )}
             >
@@ -251,8 +251,8 @@ export function OclcNbcPlusDetailPage({
         <section className="debug-section">
           <div className="download-buttons-row">
             <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}.json`, pretty(record), "application/json;charset=utf-8;")}>Download OCLC JSON</button>
-            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-gebruikte-velden.csv`, toOclcAudiobookUsedCsv(usedRows), "text/csv;charset=utf-8;")}>Gebruikte velden OCLC CSV</button>
-            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-alle-velden-oclc.csv`, toOclcAudiobookAllCsv(allRows), "text/csv;charset=utf-8;")}>Alle velden OCLC CSV</button>
+            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-gebruikte-velden.csv`, toOclcNbcPlusUsedCsv(usedRows), "text/csv;charset=utf-8;")}>Gebruikte velden OCLC CSV</button>
+            <button type="button" className="tab-button" onClick={() => downloadFile(`${filePrefix}-${ppn}-alle-velden-oclc.csv`, toOclcNbcPlusAllCsv(allRows), "text/csv;charset=utf-8;")}>Alle velden OCLC CSV</button>
           </div>
 
           <details className="debug-block">
@@ -272,6 +272,6 @@ export function OclcNbcPlusDetailPage({
   );
 }
 
-export default function OclcAudiobookDetailPage() {
+export default function OclcLuisterboekDetailPage() {
   return <OclcNbcPlusDetailPage />;
 }
