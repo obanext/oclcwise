@@ -257,15 +257,21 @@ function availabilityCountUrl(searchUrl) {
   return url.toString();
 }
 
-function perspectiveCountUrl(searchUrl, perspectiveId) {
-  const url = new URL(searchUrl);
-  const perspectivePath = `/perspective/${encodeURIComponent(perspectiveId)}/titlesummary`;
-  url.pathname = url.pathname.replace(/\/perspective\/[^/]+\/titlesummary$/, perspectivePath);
+function perspectiveCountUrl(searchUrl, perspective = {}) {
+  const countHref = asArray(perspective?.links)
+    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
+  const sourceUrl = new URL(searchUrl);
+  const url = countHref
+    ? new URL(countHref, `${new URL(WISE_BASE_URL).origin}/`)
+    : new URL(
+        `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
+        `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
+      );
+
   url.searchParams.set("returnType", "count");
-  url.searchParams.delete("offset");
-  url.searchParams.delete("limit");
-  url.searchParams.delete("sort");
-  url.searchParams.delete("enableMultiSelectFaceting");
+  const query = sourceUrl.searchParams.get("term");
+  if (query) url.searchParams.set("term", query);
+  else url.searchParams.delete("term");
   return url.toString();
 }
 
@@ -578,17 +584,16 @@ export default async function handler(req, res) {
   searchUrl = appendRepeatedParam(searchUrl, "termFilter", selectedTermFilters);
 
   const perspectiveCountTargets = extractPerspectives(perspectiveCall.body)
-    .map((perspective) => text(perspective?.id))
-    .filter((id) => id && id !== text(selectedPerspectiveId));
+    .filter((perspective) => text(perspective?.id));
 
   const [searchCall, availabilityCountCall, perspectiveCountCalls] = await Promise.all([
     fetchWiseResponse(searchUrl),
     selectedFilterAvailableTitles
       ? Promise.resolve(null)
       : fetchWiseResponse(availabilityCountUrl(searchUrl)),
-    Promise.all(perspectiveCountTargets.map(async (countPerspectiveId) => ({
-      perspectiveId: countPerspectiveId,
-      call: await fetchWiseResponse(perspectiveCountUrl(searchUrl, countPerspectiveId)),
+    Promise.all(perspectiveCountTargets.map(async (countPerspective) => ({
+      perspectiveId: text(countPerspective?.id),
+      call: await fetchWiseResponse(perspectiveCountUrl(searchUrl, countPerspective)),
     }))),
   ]);
 
