@@ -796,8 +796,12 @@ export default function OclcSearchPage() {
                               <div className="oba-result-cover empty-cover">Geen cover</div>
                             )}
                           </Link>
+                        ) : image ? (
+                          <div className="oba-result-cover-link">
+                            <img src={image} alt={title || "Cover"} className="oba-result-cover" />
+                          </div>
                         ) : (
-                          <div className="oba-result-cover empty-cover">Geen detail-id</div>
+                          <div className="oba-result-cover empty-cover">Geen cover</div>
                         )}
 
                         <div className="oba-result-body">

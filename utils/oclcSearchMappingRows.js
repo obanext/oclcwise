@@ -103,7 +103,13 @@ export function buildOclcUsedFieldRows(data = {}) {
     ]);
     const visibleFields = [
       { section: "Resultaat", siteField: "Titel", oclcField: title.field, value: title.value },
-      { section: "Resultaat", siteField: "Cover", oclcField: cover.field, value: cover.value },
+      {
+        section: "Resultaat",
+        siteField: "Cover",
+        oclcField: cover.field,
+        value: cover.value,
+        note: "De cover-URL wordt rechtstreeks uit de zoekresponse gebruikt. Een NBC+-cover blijft zichtbaar als het resultaat geen numeriek WISE-detail-ID heeft; alleen de detail-link ontbreekt dan.",
+      },
       { section: "Resultaat", siteField: "Auteur", oclcField: "items[].author.description", value: item?.author?.description },
       { section: "Resultaat", siteField: "Type", oclcField: media.field, value: media.value },
       {
