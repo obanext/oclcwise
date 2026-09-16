@@ -109,6 +109,7 @@ function parseSearchStateFromPath(asPath = "") {
 
   return {
     q: params.get("term") || "",
+    nextSearchRequested: params.has("perspectiveId"),
     nextPage: Math.max(Number(params.get("page") || 1) || 1, 1),
     nextPerspectiveId: params.get("perspectiveId") || DEFAULT_PERSPECTIVE_ID,
     nextSearchScope: params.get("searchScope") || DEFAULT_SCOPE,
@@ -267,6 +268,7 @@ export default function OclcSearchPage() {
 
   function buildUrl({
     q,
+    nextSearchRequested,
     nextPage,
     nextPerspectiveId,
     nextSearchScope,
@@ -276,6 +278,15 @@ export default function OclcSearchPage() {
     nextFilterAvailableTitles,
   }) {
     const params = new URLSearchParams();
+    const shouldSearch = Boolean(
+      nextSearchRequested ||
+      text(q) ||
+      asArray(nextFacetFilters).length ||
+      asArray(nextTermFilters).length ||
+      nextFilterAvailableTitles
+    );
+
+    if (!shouldSearch) return "/oclc-search";
 
     if (text(q)) params.set("term", text(q));
     params.set("page", String(nextPage || 1));
@@ -300,6 +311,7 @@ export default function OclcSearchPage() {
 
   function buildApiUrl({
     q,
+    nextSearchRequested,
     nextPage,
     nextPerspectiveId,
     nextSearchScope,
@@ -313,7 +325,9 @@ export default function OclcSearchPage() {
     if (text(q)) params.set("term", text(q));
     params.set("page", String(nextPage || 1));
     params.set("limit", String(DEFAULT_LIMIT));
-    params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
+    if (nextSearchRequested) {
+      params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
+    }
     if (String(nextSearchScope || DEFAULT_SCOPE) !== DEFAULT_SCOPE) {
       params.set("searchScope", String(nextSearchScope));
     }
@@ -373,12 +387,13 @@ export default function OclcSearchPage() {
 
   function submit(event) {
     event.preventDefault();
-    navigateSearch({ q: query, nextPage: 1, nextTermFilters: [] });
+    navigateSearch({ q: query, nextSearchRequested: true, nextPage: 1, nextTermFilters: [] });
   }
 
   function changePerspective(nextPerspectiveId) {
     navigateSearch({
       q: query,
+      nextSearchRequested: true,
       nextPage: 1,
       nextPerspectiveId,
       nextSearchScope: DEFAULT_SCOPE,
@@ -392,6 +407,7 @@ export default function OclcSearchPage() {
   function changeScope(nextScope) {
     navigateSearch({
       q: query,
+      nextSearchRequested: true,
       nextPage: 1,
       nextSearchScope: nextScope,
       nextFacetFilters: [],
@@ -484,9 +500,10 @@ export default function OclcSearchPage() {
   const resultCount = Number(data?.pagination?.total || 0).toLocaleString("nl-NL");
   const currentPage = Number(data?.pagination?.page || page || 1);
   const hasSearchCriteria = Boolean(
-    text(query) || facetFilters.length || termFilters.length || filterAvailableTitles
+    data?.selectedFullCollection || text(query) || facetFilters.length || termFilters.length || filterAvailableTitles
   );
   const hasCompletedSearch = Boolean(
+    data?.selectedFullCollection ||
     text(data?.query) ||
     asArray(data?.selectedFacetFilters).length ||
     asArray(data?.selectedTermFilters).length ||
@@ -603,7 +620,7 @@ export default function OclcSearchPage() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                placeholder="Waar ben je naar op zoek? (*.* voor volledige collectie)"
+                placeholder="Waar ben je naar op zoek?"
                 aria-label="Zoeken"
               />
 
@@ -616,6 +633,7 @@ export default function OclcSearchPage() {
                     setSuggestions([]);
                     navigateSearch({
                       q: "",
+                      nextSearchRequested: false,
                       nextPage: 1,
                       nextFacetFilters: [],
                       nextTermFilters: [],
@@ -639,6 +657,7 @@ export default function OclcSearchPage() {
                         setQuery(suggestion);
                         navigateSearch({
                           q: suggestion,
+                          nextSearchRequested: true,
                           nextPage: 1,
                           nextFacetFilters: [],
                           nextTermFilters: [],
@@ -657,6 +676,23 @@ export default function OclcSearchPage() {
               →
             </button>
           </form>
+
+          <Link
+            href={buildUrl({
+              ...currentSearchState(),
+              q: "",
+              nextSearchRequested: true,
+              nextPage: 1,
+              nextSearchScope: DEFAULT_SCOPE,
+              nextSort: DEFAULT_SORT,
+              nextFacetFilters: [],
+              nextTermFilters: [],
+              nextFilterAvailableTitles: false,
+            })}
+            style={{ color: "inherit", display: "inline-block", marginTop: "12px", textDecoration: "underline" }}
+          >
+            Alles in de collectie
+          </Link>
 
         </section>
 
@@ -746,7 +782,9 @@ export default function OclcSearchPage() {
               <div className="oba-results-heading">
                 <div>
                   <h1>
-                    '{text(data?.query) || query || 'filters'}' in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
+                    {data?.selectedFullCollection
+                      ? "Alles in de collectie"
+                      : `'${text(data?.query) || query || "filters"}'`} in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
                   </h1>
                   <div className="oba-result-count">{resultCount} resultaten</div>
                 </div>

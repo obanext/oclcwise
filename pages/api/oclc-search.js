@@ -259,10 +259,15 @@ function availabilityCountUrl(searchUrl) {
 
 function perspectiveCountUrl(searchUrl, perspective = {}) {
   const sourceUrl = new URL(searchUrl);
-  const url = new URL(
+  const countHref = asArray(perspective?.links)
+    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
+  const baseUrl = new URL(WISE_BASE_URL);
+  const fallback =
     `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
-    `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
-  );
+    `/perspective/${encodeURIComponent(text(perspective?.id))}/search`;
+  const url = countHref
+    ? new URL(countHref, `${baseUrl.origin}/`)
+    : new URL(fallback);
 
   url.searchParams.set("returnType", "count");
   url.searchParams.set("searchScope", sourceUrl.searchParams.get("searchScope") || "anything");
@@ -398,6 +403,7 @@ function normalizeItem(item = {}, index = 0) {
 
 function normalizeSearchResponse({
   query,
+  selectedFullCollection,
   pageNumber,
   limitNumber,
   offset,
@@ -435,6 +441,7 @@ function normalizeSearchResponse({
 
   return {
     query,
+    selectedFullCollection: Boolean(selectedFullCollection),
     branchId: text(searchBody?.branchId || WISE_BRANCH_ID),
     clientType: WISE_CLIENT_TYPE,
     selectedPerspectiveId: text(selectedPerspectiveId),
@@ -496,6 +503,7 @@ export default async function handler(req, res) {
   } = req.query;
 
   const query = text(term);
+  const searchWasRequested = Object.prototype.hasOwnProperty.call(req.query, "perspectiveId");
 
   if (suggest === "1") {
     const suggestionResult = await fetchWiseSuggestions(query, searchScope);
@@ -517,6 +525,11 @@ export default async function handler(req, res) {
     text(filterAvailableTitles) === "1" ||
     rawFacetFilters.includes("availableNow:AT_THE_LIBRARY");
   const selectedFacetFilters = rawFacetFilters.filter((value) => value !== "availableNow:AT_THE_LIBRARY");
+  const selectedFullCollection = searchWasRequested &&
+    !query &&
+    !selectedFacetFilters.length &&
+    !selectedTermFilters.length &&
+    !selectedFilterAvailableTitles;
 
   const perspectiveUrl =
     `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
@@ -556,6 +569,7 @@ export default async function handler(req, res) {
 
   if (
     !query &&
+    !searchWasRequested &&
     !selectedFacetFilters.length &&
     !selectedTermFilters.length &&
     !selectedFilterAvailableTitles
@@ -563,6 +577,7 @@ export default async function handler(req, res) {
     return res.status(200).json(
       normalizeSearchResponse({
         query,
+        selectedFullCollection,
         pageNumber,
         limitNumber,
         offset,
@@ -630,6 +645,7 @@ export default async function handler(req, res) {
   return res.status(200).json(
     normalizeSearchResponse({
       query,
+      selectedFullCollection,
       pageNumber,
       limitNumber,
       offset,

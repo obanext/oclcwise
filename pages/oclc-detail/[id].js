@@ -103,13 +103,25 @@ function facetSearchHref(facetName, facetValue) {
   if (!hasValue(facetName) || !hasValue(facetValue)) return "";
 
   const params = new URLSearchParams({
-    q: "*.*",
     page: "1",
     perspectiveId: "3682",
-    searchScope: "title",
+    searchScope: "anything",
     sort: "2910",
   });
   params.append("facetFilter", `${facetName}:${facetValue}`);
+  return `/oclc-search?${params.toString()}`;
+}
+
+function scopedSearchHref(searchScope, term) {
+  if (!hasValue(searchScope) || !hasValue(term)) return "";
+
+  const params = new URLSearchParams({
+    term: String(term),
+    page: "1",
+    perspectiveId: "3682",
+    searchScope: String(searchScope),
+    sort: "2910",
+  });
   return `/oclc-search?${params.toString()}`;
 }
 
@@ -350,7 +362,7 @@ export default function OclcDetailPage() {
   const seriesValues = asArray(titleData?.titleSeries).map(seriesLabel).filter(hasValue);
   const seriesSearchLinks = asArray(titleData?.titleSeries)
     .filter((entry) => hasValue(entry?.description))
-    .map((entry) => facetSearchHref("series", entry.description));
+    .map((entry) => scopedSearchHref("series", entry.description));
   const isbnValues = readableValues(isbnSource.value);
   const ppnValues = [...new Set(readableValues(ppnSource.value))];
   const placeValues = [...new Set(itemInformation.map((item) => item?.callNumber).filter(hasValue))];
@@ -363,8 +375,8 @@ export default function OclcDetailPage() {
   const subjectValues = readableValues(titleData?.subjects, ["description", "code"]);
   const subjectSearchLinks = asArray(titleData?.subjects)
     .filter((entry) => hasValue(entry?.description) || hasValue(entry?.code))
-    .map((entry) => facetSearchHref("subject", entry?.description || entry?.code));
-  const authorSearchHref = facetSearchHref("authorFacet", titleData?.author?.description || authorSource.value);
+    .map((entry) => scopedSearchHref("subject", entry?.description || entry?.code));
+  const authorSearchHref = scopedSearchHref("author", titleData?.author?.description || authorSource.value);
   const classificationValues = [
     titleData?.narrative === true || titleRecord?.categoryNarrative === true ? "Verhalend" : "",
     titleData?.informative === true || titleRecord?.categoryInformative === true ? "Informatief" : "",
@@ -407,8 +419,8 @@ export default function OclcDetailPage() {
         value: firstReadableValue(entry, ["description", "code"]),
         field: `subjects[${index}]${property ? `.${property}` : ""}`,
         endpoint: ENDPOINTS.discovery,
-        href: facetSearchHref("subject", entry?.description || entry?.code),
-        note: "Onderwerpen worden afzonderlijk getoond en linken via facetFilter=subject:<omschrijving> naar OCLC zoeken.",
+        href: scopedSearchHref("subject", entry?.description || entry?.code),
+        note: "Onderwerpen worden afzonderlijk getoond en linken via term=<onderwerp>&searchScope=subject naar OCLC zoeken.",
       };
     })
     .filter((row) => hasValue(row.value)), [titleData]);
@@ -472,7 +484,7 @@ export default function OclcDetailPage() {
       hrefs: seriesSearchLinks,
       field: "titleSeries[].description | titleSeries[].addition | titleSeries[].number",
       endpoint: ENDPOINTS.discovery,
-      note: "Alle reeksen worden getoond; description wordt gecombineerd met addition/number en linkt via facetFilter=series:<description>.",
+      note: "Alle reeksen worden getoond; description wordt gecombineerd met addition/number en linkt via term=<reeks>&searchScope=series.",
     },
     { label: "Noot", value: titleData?.annotationNoMarc, field: "annotationNoMarc", endpoint: ENDPOINTS.discovery },
     { label: "Inhoud", value: summarySource.value, field: summarySource.field, endpoint: summarySource.endpoint },
@@ -503,7 +515,7 @@ export default function OclcDetailPage() {
       href: authorSearchHref,
       field: "author.description | author.qualifier",
       endpoint: ENDPOINTS.discovery,
-      note: "De auteursbeschrijving wordt met qualifier gecombineerd en linkt via facetFilter=authorFacet:<description>.",
+      note: "De auteursbeschrijving wordt met qualifier gecombineerd en linkt via term=<auteur>&searchScope=author.",
     },
     { label: "Materiaal", value: materialSource.value, field: materialSource.field, endpoint: materialSource.endpoint },
     {
@@ -551,7 +563,7 @@ export default function OclcDetailPage() {
       hrefs: subjectSearchLinks,
       field: "subjects[].description",
       endpoint: ENDPOINTS.discovery,
-      note: "Alle onderwerpen worden getoond en linken via facetFilter=subject:<omschrijving>; in de CSV zijn meerdere waarden gescheiden met |.",
+      note: "Alle onderwerpen worden getoond en linken via term=<onderwerp>&searchScope=subject; in de CSV zijn meerdere waarden gescheiden met |.",
     },
     { label: "Aanschafinfo", value: titleData?.acquisitionInformation, field: "acquisitionInformation", endpoint: ENDPOINTS.discovery },
     { label: "Titelnummer", value: titleData?.id, field: "id", endpoint: ENDPOINTS.discovery },

@@ -23,13 +23,25 @@ function facetSearchHref(detailType, facetName, facetValue) {
   if (!hasValue(facetName) || !hasValue(facetValue)) return "";
 
   const params = new URLSearchParams({
-    term: "*.*",
     page: "1",
     perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
-    searchScope: "title",
+    searchScope: "anything",
     sort: "2910",
   });
   params.append("facetFilter", `${facetName}:${facetValue}`);
+  return `/oclc-search?${params.toString()}`;
+}
+
+function scopedSearchHref(detailType, searchScope, term) {
+  if (!hasValue(searchScope) || !hasValue(term)) return "";
+
+  const params = new URLSearchParams({
+    term: String(term),
+    page: "1",
+    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
+    searchScope: String(searchScope),
+    sort: "2910",
+  });
   return `/oclc-search?${params.toString()}`;
 }
 
@@ -37,10 +49,9 @@ function termFilterSearchHref(detailType, fieldName, fieldValue) {
   if (!hasValue(fieldName) || !hasValue(fieldValue)) return "";
 
   const params = new URLSearchParams({
-    term: "*.*",
     page: "1",
     perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
-    searchScope: "title",
+    searchScope: "anything",
     sort: "2910",
   });
   params.append("termFilter", `${fieldName}:${fieldValue}`);
@@ -171,10 +182,10 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
       : "luisterboek";
   const authorField = "author.description | author.qualifier | collaborators[].description | collaborators[].qualifier";
   const audienceField = "audience.description | targetAudience.description | targetGroup | ageRange.from | ageRange.to | youth | adult";
-  const authorHref = facetSearchHref(detailType, "authorFacet", record?.author?.description);
+  const authorHref = scopedSearchHref(detailType, "author", record?.author?.description);
   const authorSources = [record?.author, ...asArray(record?.collaborators)]
     .filter((entry) => hasValue(entry?.description));
-  const authorHrefs = authorSources.map((entry) => facetSearchHref(detailType, "authorFacet", entry.description));
+  const authorHrefs = authorSources.map((entry) => scopedSearchHref(detailType, "author", entry.description));
   const formatHref = facetSearchHref(detailType, "mediumTypeCode", firstText(record?.media?.code, record?.media?.icon));
   const languageHrefs = asArray(record?.language)
     .filter((entry) => hasValue(entry?.description || entry?.code))
@@ -189,10 +200,10 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const publisherHref = termFilterSearchHref(detailType, "publisher", view.publisher);
   const seriesSource = (asArray(record?.titleSeries).length ? asArray(record.titleSeries) : asArray(record?.titleSeriesSchoolWise))
     .filter((entry) => hasValue(entry?.description));
-  const seriesHrefs = seriesSource.map((entry) => facetSearchHref(detailType, "series", entry.description));
+  const seriesHrefs = seriesSource.map((entry) => scopedSearchHref(detailType, "series", entry.description));
   const subjectSource = (asArray(record?.subjects).length ? asArray(record.subjects) : asArray(record?.subjectSchoolWise))
     .filter((entry) => hasValue(entry?.description || entry?.code));
-  const subjectHrefs = subjectSource.map((entry) => facetSearchHref(detailType, "subject", entry?.description || entry?.code));
+  const subjectHrefs = subjectSource.map((entry) => scopedSearchHref(detailType, "subject", entry?.description || entry?.code));
   const genreSource = asArray(record?.genre).filter((entry) => hasValue(entry?.description || entry?.code));
   const genreHrefs = genreSource.map((entry) => facetSearchHref(detailType, "genreCode", entry?.code || entry?.description));
   const titleField = hasValue(record?.mainTitle) ? "mainTitle" : "title";

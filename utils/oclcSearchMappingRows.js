@@ -69,7 +69,9 @@ function toCsv(rows = [], columns = []) {
 
 function perspectiveCountEndpoint(perspective = {}) {
   const perspectiveId = text(perspective?.id) || "{perspectiveId}";
-  return `/branch/{branchId}/perspective/${perspectiveId}/titlesummary?returnType=count&searchScope=anything`;
+  const oclcCountLink = asArray(perspective?.links)
+    .find((link) => text(link?.rel).toLowerCase() === "count")?.href;
+  return text(oclcCountLink) || `/branch/{branchId}/perspective/${perspectiveId}/search?searchScope=anything&returnType=count`;
 }
 
 function firstSource(candidates = []) {
@@ -292,6 +294,19 @@ export function buildOclcFilterRows(data = {}) {
       mockupRoute: MOCKUP_ROUTE,
       note: `Het ruwe OCLC-label wordt vertaald naar ${presentation.label}; de WISE-call ontvangt sorteercode plus richting.`,
     });
+  });
+
+  rows.push({
+    order: rows.length + 1,
+    group: "Technische conventies",
+    oclcField: "perspectiveId; term wordt weggelaten",
+    siteField: "Alles in de collectie",
+    obaIst: "WEL",
+    technicalValue: "perspectiveId=<bron>; geen term-parameter",
+    endpoint,
+    countEndpoint: "/branch/{branchId}/perspective/{perspectiveId}/search?searchScope=anything&returnType=count",
+    mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. Voor de aantallen wordt per perspective de door OCLC geleverde rel=count-link gebruikt. Detailpaginafilters gebruiken searchScope met term voor auteur, onderwerp en reeks; alleen echte codefacetten gebruiken facetFilter.",
   });
 
   rows.push({
