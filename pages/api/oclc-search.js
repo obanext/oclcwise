@@ -266,9 +266,14 @@ function perspectiveCountUrl(searchUrl, perspective = {}) {
 
   url.searchParams.set("returnType", "count");
   url.searchParams.set("searchScope", sourceUrl.searchParams.get("searchScope") || "anything");
-  const query = sourceUrl.searchParams.get("term");
-  if (query) url.searchParams.set("term", query);
-  else url.searchParams.delete("term");
+
+  // Tel per bron exact dezelfde zoekopdracht. Als een bron een criterium niet
+  // ondersteunt, mislukt alleen die count-call en blijft de teller leeg.
+  ["term", "facetFilter", "termFilter", "filterAvailableTitles"].forEach((name) => {
+    sourceUrl.searchParams.getAll(name).forEach((value) => {
+      if (text(value)) url.searchParams.append(name, value);
+    });
+  });
   return url.toString();
 }
 

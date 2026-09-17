@@ -36,6 +36,37 @@ const SORT_LABELS = {
   "SORTBY-TITLE": "Titel",
 };
 
+const FILTER_LABELS = {
+  audienceCode: "Doelgroep",
+  authorFacet: "Auteur",
+  branchId: "Waar",
+  customPublicationYear: "Jaar van uitgave",
+  fictionNonfictionCode: "Fictie/Non-fictie",
+  genreCode: "Genre",
+  languageCode: "Taal",
+  mediumTypeCode: "Type",
+  publicationYear: "Jaar van uitgave",
+  series: "Serie",
+  subject: "Onderwerp",
+  targetAudienceCode: "Leeftijd / niveau",
+};
+
+function readableFilterCriteria(facetFilters = [], termFilters = [], available = false) {
+  const criteria = [...asArray(facetFilters), ...asArray(termFilters)]
+    .map(text)
+    .filter(Boolean)
+    .map((filter) => {
+      const separator = filter.indexOf(":");
+      if (separator < 0) return filter;
+      const field = filter.slice(0, separator);
+      const value = filter.slice(separator + 1).replace(/\|/g, " of ");
+      return `${FILTER_LABELS[field] || field}: ${value}`;
+    });
+
+  if (available) criteria.push("Beschikbaarheid: Nu aanwezig");
+  return criteria.join(", ");
+}
+
 function rawSortLabel(sort = {}) {
   const labelKey = text(sort.labelKey || sort.label);
   return SORT_LABELS[labelKey] || text(sort.label) || text(sort.id);
@@ -498,6 +529,11 @@ export default function OclcSearchPage() {
   );
 
   const resultCount = Number(data?.pagination?.total || 0).toLocaleString("nl-NL");
+  const activeCriteriaLabel = text(data?.query) || query || readableFilterCriteria(
+    data?.selectedFacetFilters || facetFilters,
+    data?.selectedTermFilters || termFilters,
+    data?.selectedFilterAvailableTitles || filterAvailableTitles
+  );
   const currentPage = Number(data?.pagination?.page || page || 1);
   const hasSearchCriteria = Boolean(
     data?.selectedFullCollection || text(query) || facetFilters.length || termFilters.length || filterAvailableTitles
@@ -784,7 +820,9 @@ export default function OclcSearchPage() {
                   <h1>
                     {data?.selectedFullCollection
                       ? "Alles in de collectie"
-                      : `'${text(data?.query) || query || "filters"}'`} in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
+                      : activeCriteriaLabel
+                        ? `'${activeCriteriaLabel}'`
+                        : "Zoekresultaten"} in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
                   </h1>
                   <div className="oba-result-count">{resultCount} resultaten</div>
                 </div>

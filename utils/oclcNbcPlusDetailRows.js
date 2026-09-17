@@ -19,6 +19,20 @@ const PERSPECTIVE_IDS = {
   landelijk: "3687",
 };
 
+// NBC+ detailrecords gebruiken deels andere mediacodes dan het
+// mediumTypeCode-facet. Deze aliases volgen data/wise/mediumtypecode.txt.
+const MEDIUM_TYPE_CODE_ALIASES = {
+  AUDIOBOOK: "ORA",
+  BOOK: "BOE",
+  CD: "CDS",
+  EBOOK: "ORB",
+};
+
+function mediumTypeFacetCode(record = {}) {
+  const rawCode = firstText(record?.media?.code, record?.media?.icon).toUpperCase();
+  return MEDIUM_TYPE_CODE_ALIASES[rawCode] || rawCode;
+}
+
 function facetSearchHref(detailType, facetName, facetValue) {
   if (!hasValue(facetName) || !hasValue(facetValue)) return "";
 
@@ -186,7 +200,8 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const authorSources = [record?.author, ...asArray(record?.collaborators)]
     .filter((entry) => hasValue(entry?.description));
   const authorHrefs = authorSources.map((entry) => termSearchHref(detailType, entry.description));
-  const formatHref = facetSearchHref(detailType, "mediumTypeCode", firstText(record?.media?.code, record?.media?.icon));
+  const formatFacetCode = mediumTypeFacetCode(record);
+  const formatHref = facetSearchHref(detailType, "mediumTypeCode", formatFacetCode);
   const languageHrefs = asArray(record?.language)
     .filter((entry) => hasValue(entry?.description || entry?.code))
     .map((entry) => facetSearchHref(detailType, "languageCode", entry?.code || entry?.description));
@@ -197,6 +212,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     record?.adult === true && record?.youth !== true ? "NJ" : ""
   );
   const audienceHref = facetSearchHref(detailType, "audienceCode", audienceCode);
+  const publicationYearHref = facetSearchHref(detailType, "customPublicationYear", view.publicationYear);
   const publisherHref = termFilterSearchHref(detailType, "publisher", view.publisher);
   const seriesSource = (asArray(record?.titleSeries).length ? asArray(record.titleSeries) : asArray(record?.titleSeriesSchoolWise))
     .filter((entry) => hasValue(entry?.description));
@@ -211,7 +227,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const publisherField = hasValue(record?.publicationDetails) ? "publicationDetails" : "imprint";
   const seriesField = asArray(record?.titleSeries).length ? "titleSeries[].description" : "titleSeriesSchoolWise[].description";
   const topSpecificationRows = [
-    ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+    ["Formaat", formatField, view.format, `Ruwe mediumomschrijving; de zoeklink gebruikt de bijbehorende OCLC mediumTypeCode ${formatFacetCode}.`],
     ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
     ["Uitgever", publisherField, view.publisher, "Uit publicationDetails wordt de uitgeversnaam vóór de eerste komma getoond; bij imprint wordt de uitgeversnaam na de dubbele punt gebruikt."],
     ...(detailType === "landelijk"
@@ -223,21 +239,21 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     ? [
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
         ["Auteurs", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
-        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+        ["Formaat", formatField, view.format, `Ruwe mediumomschrijving; de zoeklink gebruikt de bijbehorende OCLC mediumTypeCode ${formatFacetCode}.`],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond en linken via term=<waarde>&searchScope=anything."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
-        ["Jaar van uitgave", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
+        ["Jaar van uitgave", "publicationYear", view.publicationYear, "Ruw publicatiejaar; de zoeklink gebruikt facetFilter=customPublicationYear:<jaar>."],
       ]
     : detailType === "ebook"
     ? [
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
         ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+        ["Formaat", formatField, view.format, `Ruwe mediumomschrijving; de zoeklink gebruikt de bijbehorende OCLC mediumTypeCode ${formatFacetCode}.`],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
@@ -248,7 +264,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
         ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
-        ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
+        ["Formaat", formatField, view.format, `Ruwe mediumomschrijving; de zoeklink gebruikt de bijbehorende OCLC mediumTypeCode ${formatFacetCode}.`],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Speelduur", "annotationCollation", view.duration, "Voor de zichtbare speelduur wordt de eerste waarde vóór de komma gebruikt; de volledige bronwaarde blijft in Alle velden OCLC beschikbaar."],
         ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
@@ -278,6 +294,8 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
             ? publisherHref
         : label === "Doelgroep"
           ? audienceHref
+          : label === "Jaar van uitgave"
+            ? publicationYearHref
           : "";
       const hrefs = label === "Auteur" || label === "Auteurs"
         ? authorHrefs

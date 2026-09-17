@@ -241,7 +241,7 @@ export function buildOclcFilterRows(data = {}) {
       count: perspective?.count,
       countEndpoint: perspectiveCountEndpoint(perspective),
       mockupRoute: MOCKUP_ROUTE,
-      note: "Zichtbare waarde uit perspective.label. Na een zoekopdracht wordt per perspective een kleine titlesummary-call met returnType=count uitgevoerd. Dit geeft ook direct tellers voor NBC+-perspectives zoals e-books, luisterboeken en heel Nederland, zonder dat deze eerst geselecteerd hoeven te worden.",
+      note: "Zichtbare waarde uit perspective.label. Na een zoekopdracht wordt per perspective een kleine titlesummary-call met returnType=count uitgevoerd met dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria. Een mislukte call blijft leeg en wordt niet vervangen door een ongefilterd collectietotaal.",
     }));
 
   OCLC_SEARCH_FACET_DEFINITIONS
@@ -304,7 +304,7 @@ export function buildOclcFilterRows(data = {}) {
     endpoint,
     countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
     mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count, omdat deze route in de gebruikte acceptatieomgeving ook voor NBC+-perspectives een bruikbare teller retourneert. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Alleen waarden waarvoor een echte OCLC-code beschikbaar is, blijven facetFilter gebruiken.",
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Formaat gebruikt een mediumTypeCode uit de OCLC-metadatalijst en jaar gebruikt customPublicationYear:<jaar>.",
   });
 
   rows.push({
