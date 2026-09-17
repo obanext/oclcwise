@@ -50,7 +50,10 @@ function combineFacetFilters(values) {
   const ungrouped = [];
 
   asArray(values).map(text).filter(Boolean).forEach((filter) => {
-    const separatorIndex = filter.indexOf(":");
+    const nbcSeparatorIndex = filter.startsWith("nbc:") ? filter.indexOf("_key:") : -1;
+    const separatorIndex = nbcSeparatorIndex >= 0
+      ? nbcSeparatorIndex + "_key".length
+      : filter.indexOf(":");
 
     if (separatorIndex <= 0 || separatorIndex === filter.length - 1) {
       if (!ungrouped.includes(filter)) ungrouped.push(filter);

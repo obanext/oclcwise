@@ -49,17 +49,29 @@ const FILTER_LABELS = {
   series: "Serie",
   subject: "Onderwerp",
   targetAudienceCode: "Leeftijd / niveau",
+  "nbc:carrierOB_key": "Type",
+  "nbc:publicationYear_key": "Jaar van uitgave",
 };
+
+function splitFilterCriterion(filter) {
+  const knownField = Object.keys(FILTER_LABELS)
+    .find((field) => filter.startsWith(`${field}:`));
+  if (knownField) return [knownField, filter.slice(knownField.length + 1)];
+
+  const separator = filter.indexOf(":");
+  return separator < 0
+    ? ["", filter]
+    : [filter.slice(0, separator), filter.slice(separator + 1)];
+}
 
 function readableFilterCriteria(facetFilters = [], termFilters = [], available = false) {
   const criteria = [...asArray(facetFilters), ...asArray(termFilters)]
     .map(text)
     .filter(Boolean)
     .map((filter) => {
-      const separator = filter.indexOf(":");
-      if (separator < 0) return filter;
-      const field = filter.slice(0, separator);
-      const value = filter.slice(separator + 1).replace(/\|/g, " of ");
+      const [field, rawValue] = splitFilterCriterion(filter);
+      if (!field) return rawValue;
+      const value = rawValue.replace(/\|/g, " of ");
       return `${FILTER_LABELS[field] || field}: ${value}`;
     });
 

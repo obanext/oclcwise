@@ -45,8 +45,12 @@ export const OCLC_SEARCH_FACET_DEFINITIONS = [
 export function findOclcSearchFacetDefinition(facet = {}) {
   const name = text(facet?.name);
   const labelKey = text(facet?.labelKey);
+  const nameAliases = {
+    "nbc:carrierOB_key": "mediumTypeCode",
+    "nbc:publicationYear_key": "publicationYear",
+  };
   return OCLC_SEARCH_FACET_DEFINITIONS.find((definition) => (
-    definition.name === name || definition.labelKey === labelKey
+    definition.name === (nameAliases[name] || name) || definition.labelKey === labelKey
   ));
 }
 
@@ -162,7 +166,7 @@ export function buildOclcFilterRows(data = {}) {
 
   const appendFacetDefinition = (definition) => {
     const facet = asArray(data?.facets).find((candidate) => (
-      text(candidate?.name) === definition.name || text(candidate?.labelKey) === definition.labelKey
+      findOclcSearchFacetDefinition(candidate)?.name === definition.name
     ));
     const values = asArray(facet?.values);
 
@@ -190,12 +194,15 @@ export function buildOclcFilterRows(data = {}) {
       const yearMatch = definition.name === "publicationYear"
         ? text(value?.term || valueLabel).match(/(?:18|19|20|21)\d{2}/)
         : null;
+      const isNbcYear = text(facet?.name) === "nbc:publicationYear_key";
       const siteValueLabel = definition.name === "availableNow"
         ? "Nu aanwezig"
         : yearMatch
           ? yearMatch[0]
           : valueLabel;
-      const technicalValue = yearMatch
+      const technicalValue = isNbcYear
+        ? text(value?.facetFilter)
+        : yearMatch
         ? `customPublicationYear:${yearMatch[0]}`
         : text(value?.facetFilter);
       rows.push({
@@ -215,6 +222,8 @@ export function buildOclcFilterRows(data = {}) {
         mockupRoute: MOCKUP_ROUTE,
         note: definition.name === "availableNow"
           ? "De OCLC-filterwaarde wordt op de site vertaald naar Nu aanwezig. De teller komt uit een aanvullende titlesummary-call met returnType=count en filterAvailableTitles=true; selectie van het filter stuurt filterAvailableTitles=true."
+          : isNbcYear
+            ? "Landelijk NBC+-publicatiejaar gebruikt de ongewijzigde facetwaarde nbc:publicationYear_key:<jaar>."
           : yearMatch
             ? "Publicatiejaar wordt als viercijferig jaar getoond en als customPublicationYear:<jaar> verstuurd."
             : valueLabel
@@ -304,7 +313,7 @@ export function buildOclcFilterRows(data = {}) {
     endpoint,
     countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
     mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Formaat gebruikt een mediumTypeCode uit de OCLC-metadatalijst en jaar gebruikt customPublicationYear:<jaar>.",
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Landelijk gebruikt voor formaat nbc:carrierOB_key:<carrierterm> en voor jaar nbc:publicationYear_key:<jaar>; deze NBC+-facetten worden niet vertaald naar lokale WISE-facetten.",
   });
 
   rows.push({
