@@ -347,6 +347,18 @@ export function buildOclcFilterRows(data = {}) {
     note: "Termfilters worden afzonderlijk en herhaald naar WISE gestuurd; ze worden gecombineerd met de hoofdterm en de facetfilters.",
   });
 
+  rows.push({
+    order: rows.length + 1,
+    group: "Technische conventies",
+    oclcField: "facetFilter | termFilter | filterAvailableTitles",
+    siteField: "Actieve filters boven zoekresultaten",
+    obaIst: "WEL",
+    technicalValue: "URL blijft de bron; verwijderen wist uitsluitend de gekozen parameter en zet page=1",
+    endpoint,
+    mockupRoute: MOCKUP_ROUTE,
+    note: "Na een zoekopdracht wordt iedere geselecteerde facetFilter- en termFilter-waarde boven de resultaten als verwijderbare keuze getoond. Beschikbaarheid verschijnt als Nu aanwezig. De zichtbare naam komt waar mogelijk uit het OCLC-facetlabel. Klik op × verwijdert alleen die keuze uit het URL-pad, behoudt term, perspectiveId, searchScope, sort en overige filters, zet de paginering terug op pagina 1 en voert de zoekopdracht opnieuw uit. Deze conventie geldt voor alle perspectives en daarmee voor lokaal, e-books, luisterboeken en landelijk.",
+  });
+
   return rows;
 }
 

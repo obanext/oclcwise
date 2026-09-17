@@ -85,6 +85,24 @@ function readableFilterCriteria(facetFilters = [], termFilters = [], available =
   return criteria.join(", ");
 }
 
+function activeFilterLabel(filterValue, facets = []) {
+  const value = text(filterValue);
+  if (!value) return "";
+
+  for (const facet of asArray(facets)) {
+    const option = asArray(facet?.values || facet?.filterList)
+      .find((candidate) => rawFacetFilterValue(facet, candidate) === value);
+    const optionLabel = rawFacetValueLabel(option);
+    if (optionLabel) return optionLabel;
+  }
+
+  const [field, rawValue] = splitFilterCriterion(value);
+  const readableValue = rawValue.replace(/\|/g, " of ");
+  return field && FILTER_LABELS[field]
+    ? `${FILTER_LABELS[field]}: ${readableValue}`
+    : readableValue || value;
+}
+
 function rawSortLabel(sort = {}) {
   const labelKey = text(sort.labelKey || sort.label);
   return SORT_LABELS[labelKey] || text(sort.label) || text(sort.id);
@@ -500,6 +518,17 @@ export default function OclcSearchPage() {
     });
   }
 
+  function removeTermFilter(filterValue) {
+    const value = text(filterValue);
+    const nextFilters = termFilters.filter((item) => item !== value);
+    setTermFilters(nextFilters);
+    navigateSearch({
+      q: query,
+      nextPage: 1,
+      nextTermFilters: nextFilters,
+    });
+  }
+
   function toggleFacetExpansion(facetName) {
     setExpandedFacets((current) => ({
       ...current,
@@ -534,6 +563,23 @@ export default function OclcSearchPage() {
   const items = asArray(data?.items);
   const calls = asArray(data?.debug?.calls);
   const selectedFilters = selectedSet(facetFilters);
+  const activeFilterChips = [
+    ...facetFilters.map((value) => ({
+      key: `facet-${value}`,
+      label: activeFilterLabel(value, facets),
+      remove: () => toggleFacet(value),
+    })),
+    ...termFilters.map((value) => ({
+      key: `term-${value}`,
+      label: activeFilterLabel(value, facets),
+      remove: () => removeTermFilter(value),
+    })),
+    ...(filterAvailableTitles ? [{
+      key: "availability",
+      label: "Nu aanwezig",
+      remove: () => toggleFacet("availableNow:AT_THE_LIBRARY", { isAvailableNow: true }),
+    }] : []),
+  ].filter((chip) => chip.label);
 
   const usedFieldRows = useMemo(() => buildOclcUsedFieldRows(data), [data]);
   const filterRows = useMemo(() => buildOclcFilterRows(data), [data]);
@@ -842,6 +888,22 @@ export default function OclcSearchPage() {
                         ? `'${activeCriteriaLabel}'`
                         : "Zoekresultaten"} in {text(selectedPerspective?.label || selectedPerspective?.labelText) || "OCLC collectie"}
                   </h1>
+                  {activeFilterChips.length ? (
+                    <div className="oba-active-filters" aria-label="Actieve filters">
+                      {activeFilterChips.map((chip) => (
+                        <button
+                          type="button"
+                          className="oba-active-filter"
+                          key={chip.key}
+                          onClick={chip.remove}
+                          aria-label={`Verwijder filter ${chip.label}`}
+                        >
+                          <span>{chip.label}</span>
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                   <div className="oba-result-count">{resultCount} resultaten</div>
                 </div>
 
