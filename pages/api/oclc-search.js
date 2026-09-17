@@ -14,6 +14,10 @@ import {
 } from "../../utils/wisePerspective.js";
 import { fetchWiseResponse } from "../../utils/wiseResponse.js";
 import { fetchWiseSuggestions } from "../../utils/wiseSuggestions.js";
+import {
+  expandFacetSelections, isCollectionTerm, isNbcPerspective, searchStateForPerspective,
+  searchTermForBackend, serializeFacetFilters, validateSearchFilters,
+} from "../../utils/oclcSearchFilters.js";
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
@@ -43,35 +47,6 @@ function appendParam(url, key, value) {
 
 function appendRepeatedParam(url, key, values) {
   return asArray(values).reduce((nextUrl, value) => appendParam(nextUrl, key, value), url);
-}
-
-function combineFacetFilters(values) {
-  const grouped = new Map();
-  const ungrouped = [];
-
-  asArray(values).map(text).filter(Boolean).forEach((filter) => {
-    const nbcSeparatorIndex = filter.startsWith("nbc:") ? filter.indexOf("_key:") : -1;
-    const separatorIndex = nbcSeparatorIndex >= 0
-      ? nbcSeparatorIndex + "_key".length
-      : filter.indexOf(":");
-
-    if (separatorIndex <= 0 || separatorIndex === filter.length - 1) {
-      if (!ungrouped.includes(filter)) ungrouped.push(filter);
-      return;
-    }
-
-    const field = filter.slice(0, separatorIndex);
-    const term = filter.slice(separatorIndex + 1);
-    const terms = grouped.get(field) || [];
-
-    if (!terms.includes(term)) terms.push(term);
-    grouped.set(field, terms);
-  });
-
-  return [
-    ...Array.from(grouped, ([field, terms]) => `${field}:${terms.join("|")}`),
-    ...ungrouped,
-  ];
 }
 
 function extractItems(body) {
@@ -208,7 +183,7 @@ function normalizeFacets(searchBody = {}, availabilityCount = null) {
           const facetFilter = firstText(value?.facetFilter, value?.filter, value?.query) || (key && term ? `${key}:${term}` : "");
 
           const normalizedCount = Number(value?.count ?? value?.total ?? value?.numberOfResults ?? value?.hits ?? 0);
-          const count = name === "availableNow" && term === "AT_THE_LIBRARY" && Number.isFinite(availabilityCount)
+          const count = name === "availableNow" && term === "AT_THE_LIBRARY"
             ? availabilityCount
             : normalizedCount;
 
@@ -237,7 +212,8 @@ function normalizeFacets(searchBody = {}, availabilityCount = null) {
 }
 
 function responseTotal(body) {
-  if (typeof body === "number" && Number.isFinite(body)) return body;
+  if (typeof body === "number" && Number.isFinite(body) && body >= 0) return body;
+  if (typeof body === "string" && /^\d+$/.test(body.trim())) return Number(body);
 
   const value =
     body?.total ??
@@ -245,8 +221,20 @@ function responseTotal(body) {
     body?.count ??
     body?.numberOfResults ??
     body?.pagination?.total;
+  if (value === null || value === undefined || value === "" || typeof value === "boolean") return null;
   const number = Number(value);
-  return Number.isFinite(number) ? number : null;
+  return Number.isFinite(number) && number >= 0 ? number : null;
+}
+
+function validateResponse(call, countOnly = false) {
+  if (!call?.ok) return call;
+  const body = call.body;
+  const hasItems = body && typeof body === "object" && !Array.isArray(body) &&
+    ["items", "titles", "title", "results", "result", "content", "documents", "titleSummaries", "summaries"]
+      .some((key) => Array.isArray(body[key]));
+  if (responseTotal(body) !== null && (countOnly || hasItems)) return call;
+  return { ...call, ok: false, upstreamStatus: call.status, status: 502,
+    error: "OCLC gaf een lege of ongeldige zoekresponse. Dit is geen resultaat met nul treffers." };
 }
 
 function availabilityCountUrl(searchUrl) {
@@ -262,21 +250,17 @@ function availabilityCountUrl(searchUrl) {
 
 function perspectiveCountUrl(searchUrl, perspective = {}) {
   const sourceUrl = new URL(searchUrl);
+  const targetState = searchStateForPerspective({ q: sourceUrl.searchParams.get("term") }, perspective.id);
   const url = new URL(
     `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}` +
     `/perspective/${encodeURIComponent(text(perspective?.id))}/titlesummary`
   );
 
   url.searchParams.set("returnType", "count");
-  url.searchParams.set("searchScope", sourceUrl.searchParams.get("searchScope") || "anything");
-
-  // Tel per bron exact dezelfde zoekopdracht. Als een bron een criterium niet
-  // ondersteunt, mislukt alleen die count-call en blijft de teller leeg.
-  ["term", "facetFilter", "termFilter", "filterAvailableTitles"].forEach((name) => {
-    sourceUrl.searchParams.getAll(name).forEach((value) => {
-      if (text(value)) url.searchParams.append(name, value);
-    });
-  });
+  url.searchParams.set("searchScope", targetState.nextSearchScope);
+  // Identical to clicking this source: keep the term, reset scope and filters.
+  const term = searchTermForBackend(targetState.q, isNbcPerspective(perspective.id, perspective.backend));
+  if (term) url.searchParams.set("term", term);
   return url.toString();
 }
 
@@ -425,6 +409,7 @@ function normalizeSearchResponse({
   const rawItems = extractItems(searchBody);
   const selectedPerspectiveCount = responseTotal(searchBody);
   const countByPerspective = new Map([[text(selectedPerspectiveId), selectedPerspectiveCount]]);
+  const countCalls = new Map(asArray(perspectiveCountCalls).map(({ perspectiveId, call }) => [text(perspectiveId), call]));
 
   asArray(perspectiveCountCalls).forEach(({ perspectiveId, call }) => {
     if (call?.ok) countByPerspective.set(text(perspectiveId), responseTotal(call.body));
@@ -433,6 +418,9 @@ function normalizeSearchResponse({
   const perspectives = normalizePerspectives(perspectiveCall?.body).map((perspective) => ({
     ...perspective,
     count: countByPerspective.get(text(perspective.id)) ?? null,
+    countUrl: text(perspective.id) === text(selectedPerspectiveId) ? searchCall?.url || "" : countCalls.get(text(perspective.id))?.url || "",
+    countError: text(perspective.id) === text(selectedPerspectiveId) ? searchCall?.error || ""
+      : countCalls.get(text(perspective.id))?.ok === false ? countCalls.get(text(perspective.id))?.error || "OCLC-teller niet beschikbaar" : "",
   }));
   const selectedPerspective =
     perspectives.find((entry) => String(entry.id) === String(selectedPerspectiveId)) || perspectives[0] || null;
@@ -457,7 +445,7 @@ function normalizeSearchResponse({
       page: pageNumber,
       offset,
       limit: limitNumber,
-      total: Number(searchBody?.total ?? searchBody?.totalElements ?? searchBody?.count ?? rawItems.length ?? 0),
+      total: searchCall?.ok ? responseTotal(searchBody) : null,
     },
     perspectives,
     selectedPerspective,
@@ -478,11 +466,11 @@ function normalizeSearchResponse({
     raw: {
       perspectiveResponse: perspectiveCall?.body || null,
       searchResponse: searchCall?.body || null,
-      availabilityCountResponse: availabilityCountCall?.body || null,
+      availabilityCountResponse: availabilityCountCall?.body ?? null,
       perspectiveCountResponses: Object.fromEntries(
         asArray(perspectiveCountCalls).map(({ perspectiveId, call }) => [
           text(perspectiveId),
-          call?.body || null,
+          call?.body ?? null,
         ])
       ),
     },
@@ -505,7 +493,7 @@ export default async function handler(req, res) {
     filterAvailableTitles = "false",
   } = req.query;
 
-  const query = text(term);
+  let query = text(term);
   const searchWasRequested = Object.prototype.hasOwnProperty.call(req.query, "perspectiveId");
 
   if (suggest === "1") {
@@ -521,7 +509,7 @@ export default async function handler(req, res) {
   // ALL has no per-result discovery enrichment and intentionally allows up to 100 records.
   const limitNumber = Math.max(Math.min(Number(limit) || 20, 100), 1);
   const offset = (pageNumber - 1) * limitNumber;
-  const rawFacetFilters = asArray(facetFilter).map(text).filter(Boolean);
+  const rawFacetFilters = expandFacetSelections(facetFilter);
   const selectedTermFilters = asArray(termFilter).map(text).filter(Boolean);
   const selectedFilterAvailableTitles =
     text(filterAvailableTitles).toLowerCase() === "true" ||
@@ -529,7 +517,7 @@ export default async function handler(req, res) {
     rawFacetFilters.includes("availableNow:AT_THE_LIBRARY");
   const selectedFacetFilters = rawFacetFilters.filter((value) => value !== "availableNow:AT_THE_LIBRARY");
   const selectedFullCollection = searchWasRequested &&
-    !query &&
+    (!query || isCollectionTerm(query)) &&
     !selectedFacetFilters.length &&
     !selectedTermFilters.length &&
     !selectedFilterAvailableTitles;
@@ -565,10 +553,16 @@ export default async function handler(req, res) {
   }
 
   const {
+    perspective,
     selectedPerspectiveId,
     selectedScope: selectedSearchScope,
     selectedSort,
   } = configuration;
+
+  const nbc = isNbcPerspective(selectedPerspectiveId, perspective?.backend);
+  const filterError = validateSearchFilters({ facetFilters: selectedFacetFilters,
+    termFilters: selectedTermFilters, available: selectedFilterAvailableTitles, nbc });
+  if (filterError) return res.status(400).json({ error: filterError, debug: { calls: [perspectiveCall] } });
 
   if (
     !query &&
@@ -596,6 +590,8 @@ export default async function handler(req, res) {
     );
   }
 
+  query = searchTermForBackend(query, nbc);
+
   let searchUrl =
     `${WISE_BASE_URL}/branch/${encodeURIComponent(WISE_BRANCH_ID)}/perspective/${encodeURIComponent(selectedPerspectiveId)}/titlesummary` +
     `?returnType=default` +
@@ -614,26 +610,26 @@ export default async function handler(req, res) {
     searchUrl = appendParam(searchUrl, "term", query);
   }
 
-  searchUrl = appendRepeatedParam(searchUrl, "facetFilter", combineFacetFilters(selectedFacetFilters));
+  searchUrl = appendRepeatedParam(searchUrl, "facetFilter", serializeFacetFilters(selectedFacetFilters, nbc));
   searchUrl = appendRepeatedParam(searchUrl, "termFilter", selectedTermFilters);
 
   const perspectiveCountTargets = extractPerspectives(perspectiveCall.body)
-    .filter((perspective) => text(perspective?.id));
+    .filter((perspective) => text(perspective?.id) && text(perspective.id) !== selectedPerspectiveId);
 
   const [searchCall, availabilityCountCall, perspectiveCountCalls] = await Promise.all([
-    fetchWiseResponse(searchUrl),
-    selectedFilterAvailableTitles
+    fetchWiseResponse(searchUrl).then((call) => validateResponse(call)),
+    selectedFilterAvailableTitles || nbc
       ? Promise.resolve(null)
-      : fetchWiseResponse(availabilityCountUrl(searchUrl)),
+      : fetchWiseResponse(availabilityCountUrl(searchUrl)).then((call) => validateResponse(call, true)),
     Promise.all(perspectiveCountTargets.map(async (countPerspective) => ({
       perspectiveId: text(countPerspective?.id),
-      call: await fetchWiseResponse(perspectiveCountUrl(searchUrl, countPerspective)),
+      call: validateResponse(await fetchWiseResponse(perspectiveCountUrl(searchUrl, countPerspective)), true),
     }))),
   ]);
 
   if (!searchCall.ok) {
     return res.status(searchCall.status || 500).json({
-      error: "Zoekopdracht ophalen mislukt",
+      error: searchCall.error || "Zoekopdracht ophalen mislukt",
       debug: {
         calls: [
           perspectiveCall,

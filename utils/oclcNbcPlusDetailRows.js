@@ -1,3 +1,5 @@
+import { buildSearchUrl } from "./oclcSearchFilters.js";
+
 export const NBCPLUS_DETAIL_ENDPOINT = "/discovery/origin/nbcplus/branch/{branchId}/title/{ppn}";
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
@@ -49,37 +51,28 @@ function landelijkCarrierFacetTerm(record = {}) {
 function facetSearchHref(detailType, facetName, facetValue) {
   if (!hasValue(facetName) || !hasValue(facetValue)) return "";
 
-  const params = new URLSearchParams({
-    page: "1",
-    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
-    searchScope: "anything",
-    sort: "2910",
+  return buildSearchUrl({
+    nextSearchRequested: true,
+    nextPerspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
+    nextFacetFilters: [`${facetName}:${facetValue}`],
   });
-  params.append("facetFilter", `${facetName}:${facetValue}`);
-  return `/oclc-search?${params.toString()}`;
 }
 
 function collectionSearchHref(detailType) {
-  const params = new URLSearchParams({
-    page: "1",
-    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
-    searchScope: "anything",
-    sort: "2910",
+  return buildSearchUrl({
+    nextSearchRequested: true,
+    nextPerspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
   });
-  return `/oclc-search?${params.toString()}`;
 }
 
 function termSearchHref(detailType, term) {
   if (!hasValue(term)) return "";
 
-  const params = new URLSearchParams({
-    term: String(term),
-    page: "1",
-    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
-    searchScope: "anything",
-    sort: "2910",
+  return buildSearchUrl({
+    q: String(term),
+    nextSearchRequested: true,
+    nextPerspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
   });
-  return `/oclc-search?${params.toString()}`;
 }
 
 const readableValues = (value, keys = ["description", "code"]) => asArray(value)
@@ -233,6 +226,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     ? facetSearchHref(detailType, "nbc:carrierOB_key", formatFacetCode)
     : collectionSearchHref(detailType);
   const languageHrefs = asArray(record?.language)
+    .filter((entry) => hasValue(entry?.description || entry?.code))
     .map((entry) => facetSearchHref(
       detailType,
       "nbc:language_key",
@@ -248,7 +242,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const subjectSource = (asArray(record?.subjects).length ? asArray(record.subjects) : asArray(record?.subjectSchoolWise))
     .filter((entry) => hasValue(entry?.description || entry?.code));
   const subjectHrefs = subjectSource.map((entry) => termSearchHref(detailType, entry?.description || entry?.code));
-  const genreSource = asArray(record?.genre);
+  const genreSource = asArray(record?.genre).filter((entry) => hasValue(entry?.description || entry?.code));
   const genreHrefs = genreSource.map((entry) => facetSearchHref(
     detailType,
     "nbc:subjectNbdgenre_key",
@@ -353,7 +347,7 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
         hrefs,
         searchLink: href || hrefs.filter(Boolean).join(" | "),
         note: (href || hrefs.some(Boolean))
-          ? `${note} De zichtbare waarde linkt naar OCLC zoeken binnen perspective ${PERSPECTIVE_IDS[detailType]}.`
+          ? `${note} De zichtbare waarde linkt naar OCLC zoeken binnen perspective ${PERSPECTIVE_IDS[detailType]}. Collectie- en facetlinks sturen term=*; auteur/onderwerp gebruiken hun tekst als term. Facetten behouden de NBC+-key en term. Meerdere NBC+-criteria gaan als afzonderlijke facetFilter-parameters naar OCLC (EN); geen WISE-codes of |-samenvoeging. Actieve keuzes kunnen afzonderlijk worden verwijderd; broncounters volgen de bronwissel zonder oude filters.`
           : note,
       };
     });

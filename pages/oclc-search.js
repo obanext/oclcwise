@@ -12,6 +12,9 @@ import {
   toOclcUsedFieldsCsv,
 } from "../utils/oclcSearchMappingRows";
 
+import { buildSearchUrl, expandFacetSelections, isCollectionTerm, isNbcPerspective,
+  readFacetLabels, rememberFacetLabels, searchStateForPerspective, splitFacetFilter } from "../utils/oclcSearchFilters.js";
+
 const pretty = (value) => JSON.stringify(value, null, 2);
 
 const asArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
@@ -59,16 +62,7 @@ const FILTER_LABELS = {
   "nbc:audienceNbcLeeftijdscategorie_key": "Leeftijd / niveau",
 };
 
-function splitFilterCriterion(filter) {
-  const knownField = Object.keys(FILTER_LABELS)
-    .find((field) => filter.startsWith(`${field}:`));
-  if (knownField) return [knownField, filter.slice(knownField.length + 1)];
-
-  const separator = filter.indexOf(":");
-  return separator < 0
-    ? ["", filter]
-    : [filter.slice(0, separator), filter.slice(separator + 1)];
-}
+function splitFilterCriterion(filter) { return splitFacetFilter(filter); }
 
 function readableFilterCriteria(facetFilters = [], termFilters = [], available = false) {
   const criteria = [...asArray(facetFilters), ...asArray(termFilters)]
@@ -85,7 +79,7 @@ function readableFilterCriteria(facetFilters = [], termFilters = [], available =
   return criteria.join(", ");
 }
 
-function activeFilterLabel(filterValue, facets = []) {
+function activeFilterLabel(filterValue, facets = [], labels = {}, perspectiveId = "") {
   const value = text(filterValue);
   if (!value) return "";
 
@@ -96,6 +90,8 @@ function activeFilterLabel(filterValue, facets = []) {
     if (optionLabel) return optionLabel;
   }
 
+  const cachedLabel = labels[`${perspectiveId}/${value}`];
+  if (cachedLabel) return cachedLabel;
   const [field, rawValue] = splitFilterCriterion(value);
   const readableValue = rawValue.replace(/\|/g, " of ");
   return field && FILTER_LABELS[field]
@@ -169,7 +165,7 @@ function parseSearchStateFromPath(asPath = "") {
   const queryString = String(asPath).split("?")[1] || "";
   const params = new URLSearchParams(queryString);
 
-  const rawFilters = params.getAll("facetFilter").map(text).filter(Boolean);
+  const rawFilters = expandFacetSelections(params.getAll("facetFilter"));
   const rawTermFilters = params.getAll("termFilter").map(text).filter(Boolean);
   const availableFromFacet = rawFilters.includes("availableNow:AT_THE_LIBRARY");
   const availableFromQuery = readBooleanQuery(params.get("filterAvailableTitles"));
@@ -262,6 +258,8 @@ export default function OclcSearchPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [failedCalls, setFailedCalls] = useState([]);
+  const [facetLabels, setFacetLabels] = useState({});
   const [expandedFacets, setExpandedFacets] = useState({});
   const [openFilterCards, setOpenFilterCards] = useState({ perspective: true });
 
@@ -279,7 +277,8 @@ export default function OclcSearchPage() {
 
     const urlState = parseSearchStateFromPath(router.asPath);
 
-    setQuery(urlState.q);
+    setQuery(isCollectionTerm(urlState.q) ? "" : urlState.q);
+    setFacetLabels(readFacetLabels());
     setPerspectiveId(urlState.nextPerspectiveId);
     setSearchScope(urlState.nextSearchScope);
     setSort(urlState.nextSort);
@@ -287,19 +286,20 @@ export default function OclcSearchPage() {
     setTermFilters(urlState.nextTermFilters);
     setFilterAvailableTitles(urlState.nextFilterAvailableTitles);
 
-    runSearchFromState(urlState);
+    return runSearchFromState(urlState);
   }, [router.isReady, router.asPath]);
 
   useEffect(() => {
     const q = query.trim();
 
-    if (q.length < 2) {
+    if (q.length < 2 || isCollectionTerm(q)) {
       setSuggestions([]);
       return;
     }
 
+    const controller = new AbortController();
     const timer = setTimeout(() => {
-      fetch(`/api/oclc-search?term=${encodeURIComponent(q)}&suggest=1&searchScope=${encodeURIComponent(searchScope)}`)
+      fetch(`/api/oclc-search?term=${encodeURIComponent(q)}&suggest=1&searchScope=${encodeURIComponent(searchScope)}`, { signal: controller.signal })
         .then((response) => response.json())
         .then((json) => {
           const values = asArray(json?.suggestions)
@@ -310,12 +310,12 @@ export default function OclcSearchPage() {
             )
             .filter(Boolean);
 
-          setSuggestions(values);
+          if (!controller.signal.aborted) setSuggestions(values);
         })
-        .catch(() => setSuggestions([]));
+        .catch(() => { if (!controller.signal.aborted) setSuggestions([]); });
     }, 250);
 
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(timer); controller.abort(); };
   }, [query, searchScope]);
 
   function currentSearchState() {
@@ -323,7 +323,7 @@ export default function OclcSearchPage() {
 
     return {
       ...urlState,
-      q: query,
+      q: urlState.q,
       nextPerspectiveId: perspectiveId || urlState.nextPerspectiveId || DEFAULT_PERSPECTIVE_ID,
       nextSearchScope: searchScope || urlState.nextSearchScope || DEFAULT_SCOPE,
       nextSort: sort || urlState.nextSort || DEFAULT_SORT,
@@ -333,85 +333,13 @@ export default function OclcSearchPage() {
     };
   }
 
-  function buildUrl({
-    q,
-    nextSearchRequested,
-    nextPage,
-    nextPerspectiveId,
-    nextSearchScope,
-    nextSort,
-    nextFacetFilters,
-    nextTermFilters,
-    nextFilterAvailableTitles,
-  }) {
-    const params = new URLSearchParams();
-    const shouldSearch = Boolean(
-      nextSearchRequested ||
-      text(q) ||
-      asArray(nextFacetFilters).length ||
-      asArray(nextTermFilters).length ||
-      nextFilterAvailableTitles
-    );
-
-    if (!shouldSearch) return "/oclc-search";
-
-    if (text(q)) params.set("term", text(q));
-    params.set("page", String(nextPage || 1));
-    params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
-    params.set("searchScope", String(nextSearchScope || DEFAULT_SCOPE));
-    params.set("sort", String(nextSort || DEFAULT_SORT));
-
-    asArray(nextFacetFilters).forEach((filter) => {
-      if (text(filter)) params.append("facetFilter", text(filter));
-    });
-
-    asArray(nextTermFilters).forEach((filter) => {
-      if (text(filter)) params.append("termFilter", text(filter));
-    });
-
-    if (nextFilterAvailableTitles) {
-      params.set("filterAvailableTitles", "true");
-    }
-
-    return `/oclc-search?${params.toString()}`;
+  function buildUrl(state) {
+    const backend = asArray(data?.perspectives).find((entry) => String(entry.id) === String(state.nextPerspectiveId))?.backend;
+    return buildSearchUrl(state, { backend });
   }
-
-  function buildApiUrl({
-    q,
-    nextSearchRequested,
-    nextPage,
-    nextPerspectiveId,
-    nextSearchScope,
-    nextSort,
-    nextFacetFilters,
-    nextTermFilters,
-    nextFilterAvailableTitles,
-  }) {
-    const params = new URLSearchParams();
-
-    if (text(q)) params.set("term", text(q));
-    params.set("page", String(nextPage || 1));
-    params.set("limit", String(DEFAULT_LIMIT));
-    if (nextSearchRequested) {
-      params.set("perspectiveId", String(nextPerspectiveId || DEFAULT_PERSPECTIVE_ID));
-    }
-    if (String(nextSearchScope || DEFAULT_SCOPE) !== DEFAULT_SCOPE) {
-      params.set("searchScope", String(nextSearchScope));
-    }
-    if (String(nextSort || DEFAULT_SORT) !== DEFAULT_SORT) {
-      params.set("sort", String(nextSort));
-    }
-    params.set("filterAvailableTitles", nextFilterAvailableTitles ? "true" : "false");
-
-    asArray(nextFacetFilters).forEach((filter) => {
-      if (text(filter)) params.append("facetFilter", text(filter));
-    });
-
-    asArray(nextTermFilters).forEach((filter) => {
-      if (text(filter)) params.append("termFilter", text(filter));
-    });
-
-    return `/api/oclc-search?${params.toString()}`;
+  function buildApiUrl(state) {
+    const backend = asArray(data?.perspectives).find((entry) => String(entry.id) === String(state.nextPerspectiveId))?.backend;
+    return buildSearchUrl(state, { api: true, limit: DEFAULT_LIMIT, backend });
   }
 
   function navigateSearch(nextValues = {}) {
@@ -424,32 +352,34 @@ export default function OclcSearchPage() {
   }
 
   function runSearchFromState(searchState) {
+    const controller = new AbortController();
     setLoading(true);
     setError("");
+    setFailedCalls([]);
+    // Old results and counts must not appear under new criteria.
+    setData((previous) => ({ perspectives: asArray(previous?.perspectives).map((entry) => ({ ...entry, count: null, countUrl: "", countError: "" })) }));
     setShowSuggestions(false);
-
-    fetch(buildApiUrl(searchState))
+    fetch(buildApiUrl(searchState), { signal: controller.signal })
       .then(async (response) => {
         const json = await response.json().catch(() => null);
-
-        if (!response.ok) {
+        if (!response.ok || !json) {
+          if (!controller.signal.aborted) setFailedCalls(asArray(json?.debug?.calls));
           throw new Error(json?.error || `Request failed with status ${response.status}`);
         }
-
         return json;
       })
       .then((json) => {
+        if (controller.signal.aborted) return;
         setData(json);
+        const labelEntries = asArray(json?.facets).flatMap((facet) => asArray(facet.values).map((option) => [rawFacetFilterValue(facet, option), rawFacetValueLabel(option)]));
+        setFacetLabels(rememberFacetLabels(json?.selectedPerspectiveId, labelEntries));
         setPerspectiveId(text(json?.selectedPerspectiveId || searchState.nextPerspectiveId));
         setSearchScope(text(json?.selectedSearchScope || searchState.nextSearchScope));
         setSort(text(json?.selectedSort || searchState.nextSort));
       })
-      .catch((err) => {
-        setError(err.message || "Onbekende fout");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((err) => { if (!controller.signal.aborted) setError(err.message || "Onbekende fout"); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }
 
   function submit(event) {
@@ -458,22 +388,12 @@ export default function OclcSearchPage() {
   }
 
   function changePerspective(nextPerspectiveId) {
-    navigateSearch({
-      q: query,
-      nextSearchRequested: true,
-      nextPage: 1,
-      nextPerspectiveId,
-      nextSearchScope: DEFAULT_SCOPE,
-      nextSort: DEFAULT_SORT,
-      nextFacetFilters: [],
-      nextTermFilters: [],
-      nextFilterAvailableTitles: false,
-    });
+    if (String(nextPerspectiveId) === String(perspectiveId)) return;
+    navigateSearch(searchStateForPerspective(currentSearchState(), nextPerspectiveId));
   }
 
   function changeScope(nextScope) {
     navigateSearch({
-      q: query,
       nextSearchRequested: true,
       nextPage: 1,
       nextSearchScope: nextScope,
@@ -485,7 +405,6 @@ export default function OclcSearchPage() {
 
   function changeSort(nextSort) {
     navigateSearch({
-      q: query,
       nextPage: 1,
       nextSort,
     });
@@ -496,7 +415,6 @@ export default function OclcSearchPage() {
       const nextAvailable = !filterAvailableTitles;
       setFilterAvailableTitles(nextAvailable);
       navigateSearch({
-        q: query,
         nextPage: 1,
         nextFilterAvailableTitles: nextAvailable,
       });
@@ -506,13 +424,13 @@ export default function OclcSearchPage() {
 
     const value = text(filterValue);
     if (!value) return;
+    if (options.label) setFacetLabels(rememberFacetLabels(perspectiveId, [[value, options.label]]));
 
     const exists = facetFilters.includes(value);
     const nextFilters = exists ? facetFilters.filter((item) => item !== value) : [...facetFilters, value];
 
     setFacetFilters(nextFilters);
     navigateSearch({
-      q: query,
       nextPage: 1,
       nextFacetFilters: nextFilters,
     });
@@ -523,7 +441,6 @@ export default function OclcSearchPage() {
     const nextFilters = termFilters.filter((item) => item !== value);
     setTermFilters(nextFilters);
     navigateSearch({
-      q: query,
       nextPage: 1,
       nextTermFilters: nextFilters,
     });
@@ -561,17 +478,17 @@ export default function OclcSearchPage() {
   const labeledSearchScopes = searchScopes.filter((scope) => text(scope?.label));
   const labeledSortkeys = sortkeys.filter((sorting) => text(sorting?.label));
   const items = asArray(data?.items);
-  const calls = asArray(data?.debug?.calls);
+  const calls = failedCalls.length ? failedCalls : asArray(data?.debug?.calls);
   const selectedFilters = selectedSet(facetFilters);
   const activeFilterChips = [
     ...facetFilters.map((value) => ({
       key: `facet-${value}`,
-      label: activeFilterLabel(value, facets),
+      label: activeFilterLabel(value, facets, facetLabels, perspectiveId),
       remove: () => toggleFacet(value),
     })),
     ...termFilters.map((value) => ({
       key: `term-${value}`,
-      label: activeFilterLabel(value, facets),
+      label: activeFilterLabel(value, facets, facetLabels, perspectiveId),
       remove: () => removeTermFilter(value),
     })),
     ...(filterAvailableTitles ? [{
@@ -581,8 +498,9 @@ export default function OclcSearchPage() {
     }] : []),
   ].filter((chip) => chip.label);
 
-  const usedFieldRows = useMemo(() => buildOclcUsedFieldRows(data), [data]);
-  const filterRows = useMemo(() => buildOclcFilterRows(data), [data]);
+  const documentationData = useMemo(() => ({ ...data, debug: { calls: failedCalls.length ? failedCalls : asArray(data?.debug?.calls) } }), [data, failedCalls]);
+  const usedFieldRows = useMemo(() => buildOclcUsedFieldRows(documentationData), [documentationData]);
+  const filterRows = useMemo(() => buildOclcFilterRows(documentationData), [documentationData]);
   const allFieldRows = useMemo(() => buildOclcAllFieldRows(data), [data]);
   const allOclc = useMemo(
     () => ({
@@ -592,15 +510,16 @@ export default function OclcSearchPage() {
     [data]
   );
 
-  const resultCount = Number(data?.pagination?.total || 0).toLocaleString("nl-NL");
-  const activeCriteriaLabel = text(data?.query) || query || readableFilterCriteria(
+  const resultCount = data?.pagination?.total == null ? "" : Number(data.pagination.total).toLocaleString("nl-NL");
+  const appliedTerm = parseSearchStateFromPath(router.asPath).q;
+  const activeCriteriaLabel = (isCollectionTerm(appliedTerm) ? "" : text(appliedTerm)) || readableFilterCriteria(
     data?.selectedFacetFilters || facetFilters,
     data?.selectedTermFilters || termFilters,
     data?.selectedFilterAvailableTitles || filterAvailableTitles
   );
   const currentPage = Number(data?.pagination?.page || page || 1);
   const hasSearchCriteria = Boolean(
-    data?.selectedFullCollection || text(query) || facetFilters.length || termFilters.length || filterAvailableTitles
+    parseSearchStateFromPath(router.asPath).nextSearchRequested || text(appliedTerm) || facetFilters.length || termFilters.length || filterAvailableTitles
   );
   const hasCompletedSearch = Boolean(
     data?.selectedFullCollection ||
@@ -646,11 +565,12 @@ export default function OclcSearchPage() {
                   key={`${key}-${filterValue}-${valueLabel}`}
                   type="button"
                   className={checked ? "filter-checkbox active" : "filter-checkbox"}
-                  onClick={() => toggleFacet(filterValue, { isAvailableNow })}
+                  aria-pressed={checked}
+                  onClick={() => toggleFacet(filterValue, { isAvailableNow, label: valueLabel })}
                 >
                   <span className="checkbox-dot" />
                   <span className="filter-label">{valueLabel}</span>
-                  <span className="filter-count">{Number(option.count || 0).toLocaleString("nl-NL")}</span>
+                  <span className="filter-count">{option.count == null ? "—" : Number(option.count).toLocaleString("nl-NL")}</span>
                 </button>
               );
             })}
@@ -827,7 +747,7 @@ export default function OclcSearchPage() {
                           <span className="filter-count">
                             {Number(perspective.count).toLocaleString("nl-NL")}
                           </span>
-                        ) : null}
+                        ) : perspective.countError ? <span className="filter-count" title={perspective.countError} aria-label="Aantal niet beschikbaar">—</span> : null}
                       </button>
                     ))}
                   </div>
@@ -882,7 +802,7 @@ export default function OclcSearchPage() {
               <div className="oba-results-heading">
                 <div>
                   <h1>
-                    {data?.selectedFullCollection
+                    {data?.selectedFullCollection || ((!appliedTerm || isCollectionTerm(appliedTerm)) && !facetFilters.length && !termFilters.length && !filterAvailableTitles)
                       ? "Alles in de collectie"
                       : activeCriteriaLabel
                         ? `'${activeCriteriaLabel}'`
@@ -904,7 +824,8 @@ export default function OclcSearchPage() {
                       ))}
                     </div>
                   ) : null}
-                  <div className="oba-result-count">{resultCount} resultaten</div>
+                  {resultCount !== "" && !loading && !error ? <div className="oba-result-count">{resultCount} resultaten</div> : null}
+                  {isNbcPerspective(perspectiveId, selectedPerspective?.backend) && activeFilterChips.length ? <p>Alle geselecteerde filters gelden tegelijk (EN).</p> : null}
                 </div>
 
                 <label className="oba-sort">
@@ -927,7 +848,7 @@ export default function OclcSearchPage() {
               </div>
             ) : null}
 
-            {hasSearchCriteria ? (
+            {hasCompletedSearch && !loading && !error ? (
               <section className="oba-result-list">
                 {items.length ? (
                   items.map((item, index) => {
@@ -987,13 +908,13 @@ export default function OclcSearchPage() {
               </section>
             ) : null}
 
-            {hasSearchCriteria ? (
+            {hasCompletedSearch && !loading && !error ? (
               <section className="pagination-row">
                 <button
                   type="button"
                   className="tab-button"
                   disabled={currentPage <= 1}
-                  onClick={() => navigateSearch({ q: query, nextPage: currentPage - 1 })}
+                  onClick={() => navigateSearch({ nextPage: currentPage - 1 })}
                 >
                   vorige
                 </button>
@@ -1002,7 +923,7 @@ export default function OclcSearchPage() {
                   type="button"
                   className="tab-button active"
                   disabled={!hasNextPage}
-                  onClick={() => navigateSearch({ q: query, nextPage: currentPage + 1 })}
+                  onClick={() => navigateSearch({ nextPage: currentPage + 1 })}
                 >
                   volgende
                 </button>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { rememberDetailFilterLabel } from "../utils/oclcSearchFilters.js";
 import {
   buildOclcNbcPlusAllRows,
   buildOclcNbcPlusUsedRows,
@@ -33,7 +34,7 @@ function DisplayValue({ value, href = "", hrefs = [] }) {
         {value.map((entry, index) => (
           <li key={`${rawText(entry)}-${index}`}>
             {hrefs[index] ? (
-              <Link href={hrefs[index]} style={{ color: "inherit", textDecoration: "underline" }}>{rawText(entry)}</Link>
+              <Link href={hrefs[index]} onClick={() => rememberDetailFilterLabel(hrefs[index], rawText(entry))} style={{ color: "inherit", textDecoration: "underline" }}>{rawText(entry)}</Link>
             ) : rawText(entry)}
           </li>
         ))}
@@ -41,7 +42,7 @@ function DisplayValue({ value, href = "", hrefs = [] }) {
     );
   }
   const content = <span className="raw-value">{hasValue(value) ? rawText(value) : "—"}</span>;
-  return href ? <Link href={href} style={{ color: "inherit", textDecoration: "underline" }}>{content}</Link> : content;
+  return href ? <Link href={href} onClick={() => rememberDetailFilterLabel(href, rawText(value))} style={{ color: "inherit", textDecoration: "underline" }}>{content}</Link> : content;
 }
 
 function SpecificationRows({ rows }) {

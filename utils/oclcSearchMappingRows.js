@@ -1,3 +1,5 @@
+import { isNbcPerspective } from "./oclcSearchFilters.js";
+
 const text = (value) => {
   if (typeof value === "string") return value.trim();
   if (value === null || value === undefined) return "";
@@ -78,6 +80,7 @@ function toCsv(rows = [], columns = []) {
 }
 
 function perspectiveCountEndpoint(perspective = {}) {
+  if (perspective.countUrl) return perspective.countUrl;
   const perspectiveId = text(perspective?.id) || "{perspectiveId}";
   return `/branch/{branchId}/perspective/${perspectiveId}/titlesummary?returnType=count&searchScope=anything`;
 }
@@ -162,6 +165,12 @@ export function buildOclcUsedFieldRows(data = {}) {
     }));
   });
 
+  // Include migration instructions in the used-fields download as well.
+  buildOclcFilterRows(data).filter((row) => row.group === "Technische conventies").forEach((row) => rows.push({
+    order: rows.length + 1, resultIndex: "", detailId: "", section: row.group,
+    oclcField: row.oclcField, siteField: row.siteField, obaIst: row.obaIst,
+    endpoint: row.endpoint, mockupRoute: row.mockupRoute, value: row.technicalValue, note: row.note,
+  }));
   return rows;
 }
 
@@ -175,12 +184,13 @@ export function buildOclcFilterRows(data = {}) {
       findOclcSearchFacetDefinition(candidate)?.name === definition.name
     ));
     const values = asArray(facet?.values);
+    if (!facet && isNbcPerspective(selectedPerspective.id, selectedPerspective.backend)) return;
 
     if (!facet || !values.length) {
       rows.push({
         order: rows.length + 1,
         group: definition.group,
-        oclcField: definition.name,
+        oclcField: text(facet?.name) || definition.name,
         oclcLabelKey: definition.labelKey,
         oclcLabel: text(facet?.label),
         siteField: definition.siteLabel,
@@ -215,7 +225,7 @@ export function buildOclcFilterRows(data = {}) {
       rows.push({
         order: rows.length + 1,
         group: definition.group,
-        oclcField: definition.name,
+        oclcField: text(facet?.name) || definition.name,
         oclcLabelKey: text(facet?.labelKey || definition.labelKey),
         oclcLabel: text(facet?.label),
         siteField: definition.siteLabel,
@@ -257,7 +267,7 @@ export function buildOclcFilterRows(data = {}) {
       count: perspective?.count,
       countEndpoint: perspectiveCountEndpoint(perspective),
       mockupRoute: MOCKUP_ROUTE,
-      note: "Zichtbare waarde uit perspective.label. Na een zoekopdracht wordt per perspective een kleine titlesummary-call met returnType=count uitgevoerd met dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria. Een mislukte call blijft leeg en wordt niet vervangen door een ongefilterd collectietotaal.",
+      note: "De actieve bron toont het gefilterde total uit de hoofdresponse. Andere bronnen krijgen returnType=count met dezelfde term, searchScope=anything en zonder facet-, term- of beschikbaarheidsfilters: exact de opdracht bij klikken op die bron. De endpoint-kolom bevat de werkelijke request. Een mislukte of ongeldige count verschijnt als —, nooit als 0 of vervangend totaal.",
     }));
 
   OCLC_SEARCH_FACET_DEFINITIONS
@@ -313,14 +323,14 @@ export function buildOclcFilterRows(data = {}) {
   rows.push({
     order: rows.length + 1,
     group: "Technische conventies",
-    oclcField: "perspectiveId; term wordt weggelaten",
+    oclcField: "perspectiveId; term",
     siteField: "Alles in de collectie",
     obaIst: "WEL",
-    technicalValue: "perspectiveId=<bron>; geen term-parameter",
+    technicalValue: "NBC+: term=*; WISE: lege term blijft toegestaan, expliciete wildcard is *.*",
     endpoint,
     countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
-    mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor auteur en onderwerp term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Bij e-books bepaalt perspective 3684 het formaat en bij luisterboeken perspective 3685; daarvoor wordt geen formaatfacet toegevoegd. Landelijk gebruikt nbc:carrierOB_key:<carrierterm>. NBC+ gebruikt voor taal nbc:language_key, voor jaar nbc:publicationYear_key, voor genre nbc:subjectNbdgenre_key en voor leeftijd nbc:audienceNbcLeeftijdscategorie_key. Deze waarden worden niet vertaald naar lokale WISE-facetten. Uitgever en reeks blijven zichtbaar maar krijgen zonder aangetoond NBC+-facet geen zoeklink.",
+    mockupRoute: `${MOCKUP_ROUTE}?term=*&perspectiveId=3684&searchScope=anything&sort=2910&page=1`,
+    note: "Geen all=1 of q-parameter. NBC+-collectie- en facetlinks gebruiken de native OCLC-zoekterm *. Zonder term geeft accept1 voor deze routes een fout. De zoekbalk blijft leeg bij een collectie-wildcard; URL en request tonen de echte term. E-books gebruiken perspective 3684, luisterboeken 3685: geen extra lokaal formaatfacet. Landelijk: 3687 met nbc:carrierOB_key:<carrierterm>. Taal: nbc:language_key; jaar: nbc:publicationYear_key; genre: nbc:subjectNbdgenre_key; leeftijd: nbc:audienceNbcLeeftijdscategorie_key. Auteur/onderwerp behouden term=<tekst>&searchScope=anything. Uitgever/reeks krijgen zonder bewezen mapping geen zoeklink.",
   });
 
   rows.push({
@@ -329,10 +339,10 @@ export function buildOclcFilterRows(data = {}) {
     oclcField: "facetFilter",
     siteField: "Combinatie facetfilters",
     obaIst: "WEL",
-    technicalValue: "zelfde facet: waarde1|waarde2; verschillende facetten: herhaalde facetFilter-parameters",
+    technicalValue: "WISE: zelfde facet | (OF), verschillende facetten EN; NBC+: herhaalde facetFilter-parameters (EN)",
     endpoint,
     mockupRoute: MOCKUP_ROUTE,
-    note: "Meerdere waarden binnen hetzelfde facet worden met | gecombineerd (OR). Verschillende facetvelden blijven afzonderlijke facetFilter-parameters en werken samen als AND.",
+    note: "utils/oclcSearchFilters.js bouwt de criteria per backend. WISE behoudt de bestaande OF-groepering. NBC+ ontvangt iedere key:term afzonderlijk, exact uit facets[].filterList[]. Twee NBC+-jaarfilters 2013 en 2023 leveren terecht 0 op: beide gelden tegelijk. De geteste |-notatie werkt op accept1 niet als OF en wordt afgewezen; er wordt geen alternatieve OF-notatie verzonnen. Filters van de verkeerde backend worden afgewezen, niet stilzwijgend genegeerd. De nbc:-namespace blijft onderdeel van de sleutel.",
   });
 
   rows.push({
@@ -344,7 +354,7 @@ export function buildOclcFilterRows(data = {}) {
     technicalValue: "herhaalde termFilter-parameters",
     endpoint,
     mockupRoute: MOCKUP_ROUTE,
-    note: "Termfilters worden afzonderlijk en herhaald naar WISE gestuurd; ze worden gecombineerd met de hoofdterm en de facetfilters.",
+    note: "Termfilters worden afzonderlijk en herhaald naar WISE gestuurd, gecombineerd met hoofdterm en facetfilters. Voor NBC+ is deze mapping niet gevalideerd en wordt termFilter afgewezen. Nu aanwezig/filterAvailableTitles is eveneens beperkt tot WISE.",
   });
 
   rows.push({
@@ -356,8 +366,26 @@ export function buildOclcFilterRows(data = {}) {
     technicalValue: "URL blijft de bron; verwijderen wist uitsluitend de gekozen parameter en zet page=1",
     endpoint,
     mockupRoute: MOCKUP_ROUTE,
-    note: "Na een zoekopdracht wordt iedere geselecteerde facetFilter- en termFilter-waarde boven de resultaten als verwijderbare keuze getoond. Beschikbaarheid verschijnt als Nu aanwezig. De zichtbare naam komt waar mogelijk uit het OCLC-facetlabel. Klik op × verwijdert alleen die keuze uit het URL-pad, behoudt term, perspectiveId, searchScope, sort en overige filters, zet de paginering terug op pagina 1 en voert de zoekopdracht opnieuw uit. Deze conventie geldt voor alle perspectives en daarmee voor lokaal, e-books, luisterboeken en landelijk.",
+    note: "Iedere selectie is één verwijderbare keuze, ook WISE-waarden uit een gegroepeerde |-URL. × verwijdert alleen die waarde, behoudt term/perspective/scope/sort/overige filters en zet page=1. OCLC-labels worden per bron en filterwaarde in sessionStorage onthouden, ook vanuit NBC+-detail-links. Zonder bekend label blijft de technische waarde zichtbaar. De cache bepaalt nooit criteria en voegt geen URL-parameters toe. Terug/vooruit herstellen selecties. Een onafgemaakte zoektekst verandert de ingediende zoekopdracht niet bij een filteractie. Alleen de response voor de actuele URL mag resultaten bijwerken.",
   });
+
+  rows.push({
+    order: rows.length + 1, group: "Technische conventies", oclcField: "perspectiveId; total",
+    siteField: "Bron wisselen en tellers", obaIst: "WEL", endpoint, mockupRoute: MOCKUP_ROUTE,
+    technicalValue: "actieve bron: gefilterd total; andere bronnen: term + searchScope=anything, filters leeg",
+    note: "searchStateForPerspective wordt gebruikt voor navigatie en broncounters. Wisselen behoudt de ingediende term en wist facetfilters, termfilters en beschikbaarheid; scope=anything, sort=2910, page=1. Wildcards volgen de doelbackend. NBC+-filters gaan nooit naar WISE om daar een ongefilterd totaal op te halen. De actieve bron wordt niet dubbel geteld.",
+  });
+  rows.push({
+    order: rows.length + 1, group: "Technische conventies", oclcField: "HTTP-status; total; items",
+    siteField: "Fouten onderscheiden van nul resultaten", obaIst: "WEL", endpoint, mockupRoute: MOCKUP_ROUTE,
+    technicalValue: "zoekresponse: total >= 0 en resultaatlijst; count: geldig numeriek totaal",
+    note: "HTTP 200 met null/lege/ongeldige body is een fout (502), geen nulresultaat. Oorspronkelijke upstreamStatus en request blijven in het call-overzicht. Alleen een geldige response met total=0 toont Geen resultaten. Mislukte broncounters blijven onbekend. Tijdens laden of na een fout verschijnen geen oude resultaten of gefingeerde nul-aantallen.",
+  });
+  asArray(data?.debug?.calls).forEach((call) => rows.push({
+    order: rows.length + 1, group: "Technische conventies", oclcField: "OCLC request", siteField: "Werkelijk uitgevoerde call",
+    obaIst: "WEL", technicalValue: text(call?.url), endpoint: text(call?.url), mockupRoute: MOCKUP_ROUTE,
+    note: `Status ${call?.status ?? "onbekend"}${call?.upstreamStatus ? `; upstream ${call.upstreamStatus}` : ""}. ${call?.error || ""}`.trim(),
+  }));
 
   return rows;
 }
