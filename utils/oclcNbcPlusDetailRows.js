@@ -32,6 +32,19 @@ function facetSearchHref(detailType, facetName, facetValue) {
   return `/oclc-search?${params.toString()}`;
 }
 
+function termSearchHref(detailType, term) {
+  if (!hasValue(term)) return "";
+
+  const params = new URLSearchParams({
+    term: String(term),
+    page: "1",
+    perspectiveId: PERSPECTIVE_IDS[detailType] || PERSPECTIVE_IDS.landelijk,
+    searchScope: "anything",
+    sort: "2910",
+  });
+  return `/oclc-search?${params.toString()}`;
+}
+
 function termFilterSearchHref(detailType, fieldName, fieldValue) {
   if (!hasValue(fieldName) || !hasValue(fieldValue)) return "";
 
@@ -169,10 +182,10 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
       : "luisterboek";
   const authorField = "author.description | author.qualifier | collaborators[].description | collaborators[].qualifier";
   const audienceField = "audience.description | targetAudience.description | targetGroup | ageRange.from | ageRange.to | youth | adult";
-  const authorHref = facetSearchHref(detailType, "authorFacet", record?.author?.description);
+  const authorHref = termSearchHref(detailType, record?.author?.description);
   const authorSources = [record?.author, ...asArray(record?.collaborators)]
     .filter((entry) => hasValue(entry?.description));
-  const authorHrefs = authorSources.map((entry) => facetSearchHref(detailType, "authorFacet", entry.description));
+  const authorHrefs = authorSources.map((entry) => termSearchHref(detailType, entry.description));
   const formatHref = facetSearchHref(detailType, "mediumTypeCode", firstText(record?.media?.code, record?.media?.icon));
   const languageHrefs = asArray(record?.language)
     .filter((entry) => hasValue(entry?.description || entry?.code))
@@ -187,10 +200,10 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
   const publisherHref = termFilterSearchHref(detailType, "publisher", view.publisher);
   const seriesSource = (asArray(record?.titleSeries).length ? asArray(record.titleSeries) : asArray(record?.titleSeriesSchoolWise))
     .filter((entry) => hasValue(entry?.description));
-  const seriesHrefs = seriesSource.map((entry) => facetSearchHref(detailType, "series", entry.description));
+  const seriesHrefs = seriesSource.map((entry) => termSearchHref(detailType, entry.description));
   const subjectSource = (asArray(record?.subjects).length ? asArray(record.subjects) : asArray(record?.subjectSchoolWise))
     .filter((entry) => hasValue(entry?.description || entry?.code));
-  const subjectHrefs = subjectSource.map((entry) => facetSearchHref(detailType, "subject", entry?.description || entry?.code));
+  const subjectHrefs = subjectSource.map((entry) => termSearchHref(detailType, entry?.description || entry?.code));
   const genreSource = asArray(record?.genre).filter((entry) => hasValue(entry?.description || entry?.code));
   const genreHrefs = genreSource.map((entry) => facetSearchHref(detailType, "genreCode", entry?.code || entry?.description));
   const titleField = hasValue(record?.mainTitle) ? "mainTitle" : "title";
@@ -202,19 +215,19 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
     ["Uitgever", publisherField, view.publisher, "Uit publicationDetails wordt de uitgeversnaam vóór de eerste komma getoond; bij imprint wordt de uitgeversnaam na de dubbele punt gebruikt."],
     ...(detailType === "landelijk"
-      ? [["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond en linken via facetFilter=series:<waarde>."]]
+      ? [["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond en linken als brede termzoekopdracht binnen het landelijke perspective."]]
       : []),
     ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
   ];
   const practicalRows = detailType === "landelijk"
     ? [
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
-        ["Auteurs", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via facetFilter=authorFacet:<waarde>."],
+        ["Auteurs", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
         ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
-        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via facetFilter=subject:<waarde>."],
+        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
-        ["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond en linken via facetFilter=series:<waarde>."],
+        ["Reeks", seriesField, view.series, "Alle geleverde reekswaarden worden getoond en linken via term=<waarde>&searchScope=anything."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
         ["Jaar van uitgave", "publicationYear", view.publicationYear, "Ruw publicatiejaar."],
@@ -222,35 +235,35 @@ export function buildOclcNbcPlusUsedRows(record = {}, options = {}) {
     : detailType === "ebook"
     ? [
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
-        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via facetFilter=authorFacet:<waarde>."],
+        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
         ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
-        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via facetFilter=subject:<waarde>."],
+        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
         ["Genres", "genre[].description", view.genres, "Alle ruwe genreomschrijvingen worden getoond."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
       ]
     : [
         ["Titel", titleField, view.title, "Ruwe NBC+-titel."],
-        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via facetFilter=authorFacet:<waarde>."],
+        ["Auteur", authorField, view.authors, "Eerste verantwoordelijke en medewerkers worden afzonderlijk getoond en linken via term=<waarde>&searchScope=anything."],
         ["Taal", "language[].description", view.languages, "Alle taalbeschrijvingen worden getoond."],
         ["Formaat", formatField, view.format, "Ruwe mediumomschrijving."],
         ["Doelgroep", audienceField, view.audience, "Ruwe doelgroepomschrijving en leeftijdsrange hebben voorrang; anders worden expliciete jeugd-/volwassenenindicatoren gebruikt."],
         ["Speelduur", "annotationCollation", view.duration, "Voor de zichtbare speelduur wordt de eerste waarde vóór de komma gebruikt; de volledige bronwaarde blijft in Alle velden OCLC beschikbaar."],
-        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via facetFilter=subject:<waarde>."],
+        ["Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
         ["PPN", "ppn[]", view.ppn, "Alle PPN-waarden worden getoond."],
         ["ISBN", "isbn[]", view.isbn, "Alle ISBN-waarden worden getoond."],
       ];
   const rows = [
     ["Titel", "Titel", "title", view.title, "Ruwe NBC+-titel."],
-    ["Auteur", "Eerste verantwoordelijke", "author.description | author.qualifier", view.author, "De auteursnaam blijft in de door NBC+ geleverde volgorde en linkt via facetFilter=authorFacet:<waarde>."],
+    ["Auteur", "Eerste verantwoordelijke", "author.description | author.qualifier", view.author, "De auteursnaam blijft in de door NBC+ geleverde volgorde en linkt via term=<waarde>&searchScope=anything."],
     ["Samenvatting", "Samenvatting", hasValue(record?.contents) ? "contents" : "contentsSchoolWise", view.summary, "Ruwe samenvatting uit NBC+."],
     ["Cover", "Cover", "imageUrls.large | imageUrls.medium | imageUrls.small", view.cover, "Het grootste beschikbare coverformaat wordt gebruikt."],
     ["Beschikbaarheid", "Beschikbaarheid", "available", detailType === "landelijk" && view.available === true ? "Beschikbaar" : view.availabilityLabel, detailType === "landelijk" ? "De ruwe NBC+-beschikbaarheidswaarde wordt leesbaar getoond." : "true wordt visueel Digitaal beschikbaar; false wordt Niet beschikbaar."],
     ["Actie", detailType === "landelijk" ? (view.loanName || "Externe link") : "Digitaal te lenen", "externalLinks[].url", view.loanUrl, "De relevante link uit externalLinks wordt gebruikt."],
     ...topSpecificationRows.map(([label, field, value, note]) => ["Specificaties", label, field, value, note]),
-    ["Onderwerpen", "Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via facetFilter=subject:<waarde>."],
+    ["Onderwerpen", "Onderwerpen", view.subjectSourceField, view.subjects, "subjects heeft voorrang; anders worden subjectSchoolWise-waarden getoond. Iedere waarde linkt via term=<waarde>&searchScope=anything."],
     ...practicalRows.map(([label, field, value, note]) => ["Praktische informatie", label, field, value, note]),
   ];
 

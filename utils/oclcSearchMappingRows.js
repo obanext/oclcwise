@@ -304,7 +304,7 @@ export function buildOclcFilterRows(data = {}) {
     endpoint,
     countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
     mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count, omdat deze route in de gebruikte acceptatieomgeving ook voor NBC+-perspectives een bruikbare teller retourneert. De lokale detailroute gebruikt term met searchScope voor auteur, onderwerp en reeks. De NBC+-detailroutes voor e-books, luisterboeken en landelijk gebruiken daarvoor de exacte facetFilters authorFacet, subject en series binnen hun eigen perspective.",
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count, omdat deze route in de gebruikte acceptatieomgeving ook voor NBC+-perspectives een bruikbare teller retourneert. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Alleen waarden waarvoor een echte OCLC-code beschikbaar is, blijven facetFilter gebruiken.",
   });
 
   rows.push({
