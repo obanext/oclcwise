@@ -47,7 +47,13 @@ export function findOclcSearchFacetDefinition(facet = {}) {
   const labelKey = text(facet?.labelKey);
   const nameAliases = {
     "nbc:carrierOB_key": "mediumTypeCode",
+    "nbc:creatorNameProfile1NtaOrTitle_key": "authorFacet",
+    "nbc:subjectNbchoofdcategorie_key": "fictionNonfictionCode",
+    "nbc:subjectNbdtrefwoorden_key": "subject",
+    "nbc:subjectNbdgenre_key": "genreCode",
+    "nbc:language_key": "languageCode",
     "nbc:publicationYear_key": "publicationYear",
+    "nbc:audienceNbcLeeftijdscategorie_key": "targetAudienceCode",
   };
   return OCLC_SEARCH_FACET_DEFINITIONS.find((definition) => (
     definition.name === (nameAliases[name] || name) || definition.labelKey === labelKey
@@ -194,6 +200,7 @@ export function buildOclcFilterRows(data = {}) {
       const yearMatch = definition.name === "publicationYear"
         ? text(value?.term || valueLabel).match(/(?:18|19|20|21)\d{2}/)
         : null;
+      const isNbcFacet = text(facet?.name).startsWith("nbc:");
       const isNbcYear = text(facet?.name) === "nbc:publicationYear_key";
       const siteValueLabel = definition.name === "availableNow"
         ? "Nu aanwezig"
@@ -222,8 +229,8 @@ export function buildOclcFilterRows(data = {}) {
         mockupRoute: MOCKUP_ROUTE,
         note: definition.name === "availableNow"
           ? "De OCLC-filterwaarde wordt op de site vertaald naar Nu aanwezig. De teller komt uit een aanvullende titlesummary-call met returnType=count en filterAvailableTitles=true; selectie van het filter stuurt filterAvailableTitles=true."
-          : isNbcYear
-            ? "Landelijk NBC+-publicatiejaar gebruikt de ongewijzigde facetwaarde nbc:publicationYear_key:<jaar>."
+          : isNbcFacet
+            ? "NBC+-facet en facetwaarde worden ongewijzigd naar OCLC gestuurd; lokale WISE-veldnamen of codes worden hier niet gebruikt."
           : yearMatch
             ? "Publicatiejaar wordt als viercijferig jaar getoond en als customPublicationYear:<jaar> verstuurd."
             : valueLabel
@@ -313,7 +320,7 @@ export function buildOclcFilterRows(data = {}) {
     endpoint,
     countEndpoint: `${TITLESUMMARY_ENDPOINT}?returnType=count&searchScope=anything`,
     mockupRoute: `${MOCKUP_ROUTE}?perspectiveId={perspectiveId}&searchScope=anything&sort=2910&page=1`,
-    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor leesbare detailwaarden zoals auteur, onderwerp en reeks term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Landelijk gebruikt voor formaat nbc:carrierOB_key:<carrierterm> en voor jaar nbc:publicationYear_key:<jaar>; deze NBC+-facetten worden niet vertaald naar lokale WISE-facetten.",
+    note: "Er wordt geen eigen mockupparameter gebruikt. De expliciet gekozen perspectiveId bepaalt de bron; de OCLC titlesummary-call wordt zonder term uitgevoerd. De broncounters gebruiken per perspective titlesummary met returnType=count en nemen dezelfde term, searchScope, facetFilter-, termFilter- en beschikbaarheidscriteria over. Een mislukte count-call blijft leeg; er wordt geen ongefilterd totaal als vervanging getoond. De NBC+-detailroutes gebruiken voor auteur en onderwerp term=<waarde>&searchScope=anything binnen perspective 3684, 3685 of 3687. Bij e-books bepaalt perspective 3684 het formaat en bij luisterboeken perspective 3685; daarvoor wordt geen formaatfacet toegevoegd. Landelijk gebruikt nbc:carrierOB_key:<carrierterm>. NBC+ gebruikt voor taal nbc:language_key, voor jaar nbc:publicationYear_key, voor genre nbc:subjectNbdgenre_key en voor leeftijd nbc:audienceNbcLeeftijdscategorie_key. Deze waarden worden niet vertaald naar lokale WISE-facetten. Uitgever en reeks blijven zichtbaar maar krijgen zonder aangetoond NBC+-facet geen zoeklink.",
   });
 
   rows.push({

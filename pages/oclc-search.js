@@ -50,7 +50,13 @@ const FILTER_LABELS = {
   subject: "Onderwerp",
   targetAudienceCode: "Leeftijd / niveau",
   "nbc:carrierOB_key": "Type",
+  "nbc:creatorNameProfile1NtaOrTitle_key": "Auteur",
+  "nbc:subjectNbchoofdcategorie_key": "Fictie/Non-fictie",
+  "nbc:subjectNbdtrefwoorden_key": "Onderwerp",
+  "nbc:subjectNbdgenre_key": "Genre",
+  "nbc:language_key": "Taal",
   "nbc:publicationYear_key": "Jaar van uitgave",
+  "nbc:audienceNbcLeeftijdscategorie_key": "Leeftijd / niveau",
 };
 
 function splitFilterCriterion(filter) {
