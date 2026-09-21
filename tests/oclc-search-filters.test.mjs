@@ -9,11 +9,14 @@ import { fileURLToPath } from "node:url";
 import * as filters from "../utils/oclcSearchFilters.js";
 import { buildOclcNbcPlusUsedRows } from "../utils/oclcNbcPlusDetailRows.js";
 import { buildOclcUsedFieldRows, buildOclcFilterRows, toOclcUsedFieldsCsv } from "../utils/oclcSearchMappingRows.js";
+import { EMPTY_ADVANCED_FORM, advancedSourceChange, buildAdvancedSearch, advancedFacetOptions, getAuthorFacetOptions } from "../utils/oclcAdvancedSearch.js";
+import { preselectValue } from "../utils/oclcPreselect.js";
+import { buildAdvancedSearchMappingRows, toAdvancedSearchMappingCsv } from "../utils/advancedSearchMappingRows.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const perspectives = ["3682", "3683", "3684", "3685", "3686", "3687", "3688"].map((id) => ({
   id, backend: filters.isNbcPerspective(id) ? "nbcplus" : "wise", labelText: id,
-  searchScopes: ["anything", "author", "title", "subject"].map((labelText) => ({ labelText })),
+  searchScopes: ["anything", "author", "title", "subject", "series"].map((labelText) => ({ labelText })),
   sortings: [{ id: "2910", sortDesc: true }, { id: "2912", sortDesc: true }],
 }));
 const clean = (value) => JSON.parse(JSON.stringify(value));
@@ -147,4 +150,127 @@ test("CSV includes real NBC field names, requests, instructions and zero counts"
   const csv = toOclcUsedFieldsCsv(buildOclcUsedFieldRows(result.body));
   for (const phrase of ["term=*", "NBC+", "sessionStorage", "Werkelijk uitgevoerde call", "Bron wisselen en tellers", "Fouten onderscheiden"]) assert.ok(csv.includes(phrase), phrase);
   assert.ok(csv.startsWith("\uFEFF"));
+});
+
+function queryFromHref(href) {
+  const params = new URL(href, "http://localhost").searchParams;
+  return { ...Object.fromEntries(params), facetFilter: params.getAll("facetFilter"), termFilter: params.getAll("termFilter") };
+}
+
+test("preselection and advanced criteria reach one WISE request with one branch filter", async () => {
+  let form = { ...EMPTY_ADVANCED_FORM, term: "kikker", mediumTypeCode: "BOE", languageCode: "DUT", yearFrom: "2022", yearTo: "2023", available: true };
+  form = advancedSourceChange(form, "branch:1001", perspectives).form;
+  assert.equal(preselectValue(form), "branch:1001");
+  const built = buildAdvancedSearch(form);
+  assert.equal(built.error, "");
+  const response = await request(queryFromHref(built.href));
+  assert.equal(response.statusCode, 200);
+  assert.match(response.main.pathname, /branch\/1000\/perspective\/3682\/titlesummary$/);
+  assert.equal(response.main.searchParams.get("term"), "kikker");
+  assert.equal(response.main.searchParams.get("filterAvailableTitles"), "true");
+  assert.deepEqual(response.main.searchParams.getAll("facetFilter"), ["mediumTypeCode:BOE", "branchId:1001", "languageCode:DUT", "customPublicationYear:2022-2023"]);
+  assert.equal(response.main.href, new URL(built.request).href);
+  assert.equal(/[?&](q|all|presel|preselect)=/.test(built.href), false);
+
+  // Changing either selector uses the same state; replacing/clearing cannot stack branches.
+  form = advancedSourceChange(form, "branch:1002", perspectives).form;
+  assert.deepEqual(queryFromHref(buildAdvancedSearch(form).href).facetFilter.filter((value) => value.startsWith("branchId:")), ["branchId:1002"]);
+  form = advancedSourceChange(form, "catalog:3683", perspectives).form;
+  assert.equal(preselectValue(form), "catalog:3683");
+  assert.equal(form.branchId, "");
+  assert.equal(form.mediumTypeCode, "BOE");
+  assert.equal(queryFromHref(buildAdvancedSearch(form).href).perspectiveId, "3683");
+});
+
+test("all NBC+ preselected sources use native criteria and the preview matches the real API builder", async () => {
+  for (const perspectiveId of ["3684", "3685", "3687", "3688"]) {
+    const form = { ...EMPTY_ADVANCED_FORM, perspectiveId, year: "2013",
+      languageCode: "nbc:language_key:language~iso639-2~dut",
+      genreCode: "nbc:subjectNbdgenre_key:subject~nbdgenre~Ebsc",
+      targetAudienceCode: "nbc:audienceNbcLeeftijdscategorie_key:audience~nbcleeftijdscategorie~1.0",
+      mediumTypeCode: ["3687", "3688"].includes(perspectiveId) ? "nbc:carrierOB_key:carrier~ob~A" : "" };
+    const built = buildAdvancedSearch(form);
+    assert.equal(built.error, "");
+    const query = queryFromHref(built.href);
+    assert.equal(query.term, "*");
+    assert.equal(query.perspectiveId, perspectiveId);
+    assert.equal(query.facetFilter.length, ["3687", "3688"].includes(perspectiveId) ? 5 : 4);
+    assert.ok(query.facetFilter.every((filter) => filter.startsWith("nbc:")));
+    const response = await request(query);
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.main.href, new URL(built.request).href);
+  }
+});
+
+test("changing backend clears incompatible values and cannot restore stale WISE filters", () => {
+  const local = { ...EMPTY_ADVANCED_FORM, term: "kikker", title: "Kikker", author: "Velthuijs", authorFacetValue: "Velthuijs, Max",
+    mediumTypeCode: "ORB", branchId: "1001", languageCode: "DUT", yearFrom: "2022", yearTo: "2023", available: true };
+  const changed = advancedSourceChange(local, "catalog:3684", perspectives);
+  assert.equal(changed.resetCriteria, true);
+  assert.deepEqual(changed.form, { ...EMPTY_ADVANCED_FORM, term: "kikker", perspectiveId: "3684" });
+  const audio = advancedSourceChange({ ...changed.form, year: "2013", languageCode: "nbc:language_key:language~iso639-2~dut" }, "catalog:3685", perspectives);
+  assert.deepEqual(audio.form, { ...EMPTY_ADVANCED_FORM, term: "kikker", perspectiveId: "3685" });
+  const back = advancedSourceChange(audio.form, "branch:1002", perspectives);
+  assert.deepEqual(back.form, { ...EMPTY_ADVANCED_FORM, term: "kikker", branchId: "1002" });
+});
+
+test("invalid combinations are blocked instead of dropping user input", () => {
+  for (const extra of [
+    { mediumTypeCode: "ORB" }, { yearFrom: "2022", yearTo: "2023" }, { available: true },
+    { branchId: "1001" }, { isbn: "9789025865627" }, { term: "kikker", title: "Kikker" },
+    { term: "kikker", series: "Kikker" }, { languageCode: "languageCode:DUT" },
+    { languageCode: "nbc:language_key:language~iso639-2~dut|language~iso639-2~eng" },
+    { term: "kikker", author: "Velthuijs" },
+  ]) {
+    const built = buildAdvancedSearch({ ...EMPTY_ADVANCED_FORM, perspectiveId: "3684", ...extra });
+    assert.ok(built.error, JSON.stringify(extra));
+    assert.equal(built.href, "");
+    assert.equal(built.request, "");
+  }
+  for (const perspectiveId of ["3682", "3684", "3685", "3687"]) {
+    const alone = buildAdvancedSearch({ ...EMPTY_ADVANCED_FORM, perspectiveId, subject: "dieren" });
+    assert.equal(queryFromHref(alone.href).searchScope, "subject");
+    assert.ok(buildAdvancedSearch({ ...EMPTY_ADVANCED_FORM, perspectiveId, subject: "dieren", year: "2023" }).error);
+  }
+});
+
+test("author suggestions and native lists preserve OCLC keys and terms including colons", async () => {
+  const data = { facets: [
+    { name: "nbc:creatorNameProfile1NtaOrTitle_key", values: [{ key: "nbc:creatorNameProfile1NtaOrTitle_key", term: "Max Velthuijs", label: "Max Velthuijs" }] },
+    { name: "nbc:subjectNbdgenre_key", filterList: [{ key: "nbc:subjectNbdgenre_key", term: "subject~nbdgenre~Ebsc", label: "Schoolverhaal" }] },
+  ] };
+  assert.deepEqual(getAuthorFacetOptions(data, true), [{ value: "Max Velthuijs", label: "Max Velthuijs" }]);
+  assert.deepEqual(getAuthorFacetOptions(data, false), []);
+  assert.deepEqual(advancedFacetOptions(data, "nbc:subjectNbdgenre_key"), [{ code: "nbc:subjectNbdgenre_key:subject~nbdgenre~Ebsc", label: "Schoolverhaal" }]);
+  const form = { ...EMPTY_ADVANCED_FORM, perspectiveId: "3684", term: "kikker", author: "Max Velthuijs", authorFacetValue: "Max Velthuijs" };
+  const result = await request(queryFromHref(buildAdvancedSearch(form).href));
+  assert.deepEqual(result.main.searchParams.getAll("facetFilter"), ["nbc:creatorNameProfile1NtaOrTitle_key:Max Velthuijs"]);
+  for (const [field, scope] of [["title", "title"], ["author", "author"], ["series", "series"]]) {
+    const single = buildAdvancedSearch({ ...EMPTY_ADVANCED_FORM, perspectiveId: "3684", [field]: "Kikker" });
+    assert.equal(queryFromHref(single.href).searchScope, scope);
+    assert.equal((await request(queryFromHref(single.href))).statusCode, 200);
+  }
+});
+
+test("advanced CSV documents active preselection, backend limitations, source files and actual calls", () => {
+  for (const perspectiveId of ["3682", "3684", "3687"]) {
+    const form = { ...EMPTY_ADVANCED_FORM, perspectiveId, term: "kikker" };
+    const rows = buildAdvancedSearchMappingRows({ form, calls: [{ url: "/restapi/test-perspective", ok: true, status: 200 }] });
+    assert.equal(rows[0].field, "Voorselectie (old-school)");
+    assert.equal(rows[1].field, "Vrij zoeken");
+    const preview = rows.find((row) => row.field === "OCLC request");
+    assert.ok(preview.currentValue.includes(`/perspective/${perspectiveId}/titlesummary`));
+    assert.ok(preview.frontendUrl.includes(`perspectiveId=${perspectiveId}`));
+    assert.equal(rows.at(-1).field, "Uitgevoerde broncall");
+    const csv = toAdvancedSearchMappingCsv(rows);
+    assert.ok(csv.startsWith("\uFEFF"));
+    for (const note of ["branch.txt", "NTB", "applicatiekeuze"]) assert.ok(csv.includes(note));
+    if (perspectiveId === "3682") {
+      for (const file of ["mediumtypecode.txt", "languagecode.txt", "genrecode.txt", "targetaudiencecode.txt"]) assert.ok(csv.includes(file));
+    } else {
+      assert.equal(rows.find((row) => row.field === "Jaar van–tot").status, "NIET BESCHIKBAAR BIJ NBC+");
+      assert.ok(rows.find((row) => row.field === "Taal").valuePattern.includes("nbc:language_key"));
+      assert.equal(rows.find((row) => row.field === "Bibliotheek").example, "");
+    }
+  }
 });

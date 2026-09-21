@@ -1,19 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import OclcPreselect, { useOclcPerspectives } from "../components/OclcPreselect";
+import { parsePreselect, preselectValue, resolvePreselect } from "../utils/oclcPreselect.js";
+import { buildSearchUrl, isNbcPerspective } from "../utils/oclcSearchFilters.js";
 
 const DEFAULT_SEARCH_SCOPE = "title";
-const DEFAULT_CATALOG_PERSPECTIVE_ID = "3682";
-const DEFAULT_BRANCH_PERSPECTIVE_ID = "3682";
-
-const CATALOG_OPTIONS = [
-  { label: "In jouw bibliotheek", perspectiveId: "3682", backend: "wise" },
-  { label: "In de buurt", perspectiveId: "3683", backend: "wise" },
-  { label: "e-books", perspectiveId: "3684", backend: "nbcplus" },
-  { label: "luisterboeken", perspectiveId: "3685", backend: "nbcplus" },
-  { label: "In dit systeem", perspectiveId: "3686", backend: "wise" },
-  { label: "In heel Nederland", perspectiveId: "3687", backend: "nbcplus" },
-  { label: "Delpher boeken", perspectiveId: "3688", backend: "nbcplus" },
-];
 
 const RADIO_OPTIONS = [
   "OBA Collectie",
@@ -35,24 +26,19 @@ const QUICK_LINKS = [
   "Max Havelaar",
 ];
 
-function buildPreselectValue(type, value) {
-  return `${type}:${value || "all"}`;
-}
-
-function parsePreselect(value) {
-  const [type = "catalog", rawValue = DEFAULT_CATALOG_PERSPECTIVE_ID] = String(value || "").split(":");
-  return { type, value: rawValue === "all" ? "" : rawValue };
-}
-
 export default function OldSchoolSearchPage() {
   const router = useRouter();
+  const catalogs = useOclcPerspectives();
 
   const [query, setQuery] = useState("");
-  const [preselect, setPreselect] = useState(buildPreselectValue("catalog", DEFAULT_CATALOG_PERSPECTIVE_ID));
+  const [preselect, setPreselect] = useState(preselectValue({}));
   const [filterAvailableTitles, setFilterAvailableTitles] = useState(false);
   const [branches, setBranches] = useState([]);
   const [branchesLoading, setBranchesLoading] = useState(true);
   const [branchesError, setBranchesError] = useState("");
+  const selection = resolvePreselect(preselect);
+  const backend = catalogs.perspectives.find((entry) => entry.id === selection.perspectiveId)?.backend || "";
+  const nbc = isNbcPerspective(selection.perspectiveId, backend);
 
   useEffect(() => {
     let active = true;
@@ -94,35 +80,27 @@ export default function OldSchoolSearchPage() {
     }
 
     return (
-      CATALOG_OPTIONS.find((option) => option.perspectiveId === selected.value)?.label ||
+      catalogs.perspectives.find((option) => option.id === selected.value)?.label ||
       "In jouw bibliotheek"
     );
-  }, [branches, preselect]);
+  }, [branches, preselect, catalogs.perspectives]);
+
+  function changePreselect(value) {
+    const next = resolvePreselect(value);
+    const nextBackend = catalogs.perspectives.find((entry) => entry.id === next.perspectiveId)?.backend || "";
+    setPreselect(value);
+    if (isNbcPerspective(next.perspectiveId, nextBackend)) setFilterAvailableTitles(false);
+  }
 
   function submitSearch(event) {
     event.preventDefault();
 
-    const params = new URLSearchParams();
-    const selected = parsePreselect(preselect);
-
-    if (query.trim()) params.set("term", query.trim());
-
-    params.set("page", "1");
-    params.set("searchScope", DEFAULT_SEARCH_SCOPE);
-    params.set("sort", "2910");
-
-    if (selected.type === "branch") {
-      params.set("perspectiveId", DEFAULT_BRANCH_PERSPECTIVE_ID);
-      params.append("facetFilter", `branchId:${selected.value}`);
-    } else {
-      params.set("perspectiveId", selected.value || DEFAULT_CATALOG_PERSPECTIVE_ID);
-    }
-
-    if (filterAvailableTitles) {
-      params.set("filterAvailableTitles", "true");
-    }
-
-    router.push(`/oclc-search?${params.toString()}`);
+    router.push(buildSearchUrl({
+      q: query, nextSearchRequested: true, nextPerspectiveId: selection.perspectiveId,
+      nextSearchScope: DEFAULT_SEARCH_SCOPE,
+      nextFacetFilters: selection.branchId ? [`branchId:${selection.branchId}`] : [],
+      nextFilterAvailableTitles: !nbc && filterAvailableTitles,
+    }, { backend }));
   }
 
   return (
@@ -159,38 +137,16 @@ export default function OldSchoolSearchPage() {
                 Voorselectie
               </label>
 
-              <select
+              <OclcPreselect
                 id="old-school-preselect"
-                className="old-school-select"
                 value={preselect}
-                onChange={(event) => setPreselect(event.target.value)}
-              >
-                <optgroup label="Catalogi uit OCLC Wise perspectives">
-                  {CATALOG_OPTIONS.map((option) => (
-                    <option
-                      key={option.perspectiveId}
-                      value={buildPreselectValue("catalog", option.perspectiveId)}
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </optgroup>
-
-                <optgroup label="Actieve locaties uit WISE CG0">
-                  {branches.map((option) => (
-                    <option
-                      key={option.branchId}
-                      value={buildPreselectValue("branch", option.branchId)}
-                    >
-                      {option.name}
-                    </option>
-                  ))}
-                  {branchesLoading ? <option disabled>Vestigingen laden...</option> : null}
-                  {!branchesLoading && !branches.length ? (
-                    <option disabled>Geen vestigingen beschikbaar</option>
-                  ) : null}
-                </optgroup>
-              </select>
+                onChange={changePreselect}
+                perspectives={catalogs.perspectives}
+                loading={catalogs.loading}
+                branches={branches}
+                branchesLoading={branchesLoading}
+                branchGroupLabel="Actieve locaties uit WISE CG0"
+              />
 
               <div className="old-school-search-input-wrap">
                 <span className="old-school-search-icon" aria-hidden="true">⌕</span>
@@ -213,11 +169,13 @@ export default function OldSchoolSearchPage() {
               <input
                 type="checkbox"
                 checked={filterAvailableTitles}
+                disabled={nbc}
                 onChange={(event) => setFilterAvailableTitles(event.target.checked)}
               />
               <span>Aanwezig</span>
             </label>
           </form>
+          {catalogs.error ? <p role="alert">{catalogs.error}</p> : null}
 
           {branchesError ? (
             <p className="search-error">Vestigingen konden niet worden geladen: {branchesError}</p>

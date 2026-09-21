@@ -1533,6 +1533,12 @@ textarea {
   border-color: #111;
 }
 
+.advanced-field > small {
+  grid-column: 2;
+  margin-top: -8px;
+  line-height: 1.5;
+}
+
 .advanced-year-range {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -1586,6 +1592,11 @@ textarea {
   .advanced-field {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .advanced-field > small {
+    grid-column: 1;
+    margin-top: 0;
   }
 }
 
