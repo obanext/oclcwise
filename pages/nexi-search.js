@@ -37,12 +37,74 @@ function resultTitle(result = {}) {
   return text(result.short_title || result.title || result.name || result.titel || result.naam);
 }
 
-function resultMeta(result = {}) {
+const agendaDateFormatter = new Intl.DateTimeFormat("nl-NL", {
+  timeZone: "Europe/Amsterdam",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const agendaTimeFormatter = new Intl.DateTimeFormat("nl-NL", {
+  timeZone: "Europe/Amsterdam",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+function parseAgendaDate(value) {
+  const raw = text(value);
+  if (!/^\d{4}-\d{2}-\d{2}(?:T|$)/i.test(raw)) return null;
+
+  const hasTime = /T/i.test(raw);
+  // Een tijdstip zonder tijdzone mag niet afhangen van de browserinstellingen.
+  if (hasTime && !/(?:Z|[+-]\d{2}:?\d{2})$/i.test(raw)) return null;
+
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : { date, hasTime };
+}
+
+function agendaDateTime(result = {}) {
+  const start = parseAgendaDate(result.raw_date?.start) || parseAgendaDate(result.date);
+  const end = parseAgendaDate(result.raw_date?.end);
+
+  if (!start) {
+    const date = text(result.date);
+    // Behoud een reeds opgemaakte datum; toon geen ongeldige ISO-tijdstippen.
+    return [/^\d{4}-\d{2}-\d{2}/.test(date) ? "" : date, text(result.time)]
+      .filter(Boolean).join(" ");
+  }
+
+  const startDay = agendaDateFormatter.format(start.date);
+  if (!start.hasTime) return [startDay, text(result.time)].filter(Boolean).join(", ");
+
+  const startTime = agendaTimeFormatter.format(start.date);
+  if (!end?.hasTime || end.date <= start.date) return `${startDay}, ${startTime} uur`;
+
+  const endDay = agendaDateFormatter.format(end.date);
+  const endTime = agendaTimeFormatter.format(end.date);
+  return startDay === endDay
+    ? `${startDay}, ${startTime}–${endTime} uur`
+    : `${startDay}, ${startTime} – ${endDay}, ${endTime} uur`;
+}
+
+function agendaSummary(result = {}) {
+  const summary = (text(result.summary) || text(result.beschrijving)).replace(/\s+/g, " ");
+  if (summary.length <= 280) return summary;
+
+  const excerpt = summary.slice(0, 279);
+  const lastSpace = excerpt.lastIndexOf(" ");
+  return `${(lastSpace > 0 ? excerpt.slice(0, lastSpace) : excerpt).trimEnd()}…`;
+}
+
+function resultMeta(result = {}, isAgenda = false) {
+  if (isAgenda) {
+    return [agendaDateTime(result), text(result.location)].filter(Boolean).join(" | ");
+  }
+
   return [
     text(result.author || result.auteur),
     text(result.year || result.jaar || result.date || result.datum),
     text(result.location || result.locatie || result.gebouw),
-    text(result.ppn ? `PPN ${result.ppn}` : ""),
   ].filter(Boolean).join(" | ");
 }
 
@@ -218,6 +280,7 @@ export default function NexiSearchPage() {
   }
 
   const results = asArray(data?.results);
+  const isAgenda = data?.response?.type === "agenda";
   const submittedQuery = text(data?.query);
   const activeFilterCount = Object.keys(cleanFilters(selectedFilters)).length;
   const showFilters = Boolean(resolvedSource && asArray(filters.groups).length);
@@ -314,8 +377,8 @@ export default function NexiSearchPage() {
                     const title = resultTitle(result);
                     const image = coverUrl(result);
                     const link = text(result.link || result.url);
-                    const meta = resultMeta(result);
-                    const beschrijving = text(result.beschrijving);
+                    const meta = resultMeta(result, isAgenda);
+                    const beschrijving = isAgenda ? agendaSummary(result) : text(result.beschrijving);
 
                     return (
                       <article className="oba-result-item" key={`${result.ppn || title || "result"}-${index}`}>
