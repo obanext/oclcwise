@@ -12,16 +12,6 @@ const text = (value) => {
   return String(value).trim();
 };
 
-const SOURCE_LABELS = {
-  collection: "collectie",
-  agenda: "agenda",
-};
-
-function sourceLabel(source) {
-  const key = text(source);
-  return SOURCE_LABELS[key] || key;
-}
-
 function coverUrl(result = {}) {
   const ppn = encodeURIComponent(text(result.ppn));
   const isbn = encodeURIComponent(text(result.isbn));
@@ -361,14 +351,11 @@ export default function NexiSearchPage() {
           <main className="oba-results-panel">
             <div className="oba-results-heading">
               <div>
-                <h1>{submittedQuery && resolvedSource ? `${submittedQuery} in ${sourceLabel(resolvedSource)}` : "Zoeken met natuurlijke taal"}</h1>
                 <div className="oba-result-count">
                   {submittedQuery ? `${results.length.toLocaleString("nl-NL")} resultaten` : "Typ een natuurlijke-taal zoekvraag."}
                 </div>
               </div>
             </div>
-
-            {data?.response?.message ? <div className="info-card">{data.response.message}</div> : null}
 
             {submittedQuery || data ? (
               <section className="oba-result-list">
